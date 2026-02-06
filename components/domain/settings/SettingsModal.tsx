@@ -202,6 +202,7 @@ export function SettingsModal({
             <Animated.View
               style={[
                 settingsModalStyles.toggleThumb,
+                isDarkMode ? settingsModalStyles.toggleThumbActive : null,
                 { transform: [{ translateX }] },
               ]}
             />
@@ -237,6 +238,7 @@ export function SettingsModal({
             <Animated.View
               style={[
                 settingsModalStyles.toggleThumb,
+                isSoundEnabled ? settingsModalStyles.toggleThumbActive : null,
                 { transform: [{ translateX: soundTranslateX }] },
               ]}
             />
@@ -270,6 +272,7 @@ export function SettingsModal({
             <Animated.View
               style={[
                 settingsModalStyles.toggleThumb,
+                isColorBlind ? settingsModalStyles.toggleThumbActive : null,
                 { transform: [{ translateX: colorBlindTranslateX }] },
               ]}
             />

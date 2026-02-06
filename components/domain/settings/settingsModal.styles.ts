@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { layout } from "@/constants/layout";
+import { colors } from "@/constants/colors";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { Theme } from "@/constants/theme";
@@ -125,13 +126,16 @@ export const createSettingsModalStyles = (theme: Theme) => {
       borderWidth: 0,
     },
     toggleActive: {
-      backgroundColor: "#4ADE80",
+      backgroundColor: toggleBackground,
     },
     toggleThumb: {
       width: layout.toggle.thumb,
       height: layout.toggle.thumb,
       borderRadius: layout.toggle.thumb / 2,
-      backgroundColor: theme.colors.text,
+      backgroundColor: colors.blue500,
+    },
+    toggleThumbActive: {
+      backgroundColor: colors.green500,
     },
     infoCard: {
       backgroundColor: panelBackground,
