@@ -1,12 +1,20 @@
 import { View } from "react-native";
 import { Text } from "@/components/ui/Text/Text";
-import { botNoticeStyles } from "./botNotice.styles";
+import { createBotNoticeStyles } from "./botNotice.styles";
+import { useTheme } from "@/hooks/useTheme";
+import { useMemo } from "react";
 
 interface BotNoticeProps {
   message: string;
 }
 
 export function BotNotice({ message }: BotNoticeProps) {
+  const { theme } = useTheme();
+  const botNoticeStyles = useMemo(
+    () => createBotNoticeStyles(theme),
+    [theme],
+  );
+
   if (!message) {
     return null;
   }

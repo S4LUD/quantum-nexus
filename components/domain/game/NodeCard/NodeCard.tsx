@@ -1,13 +1,21 @@
 import { Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Zap, TrendingUp, ArrowRightLeft, Eye, Star } from "lucide-react-native";
+import {
+  Zap,
+  TrendingUp,
+  ArrowRightLeft,
+  Eye,
+  Star,
+} from "lucide-react-native";
+import { useCallback, useMemo } from "react";
 import { colors, gradients, GradientTuple } from "@/constants/colors";
 import { layout } from "@/constants/layout";
-import { EnergyIcon } from "../EnergyPool/EnergyIcon";
-import { EnergyType, Node, NodeCategory } from "../game.types";
-import { nodeCardStyles } from "./nodeCard.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { EnergyIcon } from "../EnergyPool/EnergyIcon";
+import { EnergyType, Node, NodeCategory } from "../game.types";
+import { createNodeCardStyles } from "./nodeCard.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface NodeCardProps {
   node: Node;
@@ -15,6 +23,7 @@ interface NodeCardProps {
   isAffordable?: boolean;
   size?: "sm" | "md";
   showCost?: boolean;
+  showTitle?: boolean;
 }
 
 const categoryConfig: Record<
@@ -50,82 +59,100 @@ const categoryConfig: Record<
 export function NodeCard({
   node,
   onPress,
-  isAffordable = true,
+  isAffordable = false,
   size = "md",
   showCost = true,
+  showTitle = false,
 }: NodeCardProps) {
+  const { theme } = useTheme();
+  const nodeCardStyles = useMemo(() => createNodeCardStyles(theme), [theme]);
   const config = categoryConfig[node.category];
   const CategoryIcon = config.icon;
   const sizeStyle =
     size === "sm" ? nodeCardStyles.cardSmall : nodeCardStyles.cardMedium;
   const effectText = getEffectText(node);
+  const costEntries = useMemo(
+    () =>
+      (Object.entries(node.cost) as [EnergyType, number][]).filter(
+        ([type, count]) => type !== "flux" && count > 0,
+      ),
+    [node.cost],
+  );
+  const renderCostItem = useCallback(
+    ([type, count]: [EnergyType, number]) => (
+      <View key={type} style={nodeCardStyles.costItem}>
+        <EnergyIcon type={type} size="sm" colored />
+        <Text style={nodeCardStyles.costValue}>{String(count)}</Text>
+      </View>
+    ),
+    [nodeCardStyles.costItem, nodeCardStyles.costValue],
+  );
 
   return (
     <Pressable
       onPress={onPress}
       disabled={!onPress}
-      style={[
-        nodeCardStyles.pressable,
-        !isAffordable ? nodeCardStyles.disabled : null,
-      ]}
+      style={nodeCardStyles.pressable}
     >
-      <LinearGradient
-        colors={config.gradient}
-        style={[nodeCardStyles.cardBase, sizeStyle]}
+      <View
+        style={[
+          nodeCardStyles.cardWrapper,
+          sizeStyle,
+          isAffordable ? nodeCardStyles.affordable : null,
+        ]}
       >
-        <View style={nodeCardStyles.header}>
-          <View style={nodeCardStyles.headerLeft}>
-            <CategoryIcon
-              color={config.accent}
-              size={size === "sm" ? layout.icon.sm : layout.icon.md}
-            />
-            <Text style={nodeCardStyles.headerLabel}>{config.label}</Text>
-          </View>
-          {node.efficiency > 0 ? (
-            <View style={nodeCardStyles.efficiencyBadge}>
-              <View style={nodeCardStyles.efficiencyRow}>
-                <Text style={nodeCardStyles.efficiencyText}>
-                  {String(node.efficiency)}
-                </Text>
-                <Icon
-                  icon={Star}
-                  size={layout.icon.sm}
-                  color={colors.black}
+        <LinearGradient
+          colors={config.gradient}
+          style={nodeCardStyles.cardBase}
+        >
+          <View style={nodeCardStyles.cardInner}>
+            <View style={nodeCardStyles.topRow}>
+              <View style={nodeCardStyles.categoryBadge}>
+                <CategoryIcon
+                  color={config.accent}
+                  size={size === "sm" ? layout.icon.sm : layout.icon.md}
                 />
+                {showTitle ? (
+                  <Text style={nodeCardStyles.categoryLabel}>
+                    {config.label}
+                  </Text>
+                ) : null}
               </View>
-            </View>
-          ) : null}
-        </View>
-
-        <View style={nodeCardStyles.output}>
-          <EnergyIcon
-            type={node.outputType}
-            size={size === "sm" ? "sm" : "md"}
-            colored
-          />
-          <Text style={nodeCardStyles.outputLabel}>Output</Text>
-        </View>
-
-        {showCost ? (
-          <View style={nodeCardStyles.costSection}>
-            <Text style={nodeCardStyles.costLabel}>Cost</Text>
-            <View style={nodeCardStyles.costRow}>
-              {Object.entries(node.cost).map(([type, count]) => (
-                <View key={type} style={nodeCardStyles.costItem}>
-                  <EnergyIcon type={type as EnergyType} size="sm" colored />
-                  <Text style={nodeCardStyles.costValue}>{String(count)}</Text>
+              {node.efficiency > 0 ? (
+                <View style={nodeCardStyles.efficiencyBadge}>
+                  <Text style={nodeCardStyles.efficiencyText}>
+                    {String(node.efficiency)}
+                  </Text>
+                  <Icon
+                    icon={Star}
+                    size={layout.icon.sm}
+                    color={colors.black}
+                  />
                 </View>
-              ))}
+              ) : null}
+            </View>
+
+            <View style={nodeCardStyles.centerIcon}>
+              <EnergyIcon type={node.outputType} size="xl" colored />
+            </View>
+
+            {showCost ? (
+              <View style={nodeCardStyles.costPanel}>
+                <View style={nodeCardStyles.costRow}>
+                  {costEntries.map(renderCostItem)}
+                </View>
+              </View>
+            ) : null}
+          </View>
+        </LinearGradient>
+        {effectText ? (
+          <View style={nodeCardStyles.effectPillFloat}>
+            <View style={nodeCardStyles.effectPill}>
+              <Text style={nodeCardStyles.effectText}>{effectText}</Text>
             </View>
           </View>
         ) : null}
-
-        {effectText ? (
-          <View style={nodeCardStyles.effect}>
-            <Text style={nodeCardStyles.effectText}>{effectText}</Text>
-          </View>
-        ) : null}
-      </LinearGradient>
+      </View>
     </Pressable>
   );
 }
@@ -136,16 +163,16 @@ function getEffectText(node: Node) {
   }
 
   if (node.effectType === "multiplier") {
-    return `x${node.effectValue} ${node.effectTarget}`;
+    return `x${node.effectValue} Mult`;
   }
   if (node.effectType === "discount") {
-    return `-${node.effectValue} cost`;
+    return `-${node.effectValue} Cost`;
   }
   if (node.effectType === "draw") {
-    return `+${node.effectValue} draw`;
+    return `+${node.effectValue} Draw`;
   }
   if (node.effectType === "swap") {
-    return `Swap ${node.effectValue}`;
+    return "Swap";
   }
   return null;
 }

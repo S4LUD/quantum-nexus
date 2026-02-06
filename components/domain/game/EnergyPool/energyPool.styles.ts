@@ -1,27 +1,26 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const energyPoolStyles = StyleSheet.create({
-  container: {
-    width: "100%",
-    gap: spacing.sm,
-  },
-  containerDisabled: {
-    opacity: 0.5,
-  },
-  energyRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-  },
-  energyButton: {
-    borderRadius: layout.borderRadius.md,
-    opacity: 1,
-  },
-  energyButtonSelected: {
-    borderWidth: layout.borderWidth.thin,
-    borderColor: colors.white,
-  },
-});
+export const createEnergyPoolStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      width: "100%",
+      gap: spacing.sm,
+    },
+    energyRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: spacing.sm,
+    },
+    energyButton: {
+      borderRadius: 13,
+      opacity: 1,
+    },
+    energyButtonSelected: {
+      borderWidth: layout.borderWidth.thin,
+      borderColor: theme.colors.text,
+      backgroundColor: theme.colors.surfaceAlt,
+    },
+  });

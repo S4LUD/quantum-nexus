@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { gradients } from "@/constants/colors";
-import { screenStyles } from "./screen.styles";
+import { useTheme } from "@/hooks/useTheme";
+import { createScreenStyles } from "./screen.styles";
 import { Edge, SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
 
@@ -20,6 +20,8 @@ export function Screen({
   disableTopSafeArea = false,
   disableBottomPadding = false,
 }: ScreenProps) {
+  const { theme } = useTheme();
+  const screenStyles = useMemo(() => createScreenStyles(theme), [theme]);
   const safeAreaEdges: readonly Edge[] = disableTopSafeArea
     ? ["left", "right", "bottom"]
     : ["left", "right", "top", "bottom"];
@@ -27,13 +29,15 @@ export function Screen({
   return (
     <SafeAreaView style={screenStyles.safeArea} edges={safeAreaEdges}>
       <LinearGradient
-        colors={gradients.appBackground}
+        colors={theme.gradients.appBackground}
         style={screenStyles.gradient}
       >
         <View
           style={[
             screenStyles.content,
-            disableHorizontalPadding ? screenStyles.contentNoHorizontalPadding : null,
+            disableHorizontalPadding
+              ? screenStyles.contentNoHorizontalPadding
+              : null,
             disableTopPadding ? screenStyles.contentNoTopPadding : null,
             disableBottomPadding ? screenStyles.contentNoBottomPadding : null,
           ]}

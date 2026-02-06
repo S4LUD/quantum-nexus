@@ -39,6 +39,8 @@ export const colors = {
   gray700: '#364153',
   gray400: '#99A1AF',
   gray300: '#D1D5DC',
+  gray200: '#E5E7EB',
+  gray100: '#F3F4F6',
   whiteAlpha90: 'rgba(255,255,255,0.9)',
   whiteAlpha75: 'rgba(255,255,255,0.75)',
   whiteAlpha70: 'rgba(255,255,255,0.7)',

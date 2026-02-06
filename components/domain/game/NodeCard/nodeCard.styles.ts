@@ -3,125 +3,139 @@ import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const nodeCardStyles = StyleSheet.create({
-  pressable: {
-    borderRadius: layout.borderRadius.lg,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  cardBase: {
-    borderRadius: layout.borderRadius.lg,
-    overflow: "hidden",
-  },
-  cardSmall: {
-    width: layout.nodeCard.widthSm,
-    minHeight: layout.nodeCard.minHeightSm,
-  },
-  cardMedium: {
-    width: layout.nodeCard.widthMd,
-    minHeight: layout.nodeCard.minHeightMd,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: colors.blackAlpha30,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    minHeight: layout.nodeCard.headerHeight,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xxs,
-  },
-  headerLabel: {
-    color: colors.white,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.bold,
-    textTransform: "uppercase",
-  },
-  efficiencyBadge: {
-    backgroundColor: colors.yellow400,
-    borderRadius: layout.borderRadius.sm,
-    paddingHorizontal: spacing.xxs,
-    paddingVertical: spacing.xxs,
-  },
-  efficiencyRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xxxs,
-  },
-  efficiencyText: {
-    color: colors.black,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.bold,
-  },
-  output: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: spacing.xs,
-    paddingVertical: spacing.xxs,
-    backgroundColor: colors.blackAlpha20,
-    minHeight: layout.nodeCard.outputHeight,
-  },
-  outputLabel: {
-    color: colors.white,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.medium,
-  },
-  costSection: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    gap: spacing.xxs,
-  },
-  costLabel: {
-    color: colors.whiteAlpha70,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.medium,
-    textTransform: "uppercase",
-  },
-  costRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.xxs,
-  },
-  costItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xxs,
-    backgroundColor: colors.blackAlpha30,
-    borderRadius: layout.borderRadius.sm,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: spacing.xxs,
-  },
-  costValue: {
-    color: colors.white,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.bold,
-  },
-  effect: {
-    position: "absolute",
-    left: spacing.xs,
-    right: spacing.xs,
-    bottom: spacing.xs,
-    backgroundColor: colors.blackAlpha50,
-    borderRadius: layout.borderRadius.sm,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: spacing.xxs,
-  },
-  effectText: {
-    color: colors.white,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.xs,
-    fontFamily: typography.fontFamily.medium,
-  },
-});
+export const createNodeCardStyles = (theme: Theme) =>
+  StyleSheet.create({
+    pressable: {
+      borderRadius: layout.borderRadius.lg,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.16,
+      shadowRadius: 10,
+      elevation: 4,
+    },
+    cardWrapper: {
+      position: "relative",
+    },
+    affordable: {
+      borderWidth: 5,
+      borderColor: colors.green400,
+      borderRadius: layout.borderRadius.xl - 3,
+    },
+    cardBase: {
+      borderRadius: layout.borderRadius.lg,
+      overflow: "hidden",
+      flex: 1,
+    },
+    cardSmall: {
+      width: layout.nodeCard.widthSm,
+      minHeight: layout.nodeCard.minHeightSm,
+    },
+    cardMedium: {
+      width: layout.nodeCard.widthMd,
+      minHeight: layout.nodeCard.minHeightMd,
+    },
+    cardInner: {
+      flex: 1,
+      padding: spacing.xs,
+    },
+    topRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    categoryBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.xxxs,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.xxxs,
+      borderRadius: layout.borderRadius.sm,
+      backgroundColor:
+        theme.mode === "light"
+          ? theme.colors.surfaceStrong
+          : colors.blackAlpha30,
+    },
+    categoryLabel: {
+      color: theme.mode === "light" ? theme.colors.text : colors.white,
+      fontSize: typography.size.xs,
+      lineHeight: typography.lineHeight.xs,
+      fontFamily: typography.fontFamily.bold,
+      textTransform: "uppercase",
+    },
+    efficiencyBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.xxxs,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.xxxs,
+      borderRadius: layout.borderRadius.sm,
+      backgroundColor: colors.yellow400,
+    },
+    efficiencyText: {
+      color: colors.black,
+      fontSize: typography.size.xs,
+      lineHeight: typography.lineHeight.xs,
+      fontFamily: typography.fontFamily.bold,
+    },
+    centerIcon: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: spacing.sm,
+    },
+    costPanel: {
+      borderRadius: layout.borderRadius.md,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      backgroundColor:
+        theme.mode === "light"
+          ? theme.colors.surfaceStrong
+          : colors.blackAlpha50,
+      gap: spacing.xxxs,
+    },
+    costRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: spacing.xxs,
+    },
+    costItem: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "row",
+      gap: spacing.xxs,
+      backgroundColor:
+        theme.mode === "light" ? theme.colors.surfaceAlt : colors.blackAlpha30,
+      borderRadius: layout.borderRadius.sm,
+      paddingVertical: spacing.xxxs,
+    },
+    costValue: {
+      color: theme.mode === "light" ? theme.colors.text : colors.white,
+      fontSize: typography.size.xs,
+      lineHeight: typography.lineHeight.xs,
+      fontFamily: typography.fontFamily.bold,
+    },
+    effectPill: {
+      alignSelf: "center",
+      borderRadius: layout.borderRadius.lg,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xxxs,
+      backgroundColor: colors.purple600,
+    },
+    effectPillFloat: {
+      position: "absolute",
+      left: spacing.md,
+      right: spacing.md,
+      bottom: -(spacing.xs + 1),
+      alignItems: "center",
+    },
+    effectText: {
+      color: theme.colors.buttonText,
+      fontSize: typography.size.xs,
+      lineHeight: typography.lineHeight.xs,
+      fontFamily: typography.fontFamily.bold,
+      textTransform: "uppercase",
+    },
+  });

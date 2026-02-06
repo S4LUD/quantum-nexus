@@ -1,14 +1,21 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
+import { colors } from "@/constants/colors";
 
-export const protocolCardStyles = StyleSheet.create({
+export const createProtocolCardStyles = (theme: Theme) =>
+  StyleSheet.create({
   container: {
     borderRadius: layout.borderRadius.lg,
     padding: spacing.md,
     overflow: "hidden",
+    shadowColor: theme.colors.shadow,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+    elevation: 4,
   },
   statusIcon: {
     position: "absolute",
@@ -35,7 +42,7 @@ export const protocolCardStyles = StyleSheet.create({
     fontFamily: typography.fontFamily.bold,
   },
   efficiencyLabel: {
-    color: colors.whiteAlpha70,
+    color: theme.colors.textMuted,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.medium,
@@ -45,7 +52,7 @@ export const protocolCardStyles = StyleSheet.create({
     gap: spacing.xs,
   },
   sectionLabel: {
-    color: colors.whiteAlpha70,
+    color: theme.colors.textMuted,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.medium,
@@ -60,45 +67,45 @@ export const protocolCardStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.xxs,
-    backgroundColor: colors.blackAlpha30,
+    backgroundColor: theme.colors.surfaceAlt,
     borderRadius: layout.borderRadius.sm,
     paddingHorizontal: spacing.xs,
     paddingVertical: spacing.xxs,
   },
   requirementValue: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.bold,
   },
   effect: {
     marginTop: spacing.md,
-    backgroundColor: colors.blackAlpha30,
+    backgroundColor: theme.colors.surfaceAlt,
     borderRadius: layout.borderRadius.sm,
     padding: spacing.sm,
   },
   effectLabel: {
-    color: colors.whiteAlpha70,
+    color: theme.colors.textMuted,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.medium,
   },
   effectValue: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.bold,
   },
   claimedOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: colors.blackAlpha70,
+    backgroundColor: theme.colors.overlayStrong,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: layout.borderRadius.lg,
     gap: spacing.xs,
   },
   claimedLabel: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.bold,
@@ -110,16 +117,21 @@ export const protocolCardStyles = StyleSheet.create({
     borderRadius: layout.borderRadius.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+    shadowColor: theme.colors.shadow,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+    elevation: 4,
   },
   compactLabel: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.medium,
     flex: 1,
   },
   compactValue: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.bold,

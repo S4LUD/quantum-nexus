@@ -74,7 +74,7 @@
 ### Objective
 Be the first to achieve victory through:
 - **Efficiency**: Reach 20★ after turn 20
-- **Network**: Build 12+ nodes
+- **Network**: Build required nodes (2P: 13 / 3P: 15 / 4P: 17)
 - **Protocols**: Claim 3+ protocols
 
 ### Your Turn (Choose ONE Action)

@@ -1,9 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Modal, Pressable, ScrollView, View } from "react-native";
 import { Text } from "@/components/ui/Text/Text";
 import { Node } from "../game.types";
 import { NodeCard } from "../NodeCard/NodeCard";
-import { drawModalStyles } from "./drawModal.styles";
+import { createDrawModalStyles } from "./drawModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface DrawModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export function DrawModal({
   onSelect,
   onSkip,
 }: DrawModalProps) {
+  const { theme } = useTheme();
+  const drawModalStyles = useMemo(() => createDrawModalStyles(theme), [theme]);
   const handleBackdropPress = useCallback(() => {
     onSkip();
   }, [onSkip]);

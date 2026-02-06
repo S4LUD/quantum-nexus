@@ -1,13 +1,15 @@
 import { StyleSheet } from "react-native";
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
+import { Theme } from "@/constants/theme";
+import { colors } from "@/constants/colors";
 
-export const exchangeModalStyles = StyleSheet.create({
+export const createExchangeModalStyles = (theme: Theme) =>
+  StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: colors.blackAlpha70,
+    backgroundColor: theme.colors.overlay,
     justifyContent: "center",
     alignItems: "center",
     padding: spacing.lg,
@@ -17,8 +19,8 @@ export const exchangeModalStyles = StyleSheet.create({
     maxWidth: layout.maxWidth,
     borderRadius: layout.borderRadius.lg,
     borderWidth: layout.borderWidth.thin,
-    borderColor: colors.whiteAlpha10,
-    backgroundColor: colors.slate900,
+    borderColor: theme.colors.borderSubtle,
+    backgroundColor: theme.colors.surface,
     overflow: "hidden",
   },
   header: {
@@ -26,13 +28,13 @@ export const exchangeModalStyles = StyleSheet.create({
     gap: spacing.xxs,
   },
   title: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.lg,
     lineHeight: typography.lineHeight.lg,
     fontFamily: typography.fontFamily.bold,
   },
   subtitle: {
-    color: colors.whiteAlpha70,
+    color: theme.colors.textMuted,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.medium,
@@ -48,16 +50,16 @@ export const exchangeModalStyles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderRadius: layout.borderRadius.md,
     borderWidth: layout.borderWidth.thin,
-    borderColor: colors.whiteAlpha20,
-    backgroundColor: colors.blackAlpha20,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceAlt,
     alignItems: "center",
   },
   modeButtonActive: {
-    borderColor: colors.purple400,
-    backgroundColor: colors.whiteAlpha10,
+    borderColor: theme.colors.text,
+    backgroundColor: theme.colors.surfaceAlt,
   },
   modeText: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.medium,
@@ -68,7 +70,7 @@ export const exchangeModalStyles = StyleSheet.create({
     gap: spacing.xs,
   },
   sectionLabel: {
-    color: colors.whiteAlpha75,
+    color: theme.colors.textMuted,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.medium,
@@ -83,18 +85,18 @@ export const exchangeModalStyles = StyleSheet.create({
     alignItems: "center",
     padding: spacing.xs,
     borderRadius: layout.borderRadius.md,
-    backgroundColor: colors.whiteAlpha05,
+    backgroundColor: theme.colors.surfaceAlt,
     borderWidth: layout.borderWidth.thin,
-    borderColor: colors.whiteAlpha10,
+    borderColor: theme.colors.borderSubtle,
     minWidth: layout.exchangeButton.minWidth,
   },
   energyButtonActive: {
-    borderColor: colors.purple400,
-    backgroundColor: colors.whiteAlpha10,
+    borderColor: theme.colors.text,
+    backgroundColor: theme.colors.surfaceMuted,
   },
   energyLabel: {
     marginTop: spacing.xxs,
-    color: colors.whiteAlpha80,
+    color: theme.colors.textMuted,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.medium,
@@ -102,14 +104,14 @@ export const exchangeModalStyles = StyleSheet.create({
   },
   selectedCount: {
     marginTop: spacing.xxs,
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.xs,
     lineHeight: typography.lineHeight.xs,
     fontFamily: typography.fontFamily.bold,
   },
   footer: {
     borderTopWidth: layout.borderWidth.thin,
-    borderTopColor: colors.whiteAlpha10,
+    borderTopColor: theme.colors.borderSubtle,
     padding: spacing.md,
     flexDirection: "row",
     gap: spacing.sm,
@@ -118,11 +120,11 @@ export const exchangeModalStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: spacing.sm,
     borderRadius: layout.borderRadius.md,
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: theme.mode === "light" ? colors.gray200 : theme.colors.surfaceMuted,
     alignItems: "center",
   },
   cancelText: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.medium,
@@ -135,7 +137,7 @@ export const exchangeModalStyles = StyleSheet.create({
     alignItems: "center",
   },
   confirmButtonDisabled: {
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: colors.gray400,
   },
   confirmText: {
     color: colors.white,

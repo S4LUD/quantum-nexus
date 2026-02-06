@@ -1,3 +1,7 @@
+import { Dimensions } from "react-native";
+
+const screenHeight = Dimensions.get("window").height;
+
 export const layout = {
   maxWidth: 428,
   borderRadius: {
@@ -45,5 +49,6 @@ export const layout = {
   modal: {
     minHeight: 240,
     maxHeight: "85%",
+    maxHeightPx: screenHeight * 0.8,
   },
 };

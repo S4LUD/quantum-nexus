@@ -1,16 +1,20 @@
-import { Text as RNText } from 'react-native';
-import { TextProps } from './types';
-import { textStyles } from './text.styles';
+import { useMemo } from "react";
+import { Text as RNText } from "react-native";
+import { useTheme } from "@/hooks/useTheme";
+import { TextProps } from "./types";
+import { createTextStyles } from "./text.styles";
 
 const variantMap = {
-  body: textStyles.body,
-  title: textStyles.title,
-  subtitle: textStyles.subtitle,
-  caption: textStyles.caption,
+  body: (styles: ReturnType<typeof createTextStyles>) => styles.body,
+  title: (styles: ReturnType<typeof createTextStyles>) => styles.title,
+  subtitle: (styles: ReturnType<typeof createTextStyles>) => styles.subtitle,
+  caption: (styles: ReturnType<typeof createTextStyles>) => styles.caption,
 };
 
 export function Text({ children, variant = 'body', style }: TextProps) {
-  const variantStyle = variantMap[variant];
+  const { theme } = useTheme();
+  const textStyles = useMemo(() => createTextStyles(theme), [theme]);
+  const variantStyle = variantMap[variant](textStyles);
 
   return <RNText style={[variantStyle, style]}>{children}</RNText>;
 }

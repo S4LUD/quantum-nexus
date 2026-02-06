@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import { Pressable, View } from "react-native";
 import { ArrowLeft, Star } from "lucide-react-native";
-import { gameHeaderStyles } from "./gameHeader.styles";
+import { createGameHeaderStyles } from "./gameHeader.styles";
 import { Icon } from "@/components/ui/Icon/Icon";
-import { colors } from "@/constants/colors";
 import { Text } from "@/components/ui/Text/Text";
+import { useTheme } from "@/hooks/useTheme";
+import { colors } from "@/constants/colors";
 
 interface GameHeaderProps {
   title: string;
@@ -20,6 +22,11 @@ export function GameHeader({
   efficiency,
   onBack,
 }: GameHeaderProps) {
+  const { theme } = useTheme();
+  const gameHeaderStyles = useMemo(
+    () => createGameHeaderStyles(theme),
+    [theme],
+  );
   const handleBack = () => {
     onBack();
   };
@@ -28,18 +35,26 @@ export function GameHeader({
     <View style={gameHeaderStyles.container}>
       <View style={gameHeaderStyles.left}>
         <Pressable onPress={handleBack} style={gameHeaderStyles.backButton}>
-          <Icon icon={ArrowLeft} size={16} color={colors.white} />
+          <Icon icon={ArrowLeft} size={16} color={theme.colors.text} />
         </Pressable>
-        <Text variant="caption">Turn {turnCount}</Text>
+        <Text variant="caption" style={gameHeaderStyles.captionMuted}>
+          Turn {turnCount}
+        </Text>
       </View>
       <View style={gameHeaderStyles.center}>
-        <Text variant="title">{title}</Text>
+        <Text variant="title" style={gameHeaderStyles.title}>
+          {title}
+        </Text>
       </View>
       <View style={gameHeaderStyles.right}>
-        <Text variant="caption">{playerName}</Text>
+        <Text variant="caption" style={gameHeaderStyles.caption}>
+          {playerName}
+        </Text>
         <View style={gameHeaderStyles.efficiencyRow}>
-          <Text variant="caption">{efficiency}</Text>
-          <Icon icon={Star} size={12} color={colors.yellow400} />
+          <Text variant="caption" style={gameHeaderStyles.caption}>
+            {efficiency}
+          </Text>
+          <Icon icon={Star} size={12} color={colors.yellow400} fill="none" />
         </View>
       </View>
     </View>

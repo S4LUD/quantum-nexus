@@ -1,22 +1,23 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const inputStyles = StyleSheet.create({
-  container: {
-    borderRadius: layout.borderRadius.md,
-    borderWidth: layout.borderWidth.thin,
-    borderColor: colors.whiteAlpha20,
-    backgroundColor: colors.blackAlpha30,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  input: {
-    color: colors.white,
-    fontSize: typography.size.md,
-    lineHeight: typography.lineHeight.md,
-    fontFamily: typography.fontFamily.regular,
-  },
-});
+export const createInputStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: layout.borderRadius.md,
+      borderWidth: layout.borderWidth.thin,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surfaceAlt,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+    },
+    input: {
+      color: theme.colors.text,
+      fontSize: typography.size.md,
+      lineHeight: typography.lineHeight.md,
+      fontFamily: typography.fontFamily.regular,
+    },
+  });

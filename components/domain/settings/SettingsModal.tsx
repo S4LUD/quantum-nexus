@@ -1,25 +1,39 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Animated, Pressable, View } from "react-native";
-import { X, Moon, Sun, Volume2, Palette } from "lucide-react-native";
+import { Animated, Pressable, View, Platform } from "react-native";
+import { X, Moon, Sun, Volume2, VolumeX, Palette } from "lucide-react-native";
+import Constants from "expo-constants";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
-import { settingsModalStyles } from "./settingsModal.styles";
+import { createSettingsModalStyles } from "./settingsModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface SettingsModalProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
+  isSoundEnabled: boolean;
+  onToggleSound: () => void;
   onClose: () => void;
 }
 
 export function SettingsModal({
   isDarkMode,
   onToggleDarkMode,
+  isSoundEnabled,
+  onToggleSound,
   onClose,
 }: SettingsModalProps) {
+  const { theme } = useTheme();
+  const settingsModalStyles = useMemo(
+    () => createSettingsModalStyles(theme),
+    [theme],
+  );
   const toggleAnim = useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
+  const soundToggleAnim = useRef(
+    new Animated.Value(isSoundEnabled ? 1 : 0),
+  ).current;
 
   useEffect(() => {
     Animated.timing(toggleAnim, {
@@ -28,6 +42,14 @@ export function SettingsModal({
       useNativeDriver: true,
     }).start();
   }, [isDarkMode, toggleAnim]);
+
+  useEffect(() => {
+    Animated.timing(soundToggleAnim, {
+      toValue: isSoundEnabled ? 1 : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [isSoundEnabled, soundToggleAnim]);
 
   const translateX = useMemo(() => {
     const travel =
@@ -38,20 +60,41 @@ export function SettingsModal({
     });
   }, [toggleAnim]);
 
+  const soundTranslateX = useMemo(() => {
+    const travel =
+      layout.toggle.width - layout.toggle.thumb - layout.toggle.padding * 2;
+    return soundToggleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, travel],
+    });
+  }, [soundToggleAnim]);
+
   const handleToggle = () => {
     onToggleDarkMode();
+  };
+
+  const handleSoundToggle = () => {
+    onToggleSound();
   };
 
   const handleClose = () => {
     onClose();
   };
 
+  const appVersion = Constants.expoConfig?.version ?? "1.0.0";
+  const platformLabel =
+    Platform.OS === "ios"
+      ? "iOS"
+      : Platform.OS === "android"
+        ? "Android"
+        : "Web";
+
   return (
     <View style={settingsModalStyles.wrapper}>
       <View style={settingsModalStyles.header}>
         <Text style={settingsModalStyles.title}>Settings</Text>
         <Pressable onPress={handleClose} style={settingsModalStyles.closeButton}>
-          <Icon icon={X} size={layout.icon.lg} color={colors.white} />
+          <Icon icon={X} size={layout.icon.lg} color={theme.colors.text} />
         </Pressable>
       </View>
 
@@ -62,6 +105,7 @@ export function SettingsModal({
               icon={isDarkMode ? Moon : Sun}
               size={layout.icon.lg}
               color={isDarkMode ? colors.purple400 : colors.yellow400}
+              fill="none"
             />
             <View>
               <Text style={settingsModalStyles.rowTitle}>Dark Mode</Text>
@@ -86,22 +130,45 @@ export function SettingsModal({
           </Pressable>
         </View>
 
-        <View style={[settingsModalStyles.row, settingsModalStyles.disabledRow]}>
+        <View style={settingsModalStyles.row}>
           <View style={settingsModalStyles.rowLeft}>
-            <Icon icon={Volume2} size={layout.icon.lg} color={colors.cyan400} />
+            <Icon
+              icon={isSoundEnabled ? Volume2 : VolumeX}
+              size={layout.icon.lg}
+              color={colors.cyan400}
+              fill="none"
+            />
             <View>
               <Text style={settingsModalStyles.rowTitle}>Sound Effects</Text>
-              <Text style={settingsModalStyles.rowSubtitle}>Coming soon</Text>
+              <Text style={settingsModalStyles.rowSubtitle}>
+                {isSoundEnabled ? "Enabled" : "Disabled"}
+              </Text>
             </View>
           </View>
-          <View style={settingsModalStyles.toggleDisabled}>
-            <View style={settingsModalStyles.toggleThumbDisabled} />
-          </View>
+          <Pressable
+            onPress={handleSoundToggle}
+            style={[
+              settingsModalStyles.toggle,
+              isSoundEnabled ? settingsModalStyles.toggleActive : null,
+            ]}
+          >
+            <Animated.View
+              style={[
+                settingsModalStyles.toggleThumb,
+                { transform: [{ translateX: soundTranslateX }] },
+              ]}
+            />
+          </Pressable>
         </View>
 
         <View style={[settingsModalStyles.row, settingsModalStyles.disabledRow]}>
           <View style={settingsModalStyles.rowLeft}>
-            <Icon icon={Palette} size={layout.icon.lg} color={colors.pink400} />
+            <Icon
+              icon={Palette}
+              size={layout.icon.lg}
+              color={colors.pink400}
+              fill="none"
+            />
             <View>
               <Text style={settingsModalStyles.rowTitle}>Color Blind Mode</Text>
               <Text style={settingsModalStyles.rowSubtitle}>Coming soon</Text>
@@ -115,7 +182,7 @@ export function SettingsModal({
         <View style={settingsModalStyles.infoCard}>
           <View style={settingsModalStyles.infoRow}>
             <Text style={settingsModalStyles.infoLabel}>Version</Text>
-            <Text style={settingsModalStyles.infoValue}>1.0.0</Text>
+            <Text style={settingsModalStyles.infoValue}>{appVersion}</Text>
           </View>
           <View style={settingsModalStyles.infoRow}>
             <Text style={settingsModalStyles.infoLabel}>Game Mode</Text>
@@ -123,7 +190,7 @@ export function SettingsModal({
           </View>
           <View style={settingsModalStyles.infoRow}>
             <Text style={settingsModalStyles.infoLabel}>Platform</Text>
-            <Text style={settingsModalStyles.infoValue}>Mobile</Text>
+            <Text style={settingsModalStyles.infoValue}>{platformLabel}</Text>
           </View>
         </View>
 

@@ -1,33 +1,61 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const energyIconStyles = StyleSheet.create({
-  iconRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xxs,
-  },
+export const createEnergyIconStyles = (theme: Theme) =>
+  StyleSheet.create({
+    iconRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.xxs,
+    },
   badge: {
     borderRadius: layout.borderRadius.md,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: spacing.xxs,
+    position: "relative",
+  },
+  badgeIcon: {
+    position: "absolute",
+  },
+  badgeIconSm: {
+    top: 4,
+    left: 4,
+  },
+  badgeIconMd: {
+    top: 8,
+    left: 8,
+  },
+  badgeIconLg: {
+    top: 10,
+    left: 10,
   },
   badgeCount: {
-    color: colors.white,
+    position: "absolute",
+    color: theme.colors.buttonText,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.bold,
   },
-});
+  badgeCountSm: {
+    right: 4,
+    bottom: 4,
+  },
+  badgeCountMd: {
+    right: 8,
+    bottom: 8,
+  },
+  badgeCountLg: {
+    right: 10,
+    bottom: 10,
+  },
+  });
 
 export const energyIconSizes = {
   sm: layout.energyBadge.iconSm,
   md: layout.energyBadge.iconMd,
   lg: layout.energyBadge.iconLg,
+  xl: layout.icon.xxl,
 };
 
 export const energyBadgeSizes = {

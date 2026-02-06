@@ -129,16 +129,10 @@ app/
   (screens)/
     Home/
       HomeScreen.tsx
-      HomeHeader.tsx
-      home.styles.ts
     Game/
       GameScreen.tsx
-      GameHeader.tsx
-      GameTabs.tsx
-      game.styles.ts
     Settings/
       SettingsScreen.tsx
-      settings.styles.ts
     _types.ts
 
 components/
@@ -168,6 +162,9 @@ components/
     Header.tsx
     Footer.tsx
   domain/
+    home/
+      HomeHeader.tsx
+      home.styles.ts
     game/
       EnergyPool/
         EnergyPool.tsx
@@ -181,8 +178,14 @@ components/
       PlayerArea/
         PlayerArea.tsx
         playerArea.styles.ts
+      GameHeader.tsx
+      GameTabs.tsx
+      game.styles.ts
+      gameHeader.styles.ts
+      gameTabs.styles.ts
       game.types.ts
     settings/
+      settings.styles.ts
       ThemeToggle.tsx
     tutorial/
       TutorialPager.tsx

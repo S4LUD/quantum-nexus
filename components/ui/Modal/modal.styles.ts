@@ -1,22 +1,24 @@
-import { colors } from "@/constants/colors";
 import { spacing } from "@/constants/spacing";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const modalStyles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: colors.blackAlpha70,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  backdropPress: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  content: {
-    width: "100%",
-    alignSelf: "stretch",
-    pointerEvents: "box-none",
-  },
-});
+export function createModalStyles(theme: Theme) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: theme.colors.overlay,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.md,
+    },
+    backdropPress: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    content: {
+      width: "100%",
+      alignSelf: "stretch",
+      pointerEvents: "box-none",
+    },
+  });
+}

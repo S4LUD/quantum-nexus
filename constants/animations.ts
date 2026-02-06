@@ -3,5 +3,5 @@ export const animations = {
   normal: 200,
   slow: 320,
   botNotice: 2200,
-  botTurnDelay: 700,
+  botTurnDelay: 850,
 };

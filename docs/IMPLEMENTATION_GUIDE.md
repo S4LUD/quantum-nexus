@@ -92,7 +92,7 @@ You now have the **foundation of a legally-compliant game** that eliminates all 
 
 **NEW (Quantum Nexus)**: Multiple win conditions
 - **Efficiency Threshold**: 20+ efficiency after turn 20
-- **Network Size**: 12+ nodes built
+- **Network Size**: 2P: 13 / 3P: 15 / 4P: 17 nodes built
 - **Protocol Mastery**: 3+ protocols claimed
 - Variable/hidden scoring elements
 

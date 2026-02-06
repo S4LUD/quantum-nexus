@@ -20,7 +20,7 @@ import {
   INITIAL_FLUX,
   WIN_TURN_THRESHOLD,
   WIN_EFFICIENCY_THRESHOLD,
-  WIN_NODES_THRESHOLD,
+  getWinNodesThreshold,
   WIN_PROTOCOLS_THRESHOLD,
   MAX_RESERVED_NODES,
   ENERGY_LIMIT,
@@ -106,7 +106,7 @@ export function createInitialGameState(
 
   return {
     players,
-    currentPlayerIndex: 0,
+    currentPlayerIndex: Math.floor(Math.random() * playerCount),
     energyPool: {
       solar: energyCount,
       hydro: energyCount,
@@ -265,7 +265,8 @@ export function checkWinConditions(gameState: GameState): Player | null {
   }
 
   const networkWinner = players.find(
-    (player) => player.nodes.length >= WIN_NODES_THRESHOLD,
+    (player) =>
+      player.nodes.length >= getWinNodesThreshold(gameState.players.length),
   );
   if (networkWinner) {
     return networkWinner;
@@ -593,7 +594,6 @@ export function applyProtocolClaim(
     { ...protocol, claimed: true },
   ];
   newPlayer.efficiency += protocol.efficiency;
-  newPlayer.pendingEffects.multiplier = {};
 
   const protocolIndex = newState.protocols.findIndex(
     (p) => p.id === protocol.id,

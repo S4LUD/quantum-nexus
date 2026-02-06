@@ -10,5 +10,14 @@ export const ENERGY_LIMIT = 10;
 
 export const WIN_EFFICIENCY_THRESHOLD = 20;
 export const WIN_TURN_THRESHOLD = 20;
-export const WIN_NODES_THRESHOLD = 12;
 export const WIN_PROTOCOLS_THRESHOLD = 3;
+
+export const WIN_NODES_BY_PLAYERS: Record<number, number> = {
+  2: 13,
+  3: 15,
+  4: 17,
+};
+
+export function getWinNodesThreshold(playerCount: number): number {
+  return WIN_NODES_BY_PLAYERS[playerCount] || WIN_NODES_BY_PLAYERS[4];
+}

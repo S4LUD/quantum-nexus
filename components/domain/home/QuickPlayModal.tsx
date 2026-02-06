@@ -4,8 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BotDifficulty } from "@/types";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
-import { quickPlayModalStyles } from "./quickPlayModal.styles";
-import { gradients } from "@/constants/colors";
+import { createQuickPlayModalStyles } from "./quickPlayModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface QuickPlayModalProps {
   botCount: number;
@@ -25,6 +25,11 @@ export function QuickPlayModal({
   onSelectDifficulty,
   onStart,
 }: QuickPlayModalProps) {
+  const { theme } = useTheme();
+  const quickPlayModalStyles = useMemo(
+    () => createQuickPlayModalStyles(theme),
+    [theme],
+  );
   const handleStart = useCallback(() => {
     onStart();
   }, [onStart]);
@@ -50,7 +55,7 @@ export function QuickPlayModal({
         </Pressable>
       );
     },
-    [botCount, onSelectBotCount],
+    [botCount, onSelectBotCount, quickPlayModalStyles],
   );
 
   const renderDifficulty = useCallback(
@@ -74,7 +79,7 @@ export function QuickPlayModal({
         </Pressable>
       );
     },
-    [botDifficulty, onSelectDifficulty],
+    [botDifficulty, onSelectDifficulty, quickPlayModalStyles],
   );
 
   const botCountOptions = useMemo(
@@ -88,7 +93,7 @@ export function QuickPlayModal({
 
   return (
     <LinearGradient
-      colors={gradients.modalBackground}
+      colors={theme.gradients.modalBackground}
       style={quickPlayModalStyles.gradient}
     >
       <View style={quickPlayModalStyles.container}>

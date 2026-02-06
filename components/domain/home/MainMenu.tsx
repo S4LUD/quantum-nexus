@@ -3,10 +3,10 @@ import { Animated, Easing, Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Play, Users, BookOpen, Settings, Trophy } from "lucide-react-native";
 import { Text } from "@/components/ui/Text/Text";
-import { colors, gradients } from "@/constants/colors";
 import { layout } from "@/constants/layout";
-import { mainMenuStyles } from "./mainMenu.styles";
+import { createMainMenuStyles } from "./mainMenu.styles";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { useTheme } from "@/hooks/useTheme";
 
 interface MainMenuProps {
   onQuickPlay: () => void;
@@ -40,6 +40,8 @@ export function MainMenu({
   onTutorial,
   onSettings,
 }: MainMenuProps) {
+  const { theme } = useTheme();
+  const mainMenuStyles = useMemo(() => createMainMenuStyles(theme), [theme]);
   const particlesRef = useRef<ParticleConfig[] | null>(null);
   if (!particlesRef.current) {
     particlesRef.current = createParticles();
@@ -127,7 +129,7 @@ export function MainMenu({
         title: "Quick Play",
         subtitle: "Start solo game",
         icon: Play,
-        gradient: gradients.primaryButton,
+        gradient: theme.gradients.primaryButton,
         onPress: handleQuickPlay,
       },
       {
@@ -135,7 +137,7 @@ export function MainMenu({
         title: "Multiplayer",
         subtitle: "Play with others",
         icon: Users,
-        gradient: gradients.secondaryButton,
+        gradient: theme.gradients.secondaryButton,
         onPress: handleDisabled,
         disabled: true,
       },
@@ -144,12 +146,12 @@ export function MainMenu({
         title: "Tutorial",
         subtitle: "Learn how to play",
         icon: BookOpen,
-        gradient: gradients.tabBar,
+        gradient: theme.gradients.tabBar,
         onPress: handleTutorial,
         isGlass: true,
       },
     ],
-    [handleDisabled, handleQuickPlay, handleTutorial],
+    [handleDisabled, handleQuickPlay, handleTutorial, theme.gradients],
   );
 
   const bottomActions = useMemo(
@@ -183,7 +185,7 @@ export function MainMenu({
       ]}
     >
       <LinearGradient
-        colors={action.isGlass ? gradients.tabBar : action.gradient}
+        colors={action.isGlass ? theme.gradients.tabBar : action.gradient}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
         style={mainMenuStyles.actionGradient}
@@ -191,12 +193,26 @@ export function MainMenu({
         <Icon
           icon={action.icon}
           size={layout.icon.lg}
-          color={colors.white}
+          color={action.isGlass ? theme.colors.text : theme.colors.buttonText}
           fill="none"
         />
         <View style={mainMenuStyles.actionText}>
-          <Text style={mainMenuStyles.actionTitle}>{action.title}</Text>
-          <Text style={mainMenuStyles.actionSubtitle}>{action.subtitle}</Text>
+          <Text
+            style={[
+              mainMenuStyles.actionTitle,
+              action.isGlass ? mainMenuStyles.actionTitleGlass : null,
+            ]}
+          >
+            {action.title}
+          </Text>
+          <Text
+            style={[
+              mainMenuStyles.actionSubtitle,
+              action.isGlass ? mainMenuStyles.actionSubtitleGlass : null,
+            ]}
+          >
+            {action.subtitle}
+          </Text>
         </View>
         {action.key === "multi" ? (
           <View style={mainMenuStyles.inProgressBadge}>
@@ -220,7 +236,7 @@ export function MainMenu({
       <Icon
         icon={action.icon}
         size={layout.icon.md}
-        color={colors.white}
+        color={theme.colors.text}
         fill="none"
       />
       <Text style={mainMenuStyles.bottomLabel}>{action.label}</Text>

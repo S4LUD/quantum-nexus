@@ -6,9 +6,11 @@ import { layout } from "@/constants/layout";
 import { canClaimProtocol } from "@/logic/gameEngine";
 import { EnergyIcon } from "../EnergyPool/EnergyIcon";
 import { Protocol, Player, EnergyType } from "../game.types";
-import { protocolCardStyles } from "./protocolCard.styles";
+import { createProtocolCardStyles } from "./protocolCard.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { useTheme } from "@/hooks/useTheme";
+import { useMemo } from "react";
 
 interface ProtocolCardProps {
   protocol: Protocol;
@@ -23,6 +25,11 @@ export function ProtocolCard({
   onPress,
   compact = false,
 }: ProtocolCardProps) {
+  const { theme } = useTheme();
+  const protocolCardStyles = useMemo(
+    () => createProtocolCardStyles(theme),
+    [theme],
+  );
   const canClaim = player ? canClaimProtocol(protocol, player) : false;
   const isClaimed = protocol.claimed;
 
@@ -32,7 +39,7 @@ export function ProtocolCard({
         colors={gradients.protocolActive}
         style={protocolCardStyles.compactContainer}
       >
-        <Award color={colors.white} size={layout.icon.md} />
+        <Award color={theme.colors.text} size={layout.icon.md} />
         <Text style={protocolCardStyles.compactLabel}>{protocol.name}</Text>
         <View style={protocolCardStyles.compactValueRow}>
           <Text style={protocolCardStyles.compactValue}>
@@ -41,7 +48,8 @@ export function ProtocolCard({
           <Icon
             icon={Star}
             size={layout.icon.sm}
-            color={colors.white}
+            color={theme.colors.text}
+            fill="none"
           />
         </View>
       </LinearGradient>
@@ -52,7 +60,7 @@ export function ProtocolCard({
     ? gradients.protocolClaimed
     : canClaim
       ? gradients.protocolActive
-      : gradients.bottomBar;
+      : theme.gradients.bottomBar;
 
   const handlePress = () => {
     if (canClaim && !isClaimed && onPress) {
@@ -65,7 +73,7 @@ export function ProtocolCard({
     ? colors.green400
     : canClaim
       ? colors.yellow400
-      : colors.gray400;
+      : theme.colors.textSubtle;
 
   return (
     <Pressable
@@ -91,6 +99,7 @@ export function ProtocolCard({
                 icon={Star}
                 size={layout.icon.sm}
                 color={colors.yellow400}
+                fill="none"
               />
             </View>
             <Text style={protocolCardStyles.efficiencyLabel}>Efficiency</Text>

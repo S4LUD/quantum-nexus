@@ -5,14 +5,16 @@ import { colors, gradients } from "@/constants/colors";
 import {
   energyBadgeSizes,
   energyIconSizes,
-  energyIconStyles,
+  createEnergyIconStyles,
 } from "./energyIcon.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { EnergyType } from "../game.types";
+import { useTheme } from "@/hooks/useTheme";
+import { useMemo } from "react";
 
 interface EnergyIconProps {
   type: EnergyType;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl" | number;
   count?: number;
   colored?: boolean;
 }
@@ -61,10 +63,16 @@ export function EnergyIcon({
   count,
   colored = false,
 }: EnergyIconProps) {
+  const { theme } = useTheme();
+  const energyIconStyles = useMemo(
+    () => createEnergyIconStyles(theme),
+    [theme],
+  );
   const config = iconConfig[type];
   const Icon = config.icon;
-  const iconSize = energyIconSizes[size];
-  const iconColor = colored ? config.color : colors.white;
+  const iconSize =
+    typeof size === "number" ? size : energyIconSizes[size];
+  const iconColor = colored ? config.color : theme.colors.text;
 
   return (
     <View style={energyIconStyles.iconRow}>
@@ -83,17 +91,45 @@ interface EnergyBadgeProps {
 }
 
 export function EnergyBadge({ type, count, size = "md" }: EnergyBadgeProps) {
+  const { theme } = useTheme();
+  const energyIconStyles = useMemo(
+    () => createEnergyIconStyles(theme),
+    [theme],
+  );
   const config = iconConfig[type];
   const Icon = config.icon;
   const badgeStyle = energyBadgeSizes[size];
+  const iconColor =
+    theme.mode === "light" ? theme.colors.buttonText : theme.colors.text;
+  const iconPositionStyle =
+    size === "sm"
+      ? energyIconStyles.badgeIconSm
+      : size === "lg"
+        ? energyIconStyles.badgeIconLg
+        : energyIconStyles.badgeIconMd;
+  const countPositionStyle =
+    size === "sm"
+      ? energyIconStyles.badgeCountSm
+      : size === "lg"
+        ? energyIconStyles.badgeCountLg
+        : energyIconStyles.badgeCountMd;
 
   return (
     <LinearGradient
       colors={config.gradient}
       style={[energyIconStyles.badge, badgeStyle.container]}
     >
-      <Icon color={colors.white} size={badgeStyle.icon} />
-      <Text style={energyIconStyles.badgeCount}>{String(count)}</Text>
+      <Icon
+        color={iconColor}
+        size={badgeStyle.icon}
+        fill="none"
+        style={[energyIconStyles.badgeIcon, iconPositionStyle]}
+      />
+      <Text
+        style={[energyIconStyles.badgeCount, countPositionStyle]}
+      >
+        {String(count)}
+      </Text>
     </LinearGradient>
   );
 }

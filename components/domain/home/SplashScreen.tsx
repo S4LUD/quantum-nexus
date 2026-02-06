@@ -1,12 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Animated, Easing, View } from "react-native";
 import { Hexagon, Zap } from "lucide-react-native";
 import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
-import { splashStyles } from "./splash.styles";
+import { createSplashStyles } from "./splash.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
+import { useTheme } from "@/hooks/useTheme";
 
 interface SplashScreenProps {
   onStart: () => void;
@@ -34,6 +35,8 @@ const PARTICLE_COLORS = [
 ];
 
 export function SplashScreen({ onStart }: SplashScreenProps) {
+  const { theme } = useTheme();
+  const splashStyles = useMemo(() => createSplashStyles(theme), [theme]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const logoFloat = useRef(new Animated.Value(0)).current;
 

@@ -3,7 +3,8 @@ import { Modal, Pressable, View } from "react-native";
 import { EnergyType } from "../game.types";
 import { EnergyBadge } from "../EnergyPool/EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
-import { swapModalStyles } from "./swapModal.styles";
+import { createSwapModalStyles } from "./swapModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface SwapModalProps {
   isOpen: boolean;
@@ -22,6 +23,8 @@ export function SwapModal({
   onConfirm,
   onSkip,
 }: SwapModalProps) {
+  const { theme } = useTheme();
+  const swapModalStyles = useMemo(() => createSwapModalStyles(theme), [theme]);
   const [giveSelection, setGiveSelection] = useState<EnergyType[]>([]);
   const [takeSelection, setTakeSelection] = useState<EnergyType[]>([]);
 
@@ -156,7 +159,7 @@ export function SwapModal({
         </Pressable>
       );
     },
-    [giveCounts, handleToggleGive, playerEnergy],
+    [giveCounts, handleToggleGive, playerEnergy, swapModalStyles],
   );
 
   const renderTakeButton = useCallback(
@@ -186,7 +189,7 @@ export function SwapModal({
         </Pressable>
       );
     },
-    [handleToggleTake, poolEnergy, takeCounts],
+    [handleToggleTake, poolEnergy, swapModalStyles, takeCounts],
   );
 
   const canConfirm = totalGive === totalTake && totalGive > 0;

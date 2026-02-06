@@ -1,8 +1,8 @@
 import { Dimensions, StyleSheet, TextStyle, ViewStyle } from "react-native";
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
+import { Theme } from "@/constants/theme";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -55,19 +55,25 @@ type TutorialPagerStyles = {
   footerButtonPrimary: ViewStyle;
   footerButtonSuccess: ViewStyle;
   footerLabel: TextStyle;
+  footerLabelOnPrimary: TextStyle;
   dots: ViewStyle;
   dot: ViewStyle;
   dotActive: ViewStyle;
 };
 
-export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
+export const createTutorialPagerStyles = (theme: Theme) => {
+  const panelBackground =
+    theme.mode === "light" ? "rgba(15,23,43,0.06)" : theme.colors.surfaceMuted;
+  const accentAlpha = theme.mode === "light" ? 0.16 : 0.2;
+
+  return StyleSheet.create<TutorialPagerStyles>({
   wrapper: {
     width: "100%",
     maxHeight: screenHeight * 0.85,
     borderRadius: layout.borderRadius.lg,
     borderWidth: layout.borderWidth.thin,
-    borderColor: colors.whiteAlpha20,
-    backgroundColor: colors.slate900,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
     overflow: "hidden",
   },
   header: {
@@ -76,10 +82,10 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     justifyContent: "space-between",
     padding: spacing.md,
     borderBottomWidth: layout.borderWidth.thin,
-    borderBottomColor: colors.whiteAlpha10,
+    borderBottomColor: theme.colors.borderSubtle,
   },
   headerTitle: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.lg,
     lineHeight: typography.lineHeight.lg,
     fontFamily: typography.fontFamily.bold,
@@ -103,35 +109,35 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     gap: spacing.md,
   },
   callout: {
-    backgroundColor: colors.purple500 + "33",
+    backgroundColor: panelBackground,
     borderRadius: layout.borderRadius.lg,
     padding: spacing.md,
     gap: spacing.xs,
   },
   calloutTitle: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.md,
     lineHeight: typography.lineHeight.md,
     fontFamily: typography.fontFamily.bold,
   },
   bodyText: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
   },
   bodyMuted: {
-    color: colors.whiteAlpha75,
+    color: theme.colors.textMuted,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
   },
   bodyStrong: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.bold,
   },
   listItem: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
   },
@@ -145,7 +151,7 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     gap: spacing.xxs,
   },
   listInlineText: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
   },
@@ -163,42 +169,42 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     borderRadius: layout.borderRadius.lg,
   },
   energyTitle: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.md,
     lineHeight: typography.lineHeight.md,
     fontFamily: typography.fontFamily.bold,
   },
   energySubtitle: {
-    color: colors.whiteAlpha75,
+    color: theme.colors.textMuted,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
   },
   energySolar: {
-    backgroundColor: colors.yellow500 + "33",
+    backgroundColor: `rgba(240,177,0,${accentAlpha})`,
   },
   energyHydro: {
-    backgroundColor: colors.cyan500 + "33",
+    backgroundColor: `rgba(0,184,219,${accentAlpha})`,
   },
   energyPlasma: {
-    backgroundColor: colors.pink500 + "33",
+    backgroundColor: `rgba(246,51,154,${accentAlpha})`,
   },
   energyNeural: {
-    backgroundColor: colors.green500 + "33",
+    backgroundColor: `rgba(0,201,80,${accentAlpha})`,
   },
   energyFlux: {
-    backgroundColor: colors.purple500 + "33",
+    backgroundColor: `rgba(173,70,255,${accentAlpha})`,
   },
   cardList: {
     gap: spacing.sm,
   },
   card: {
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: panelBackground,
     borderRadius: layout.borderRadius.lg,
     padding: spacing.md,
     gap: spacing.xs,
   },
   cardTitle: {
-    color: colors.white,
+    color: theme.colors.text,
     fontSize: typography.size.md,
     lineHeight: typography.lineHeight.md,
     fontFamily: typography.fontFamily.bold,
@@ -212,41 +218,41 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     gap: spacing.xs,
   },
   protocolRequirements: {
-    backgroundColor: colors.cyan500 + "33",
+    backgroundColor: `rgba(0,184,219,${accentAlpha})`,
   },
   protocolClaiming: {
-    backgroundColor: colors.purple500 + "33",
+    backgroundColor: `rgba(173,70,255,${accentAlpha})`,
   },
   protocolBenefits: {
-    backgroundColor: colors.yellow500 + "33",
+    backgroundColor: `rgba(240,177,0,${accentAlpha})`,
   },
   nodeList: {
     gap: spacing.sm,
   },
   nodeRow: {
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: panelBackground,
     borderRadius: layout.borderRadius.lg,
     padding: spacing.md,
     gap: spacing.xxs,
   },
   nodeResearch: {
-    backgroundColor: colors.blue500 + "33",
+    backgroundColor: `rgba(43,127,255,${accentAlpha})`,
   },
   nodeProduction: {
-    backgroundColor: colors.purple500 + "33",
+    backgroundColor: `rgba(173,70,255,${accentAlpha})`,
   },
   nodeNetwork: {
-    backgroundColor: colors.orange500 + "33",
+    backgroundColor: `rgba(255,105,0,${accentAlpha})`,
   },
   nodeControl: {
-    backgroundColor: colors.green500 + "33",
+    backgroundColor: `rgba(0,201,80,${accentAlpha})`,
   },
   footer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderTopWidth: layout.borderWidth.thin,
-    borderTopColor: colors.whiteAlpha10,
+    borderTopColor: theme.colors.borderSubtle,
     padding: spacing.md,
   },
   footerButtonBase: {
@@ -260,19 +266,25 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     borderRadius: layout.borderRadius.md,
   },
   footerButton: {
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: theme.mode === "light" ? "#F3F4F6" : theme.colors.surfaceMuted,
   },
   footerButtonDisabled: {
     opacity: 0.3,
   },
   footerButtonPrimary: {
-    backgroundColor: colors.purple600,
+    backgroundColor: theme.mode === "light" ? "#F3F4F6" : theme.colors.surfaceAlt,
   },
   footerButtonSuccess: {
-    backgroundColor: colors.green600,
+    backgroundColor: "#16A34A",
   },
   footerLabel: {
-    color: colors.white,
+    color: theme.colors.text,
+    fontSize: typography.size.sm,
+    lineHeight: typography.lineHeight.sm,
+    fontFamily: typography.fontFamily.medium,
+  },
+  footerLabelOnPrimary: {
+    color: theme.colors.buttonText,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.medium,
@@ -288,10 +300,11 @@ export const tutorialPagerStyles = StyleSheet.create<TutorialPagerStyles>({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.whiteAlpha30,
+    backgroundColor: theme.colors.textSubtle,
   },
   dotActive: {
     width: 24,
-    backgroundColor: colors.purple400,
+    backgroundColor: theme.colors.text,
   },
-});
+  });
+};

@@ -17,13 +17,13 @@ import {
 } from "@/logic/gameEngine";
 import { ENERGY_LIMIT } from "@/logic/rules";
 import { getTotalEnergy } from "@/logic/selectors";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { EnergyPool } from "./EnergyPool/EnergyPool";
 import { EnergyDiscardModal } from "./EnergyPool/EnergyDiscardModal";
 import { ExchangeModal } from "./EnergyPool/ExchangeModal";
 import { GameState, Player, EnergyType, Protocol, Node } from "./game.types";
-import { gameBoardStyles } from "./gameBoard.styles";
+import { createGameBoardStyles } from "./gameBoard.styles";
 import { NodeCard } from "./NodeCard/NodeCard";
 import { NodeDetailModal } from "./NodeCard/NodeDetailModal";
 import { PlayerArea } from "./PlayerArea/PlayerArea";
@@ -32,6 +32,8 @@ import { Text } from "@/components/ui/Text/Text";
 import { AlertModal } from "@/components/ui/Modal/AlertModal";
 import { DrawModal } from "./Effects/DrawModal";
 import { SwapModal } from "./Effects/SwapModal";
+import { useTheme } from "@/hooks/useTheme";
+import { useSound } from "@/hooks/useSound";
 
 interface GameBoardProps {
   gameState: GameState;
@@ -46,6 +48,9 @@ export function GameBoard({
   onUpdateGameState,
   onEndGame,
 }: GameBoardProps) {
+  const { theme } = useTheme();
+  const { play } = useSound();
+  const gameBoardStyles = useMemo(() => createGameBoardStyles(theme), [theme]);
   const [selectedEnergy, setSelectedEnergy] = useState<EnergyType[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [isNodeModalOpen, setIsNodeModalOpen] = useState(false);
@@ -53,15 +58,19 @@ export function GameBoard({
   const [discardCount, setDiscardCount] = useState(0);
   const [discardSelection, setDiscardSelection] = useState<EnergyType[]>([]);
   const [pendingDraw, setPendingDraw] = useState<Node[] | null>(null);
-  const [pendingDrawCategory, setPendingDrawCategory] = useState<Node["category"] | null>(
+  const [pendingDrawCategory, setPendingDrawCategory] = useState<
+    Node["category"] | null
+  >(null);
+  const [pendingSwap, setPendingSwap] = useState(0);
+  const [postEffectState, setPostEffectState] = useState<GameState | null>(
     null,
   );
-  const [pendingSwap, setPendingSwap] = useState(0);
-  const [postEffectState, setPostEffectState] = useState<GameState | null>(null);
   const [isExchangeOpen, setIsExchangeOpen] = useState(false);
   const [exchangeMode, setExchangeMode] = useState<"one" | "two">("one");
-  const [exchangeTakeType, setExchangeTakeType] =
-    useState<Exclude<EnergyType, "flux"> | null>(null);
+  const [exchangeTakeType, setExchangeTakeType] = useState<Exclude<
+    EnergyType,
+    "flux"
+  > | null>(null);
   const [exchangeGiveSelection, setExchangeGiveSelection] = useState<
     Exclude<EnergyType, "flux">[]
   >([]);
@@ -70,20 +79,45 @@ export function GameBoard({
     title: "",
     message: "",
   });
+  const modalStateRef = useRef({
+    node: false,
+    exchange: false,
+    draw: false,
+    swap: false,
+  });
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
   const isPlayerTurn = !currentPlayer.isBot;
 
   const openAlert = useCallback((title: string, message: string) => {
+    play("error_pop");
     setAlertState({ isOpen: true, title, message });
-  }, []);
+  }, [play]);
 
   const handleCloseAlert = useCallback(() => {
     setAlertState((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
+  const advanceTurn = useCallback(
+    (nextState: GameState) => {
+      const winner = checkWinConditions(nextState);
+      if (winner) {
+        onEndGame(winner);
+        return;
+      }
+
+      const updatedState = { ...nextState };
+      updatedState.currentPlayerIndex =
+        (updatedState.currentPlayerIndex + 1) % updatedState.players.length;
+      updatedState.turnCount = (updatedState.turnCount || 0) + 1;
+
+      onUpdateGameState(updatedState);
+    },
+    [onEndGame, onUpdateGameState],
+  );
 
   function handleEnergyToggle(type: EnergyType) {
+    play("secondary_click");
     setSelectedEnergy((prev) => {
       const countOfType = prev.filter((item) => item === type).length;
       if (countOfType === 2) {
@@ -162,10 +196,7 @@ export function GameBoard({
     );
     const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
     if (mustDiscardEnergy(updatedPlayer)) {
-      const overBy = Math.max(
-        getTotalEnergy(updatedPlayer) - ENERGY_LIMIT,
-        0,
-      );
+      const overBy = Math.max(getTotalEnergy(updatedPlayer) - ENERGY_LIMIT, 0);
       onUpdateGameState(nextState);
       setIsDiscarding(true);
       setDiscardCount(overBy);
@@ -175,6 +206,7 @@ export function GameBoard({
     }
 
     setSelectedEnergy([]);
+    play("primary_click");
     advanceTurn(nextState);
   }
 
@@ -196,13 +228,10 @@ export function GameBoard({
     setIsExchangeOpen(false);
   }, []);
 
-  const handleExchangeModeChange = useCallback(
-    (mode: "one" | "two") => {
-      setExchangeMode(mode);
-      setExchangeGiveSelection([]);
-    },
-    [],
-  );
+  const handleExchangeModeChange = useCallback((mode: "one" | "two") => {
+    setExchangeMode(mode);
+    setExchangeGiveSelection([]);
+  }, []);
 
   const handleExchangeTakeType = useCallback(
     (type: Exclude<EnergyType, "flux">) => {
@@ -261,6 +290,7 @@ export function GameBoard({
       exchangeGiveSelection,
     );
     setIsExchangeOpen(false);
+    play("primary_click");
     advanceTurn(nextState);
   }, [
     advanceTurn,
@@ -270,6 +300,7 @@ export function GameBoard({
     exchangeTakeType,
     gameState,
     openAlert,
+    play,
   ]);
 
   const handleNodePress = useCallback(
@@ -322,6 +353,7 @@ export function GameBoard({
     );
     setIsNodeModalOpen(false);
     setSelectedNode(null);
+    play("success_sparkle");
 
     const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
     if (updatedPlayer.pendingEffects.draw > 0) {
@@ -407,6 +439,7 @@ export function GameBoard({
     );
     setIsNodeModalOpen(false);
     setSelectedNode(null);
+    play("secondary_click");
     advanceTurn(nextState);
   }
 
@@ -419,26 +452,9 @@ export function GameBoard({
       return;
     }
     const nextState = applyProtocolClaim(gameState, currentPlayer, protocol);
+    play("success_sparkle");
     advanceTurn(nextState);
   }
-
-  const advanceTurn = useCallback(
-    (nextState: GameState) => {
-      const winner = checkWinConditions(nextState);
-      if (winner) {
-        onEndGame(winner);
-        return;
-      }
-
-      const updatedState = { ...nextState };
-      updatedState.currentPlayerIndex =
-        (updatedState.currentPlayerIndex + 1) % updatedState.players.length;
-      updatedState.turnCount = (updatedState.turnCount || 0) + 1;
-
-      onUpdateGameState(updatedState);
-    },
-    [onEndGame, onUpdateGameState],
-  );
 
   function handleCloseNodeModal() {
     setIsNodeModalOpen(false);
@@ -476,6 +492,7 @@ export function GameBoard({
     setIsDiscarding(false);
     setDiscardSelection([]);
     setDiscardCount(0);
+    play("primary_click");
     advanceTurn(nextState);
   }
 
@@ -500,17 +517,17 @@ export function GameBoard({
       }
       advanceTurn(nextState);
       setPostEffectState(null);
+      play("secondary_click");
     },
-    [advanceTurn, pendingDrawCategory, postEffectState],
+    [advanceTurn, pendingDrawCategory, play, postEffectState],
   );
 
   const handleDrawSkip = useCallback(() => {
     if (!postEffectState) {
       return;
     }
-    const updatedPlayer = postEffectState.players[
-      postEffectState.currentPlayerIndex
-    ];
+    const updatedPlayer =
+      postEffectState.players[postEffectState.currentPlayerIndex];
     const nextState = {
       ...postEffectState,
       players: postEffectState.players.map((player, index) => {
@@ -532,7 +549,8 @@ export function GameBoard({
     }
     advanceTurn(nextState);
     setPostEffectState(null);
-  }, [advanceTurn, postEffectState]);
+    play("secondary_click");
+  }, [advanceTurn, play, postEffectState]);
 
   const handleSwapConfirm = useCallback(
     (give: EnergyType[], take: EnergyType[]) => {
@@ -547,9 +565,10 @@ export function GameBoard({
       );
       setPendingSwap(0);
       setPostEffectState(null);
+      play("primary_click");
       advanceTurn(nextState);
     },
-    [advanceTurn, postEffectState],
+    [advanceTurn, play, postEffectState],
   );
 
   const handleSwapSkip = useCallback(() => {
@@ -570,8 +589,31 @@ export function GameBoard({
     };
     setPendingSwap(0);
     setPostEffectState(null);
+    play("secondary_click");
     advanceTurn(nextState);
-  }, [advanceTurn, postEffectState]);
+  }, [advanceTurn, play, postEffectState]);
+
+  useEffect(() => {
+    const drawOpen = Boolean(pendingDraw && pendingDraw.length > 0);
+    const swapOpen = Boolean(pendingSwap > 0 && postEffectState);
+    const prev = modalStateRef.current;
+    if (prev.node !== isNodeModalOpen) {
+      play("modal_whoosh");
+      prev.node = isNodeModalOpen;
+    }
+    if (prev.exchange !== isExchangeOpen) {
+      play("modal_whoosh");
+      prev.exchange = isExchangeOpen;
+    }
+    if (prev.draw !== drawOpen) {
+      play("modal_whoosh");
+      prev.draw = drawOpen;
+    }
+    if (prev.swap !== swapOpen) {
+      play("modal_whoosh");
+      prev.swap = swapOpen;
+    }
+  }, [isExchangeOpen, isNodeModalOpen, pendingDraw, pendingSwap, play, postEffectState]);
 
   const marketRows = useMemo(() => {
     const categories = ["Research", "Production", "Network", "Control"];
@@ -590,13 +632,16 @@ export function GameBoard({
       return (
         <View
           key={node.id}
-          style={!isPlayerTurn ? gameBoardStyles.disabledBlock : null}
+          style={{ paddingBottom: 11.5 }}
           pointerEvents={isPlayerTurn ? "auto" : "none"}
         >
           <NodeCard
             node={node}
             onPress={isPlayerTurn ? handlePress : undefined}
-            isAffordable={canAffordNode(node, currentPlayer)}
+            showTitle={false}
+            isAffordable={
+              isPlayerTurn ? canAffordNode(node, currentPlayer) : false
+            }
           />
         </View>
       );
@@ -621,11 +666,7 @@ export function GameBoard({
   const protocolCards = gameState.protocols.map((protocol) => {
     const handlePress = () => handleProtocolClaim(protocol);
     return (
-      <View
-        key={protocol.id}
-        style={!isPlayerTurn ? gameBoardStyles.disabledBlock : null}
-        pointerEvents={isPlayerTurn ? "auto" : "none"}
-      >
+      <View key={protocol.id} pointerEvents={isPlayerTurn ? "auto" : "none"}>
         <ProtocolCard
           protocol={protocol}
           player={currentPlayer}
@@ -653,7 +694,10 @@ export function GameBoard({
   return (
     <View style={gameBoardStyles.container}>
       {selectedTab === "market" ? (
-        <ScrollView contentContainerStyle={gameBoardStyles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={gameBoardStyles.scrollContent}
+        >
           <EnergyPool
             energyPool={gameState.energyPool}
             selectedEnergy={selectedEnergy}
@@ -667,13 +711,19 @@ export function GameBoard({
       ) : null}
 
       {selectedTab === "protocols" ? (
-        <ScrollView contentContainerStyle={gameBoardStyles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={gameBoardStyles.scrollContent}
+        >
           {protocolCards}
         </ScrollView>
       ) : null}
 
       {selectedTab === "players" ? (
-        <ScrollView contentContainerStyle={gameBoardStyles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={gameBoardStyles.scrollContent}
+        >
           {playerAreas}
         </ScrollView>
       ) : null}

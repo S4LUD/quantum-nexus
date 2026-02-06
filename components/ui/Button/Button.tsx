@@ -1,14 +1,10 @@
 import { Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { gradients } from "@/constants/colors";
-import { buttonStyles } from "./button.styles";
+import { useMemo } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import { createButtonStyles } from "./button.styles";
 import { Text } from "../Text/Text";
 import { ButtonProps } from "./types";
-
-const gradientMap = {
-  primary: gradients.primaryButton,
-  secondary: gradients.secondaryButton,
-};
 
 export function Button({
   label,
@@ -18,7 +14,12 @@ export function Button({
   textStyle,
   disabled = false,
 }: ButtonProps) {
-  const gradientColors = gradientMap[variant];
+  const { theme } = useTheme();
+  const buttonStyles = useMemo(() => createButtonStyles(theme), [theme]);
+  const gradientColors =
+    variant === "secondary"
+      ? theme.gradients.secondaryButton
+      : theme.gradients.primaryButton;
   const pressableStyle = [
     buttonStyles.container,
     buttonStyles[variant],

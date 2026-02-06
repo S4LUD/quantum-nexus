@@ -8,7 +8,6 @@ import {
   ArrowRightLeft,
   Lock,
   CheckCircle,
-  Star,
 } from "lucide-react-native";
 import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
@@ -18,7 +17,8 @@ import { layout } from "@/constants/layout";
 import { canAffordNode, calculateNodeCost } from "@/logic/gameEngine";
 import { EnergyIcon } from "../EnergyPool/EnergyIcon";
 import { EnergyType, Node, NodeCategory, Player } from "../game.types";
-import { nodeDetailStyles } from "./nodeDetail.styles";
+import { createNodeDetailStyles } from "./nodeDetail.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface NodeDetailModalProps {
   node: Node;
@@ -37,6 +37,11 @@ export function NodeDetailModal({
   onBuild,
   onReserve,
 }: NodeDetailModalProps) {
+  const { theme } = useTheme();
+  const nodeDetailStyles = useMemo(
+    () => createNodeDetailStyles(theme),
+    [theme],
+  );
   const isAffordable = canAffordNode(node, player);
   const actualCost = calculateNodeCost(node, player);
   const isReserved = player.reservedNodes.some(
@@ -138,6 +143,21 @@ export function NodeDetailModal({
       },
     );
   }, [actualCost, baseCostByType]);
+  const discountEntries = useMemo(
+    () =>
+      (Object.entries(actualCost) as [EnergyType, number][])
+        .filter(([type, count]) => {
+          if (type === "flux") {
+            return false;
+          }
+          return count < baseCostByType[type];
+        })
+        .map(([type, count]) => ({
+          type,
+          amount: baseCostByType[type] - count,
+        })),
+    [actualCost, baseCostByType],
+  );
 
   const handleBuild = useCallback(() => {
     onBuild(node);
@@ -157,19 +177,14 @@ export function NodeDetailModal({
 
   const renderCostItem = useCallback(
     ([type, count]: [EnergyType, number]) => {
-      const baseValue = baseCostByType[type];
-      const hasDiscount = count !== baseValue;
       return (
-        <View key={type} style={nodeDetailStyles.costItem}>
+        <View key={type} style={nodeDetailStyles.energyItem}>
           <EnergyIcon type={type} size="sm" colored />
-          <Text style={nodeDetailStyles.costCount}>{String(count)}</Text>
-          {hasDiscount ? (
-            <Text style={nodeDetailStyles.costStrike}>{String(baseValue)}</Text>
-          ) : null}
+          <Text style={nodeDetailStyles.energyCount}>{String(count)}</Text>
         </View>
       );
     },
-    [baseCostByType],
+    [nodeDetailStyles.energyCount, nodeDetailStyles.energyItem],
   );
 
   const renderEnergyItem = useCallback(
@@ -189,7 +204,21 @@ export function NodeDetailModal({
         </View>
       );
     },
-    [actualCost],
+    [
+      actualCost,
+      nodeDetailStyles.energyCount,
+      nodeDetailStyles.energyItem,
+      nodeDetailStyles.energyItemAlert,
+    ],
+  );
+  const renderDiscountLine = useCallback(
+    ({ type, amount }: { type: EnergyType; amount: number }) => (
+      <View key={type} style={nodeDetailStyles.discountLine}>
+        <EnergyIcon type={type} size="sm" colored />
+        <Text style={nodeDetailStyles.discountValue}>-{amount}</Text>
+      </View>
+    ),
+    [nodeDetailStyles.discountLine, nodeDetailStyles.discountValue],
   );
 
   return (
@@ -212,184 +241,160 @@ export function NodeDetailModal({
                 colors={config.gradient}
                 style={nodeDetailStyles.sheetGradient}
               >
-                <View style={nodeDetailStyles.header}>
-                  <View style={nodeDetailStyles.headerLeft}>
-                    <CategoryIcon color={config.accent} size={layout.icon.lg} />
-                    <View>
-                      <Text style={nodeDetailStyles.headerTitle}>
-                        {config.label} Node
-                      </Text>
-                      <Text style={nodeDetailStyles.headerSubtitle}>
-                        ID: {node.id.toUpperCase()}
+                <Pressable
+                  onPress={handleClose}
+                  style={nodeDetailStyles.closeButton}
+                >
+                  <Icon icon={X} size={layout.icon.md} color={colors.white} />
+                </Pressable>
+
+                <View style={nodeDetailStyles.badgeRow}>
+                  <View style={nodeDetailStyles.categoryBadge}>
+                    <CategoryIcon color={config.accent} size={layout.icon.sm} />
+                    <Text style={nodeDetailStyles.badgeText}>
+                      {config.label} Node
+                    </Text>
+                  </View>
+                  {node.efficiency > 0 ? (
+                    <View style={nodeDetailStyles.efficiencyBadge}>
+                      <Text style={nodeDetailStyles.badgeText}>
+                        {node.efficiency} Efficiency
                       </Text>
                     </View>
-                  </View>
-                  <Pressable
-                    onPress={handleClose}
-                    style={nodeDetailStyles.closeButton}
-                  >
-                    <Icon icon={X} size={layout.icon.lg} color={colors.white} />
-                  </Pressable>
+                  ) : null}
                 </View>
 
-                <ScrollView
-                  style={nodeDetailStyles.sheetScroll}
-                  contentContainerStyle={nodeDetailStyles.sheetContent}
-                  showsVerticalScrollIndicator
-                >
-                  <View style={nodeDetailStyles.body}>
-                    {node.efficiency > 0 ? (
-                      <View style={nodeDetailStyles.efficiencyCard}>
-                        <View style={nodeDetailStyles.efficiencyValueRow}>
-                          <Text style={nodeDetailStyles.efficiencyValue}>
-                            {node.efficiency}
-                          </Text>
+                <View style={nodeDetailStyles.hero}>
+                  <EnergyIcon type={node.outputType} size="lg" colored />
+                  <Text style={nodeDetailStyles.heroTitle}>
+                    {node.outputType}
+                  </Text>
+                  <Text style={nodeDetailStyles.heroSubtitle}>
+                    Provides output
+                  </Text>
+                </View>
+              </LinearGradient>
+
+              <ScrollView
+                style={nodeDetailStyles.sheetScroll}
+                contentContainerStyle={nodeDetailStyles.sheetContent}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={nodeDetailStyles.body}>
+                  {node.effectType ? (
+                    <View style={nodeDetailStyles.section}>
+                      <Text style={nodeDetailStyles.sectionLabel}>
+                        Special Effect
+                      </Text>
+                      <View style={nodeDetailStyles.effectRow}>
+                        <View style={nodeDetailStyles.effectIcon}>
                           <Icon
-                            icon={Star}
-                            size={layout.icon.lg}
-                            color={colors.black}
+                            icon={Zap}
+                            size={layout.icon.md}
+                            color={config.accent}
                           />
                         </View>
-                        <Text style={nodeDetailStyles.efficiencyLabel}>
-                          Efficiency Value
-                        </Text>
-                      </View>
-                    ) : null}
-
-                    <View style={nodeDetailStyles.section}>
-                      <Text style={nodeDetailStyles.sectionLabel}>
-                        Output Generation
-                      </Text>
-                      <View style={nodeDetailStyles.sectionCard}>
-                      <EnergyIcon type={node.outputType} size="lg" colored />
-                        <View>
-                          <Text style={nodeDetailStyles.sectionTitle}>
-                            {node.outputType}
+                        <View style={nodeDetailStyles.effectContent}>
+                          <Text style={nodeDetailStyles.effectTitle}>
+                            {node.effectType}
                           </Text>
-                          <Text style={nodeDetailStyles.sectionSubtitle}>
-                            +1 per turn
+                          <Text style={nodeDetailStyles.effectText}>
+                            {effectDescriptions[node.effectType]}
                           </Text>
                         </View>
                       </View>
                     </View>
+                  ) : null}
 
-                    <View style={nodeDetailStyles.section}>
-                      <Text style={nodeDetailStyles.sectionLabel}>
-                        Energy Cost
-                      </Text>
-                      <View style={nodeDetailStyles.sectionPanel}>
-                        <View style={nodeDetailStyles.costRow}>
-                          {costEntries.map(renderCostItem)}
-                        </View>
-                        {discountsApplied ? (
-                          <Text style={nodeDetailStyles.discountNote}>
-                            Discounts applied from your network
-                          </Text>
-                        ) : null}
-                      </View>
+                  <View style={nodeDetailStyles.descriptionCard}>
+                    <Text style={nodeDetailStyles.descriptionText}>
+                      {config.description}
+                    </Text>
+                  </View>
+
+                  <View style={nodeDetailStyles.section}>
+                    <Text style={nodeDetailStyles.sectionLabel}>
+                      Energy Cost
+                    </Text>
+                    <View style={nodeDetailStyles.energyRow}>
+                      {costEntries.map(renderCostItem)}
                     </View>
-
-                    {node.effectType ? (
-                      <View style={nodeDetailStyles.section}>
-                        <Text style={nodeDetailStyles.sectionLabel}>
-                          Special Effect
+                    {discountsApplied ? (
+                      <View style={nodeDetailStyles.discountNote}>
+                        <Text style={nodeDetailStyles.discountTitle}>
+                          Discounts Applied
                         </Text>
-                        <View style={nodeDetailStyles.sectionPanel}>
-                          <View style={nodeDetailStyles.effectRow}>
-                            <View style={nodeDetailStyles.effectIcon}>
-                              <Icon
-                                icon={Zap}
-                                size={layout.icon.md}
-                                color={config.accent}
-                              />
-                            </View>
-                            <View style={nodeDetailStyles.effectContent}>
-                              <Text style={nodeDetailStyles.effectTitle}>
-                                {node.effectType}
-                              </Text>
-                              <Text style={nodeDetailStyles.effectText}>
-                                {effectDescriptions[node.effectType]}
-                              </Text>
-                            </View>
-                          </View>
+                        <View style={nodeDetailStyles.discountList}>
+                          {discountEntries.map(renderDiscountLine)}
                         </View>
                       </View>
                     ) : null}
+                  </View>
 
-                    <View style={nodeDetailStyles.descriptionCard}>
-                      <Text style={nodeDetailStyles.descriptionText}>
-                        {config.description}
-                      </Text>
-                    </View>
-
-                    <View style={nodeDetailStyles.section}>
-                      <Text style={nodeDetailStyles.sectionLabel}>
-                        Your Energy
-                      </Text>
-                      <View style={nodeDetailStyles.energyRow}>
-                        {energyEntries.map(renderEnergyItem)}
-                      </View>
+                  <View style={nodeDetailStyles.section}>
+                    <Text style={nodeDetailStyles.sectionLabel}>
+                      Your Energy
+                    </Text>
+                    <View style={nodeDetailStyles.energyRow}>
+                      {energyEntries.map(renderEnergyItem)}
                     </View>
                   </View>
-                </ScrollView>
+                </View>
+              </ScrollView>
 
-                <View style={nodeDetailStyles.footer}>
-                  <Pressable
-                    onPress={handleBuild}
-                    disabled={!isAffordable}
+              <View style={nodeDetailStyles.footer}>
+                <Pressable
+                  onPress={handleBuild}
+                  disabled={!isAffordable}
+                  style={[
+                    nodeDetailStyles.primaryButton,
+                    !isAffordable
+                      ? nodeDetailStyles.primaryButtonDisabled
+                      : null,
+                  ]}
+                >
+                  <Icon
+                    icon={isAffordable ? CheckCircle : Lock}
+                    size={layout.icon.md}
+                    color={
+                      isAffordable
+                        ? theme.colors.buttonText
+                        : theme.colors.textSubtle
+                    }
+                  />
+                  <Text
                     style={[
-                      nodeDetailStyles.primaryButton,
+                      nodeDetailStyles.primaryButtonText,
                       !isAffordable
-                        ? nodeDetailStyles.primaryButtonDisabled
+                        ? nodeDetailStyles.primaryButtonTextDisabled
                         : null,
                     ]}
                   >
-                    <Icon
-                      icon={isAffordable ? CheckCircle : Lock}
-                      size={layout.icon.md}
-                      color={
-                        isAffordable ? colors.purple900 : colors.whiteAlpha70
-                      }
-                    />
-                    <Text
-                      style={[
-                        nodeDetailStyles.primaryButtonText,
-                        !isAffordable
-                          ? nodeDetailStyles.primaryButtonTextDisabled
-                          : null,
-                      ]}
-                    >
-                      {isAffordable ? "Build Node" : "Insufficient Energy"}
+                    {isAffordable ? "Build Node" : "Insufficient Energy"}
+                  </Text>
+                </Pressable>
+
+                {!isReserved ? (
+                  <Pressable
+                    onPress={handleReserve}
+                    disabled={player.reservedNodes.length >= 3}
+                    style={[
+                      nodeDetailStyles.secondaryButton,
+                      player.reservedNodes.length >= 3
+                        ? nodeDetailStyles.secondaryButtonDisabled
+                        : null,
+                    ]}
+                  >
+                    <Text style={nodeDetailStyles.secondaryButtonText}>
+                      Reserve Node
                     </Text>
                   </Pressable>
-
-                  {!isReserved ? (
-                    <Pressable
-                      onPress={handleReserve}
-                      disabled={player.reservedNodes.length >= 3}
-                      style={[
-                        nodeDetailStyles.secondaryButton,
-                        player.reservedNodes.length >= 3
-                          ? nodeDetailStyles.secondaryButtonDisabled
-                          : null,
-                      ]}
-                    >
-                      <Text style={nodeDetailStyles.secondaryButtonText}>
-                        Reserve for Later
-                      </Text>
-                      {player.reservedNodes.length >= 3 ? (
-                        <Text style={nodeDetailStyles.secondaryButtonSuffix}>
-                          (Max 3)
-                        </Text>
-                      ) : null}
-                    </Pressable>
-                  ) : (
-                    <Text style={nodeDetailStyles.reservedNote}>
-                      Already in your reserved nodes
-                    </Text>
-                  )}
-                </View>
-              </LinearGradient>
+                ) : (
+                  <Text style={nodeDetailStyles.reservedNote}>
+                    Already in your reserved nodes
+                  </Text>
+                )}
+              </View>
             </View>
           </View>
         </View>

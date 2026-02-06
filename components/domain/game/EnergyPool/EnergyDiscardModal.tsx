@@ -3,7 +3,8 @@ import { Modal, Pressable, View } from "react-native";
 import { EnergyType } from "../game.types";
 import { EnergyBadge } from "./EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
-import { energyDiscardModalStyles } from "./energyDiscardModal.styles";
+import { createEnergyDiscardModalStyles } from "./energyDiscardModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface EnergyDiscardModalProps {
   isOpen: boolean;
@@ -22,6 +23,11 @@ export function EnergyDiscardModal({
   onToggleEnergy,
   onConfirm,
 }: EnergyDiscardModalProps) {
+  const { theme } = useTheme();
+  const energyDiscardModalStyles = useMemo(
+    () => createEnergyDiscardModalStyles(theme),
+    [theme],
+  );
   const energyTypes: EnergyType[] = [
     "solar",
     "hydro",

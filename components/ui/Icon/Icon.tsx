@@ -1,6 +1,6 @@
-import { ComponentType } from 'react';
-import { ViewStyle } from 'react-native';
-import { SvgProps } from 'react-native-svg';
+import { ComponentType } from "react";
+import { ViewStyle } from "react-native";
+import { SvgProps } from "react-native-svg";
 
 interface IconProps {
   icon: ComponentType<SvgProps>;
@@ -13,8 +13,8 @@ interface IconProps {
 export function Icon({
   icon: IconComponent,
   size = 20,
-  color = '#FFFFFF',
-  fill,
+  color = "#FFFFFF",
+  fill = "none",
   style,
 }: IconProps) {
   return (

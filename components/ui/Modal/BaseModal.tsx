@@ -1,6 +1,7 @@
-import { ReactNode, useCallback, useEffect, useRef } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Modal, Pressable, View } from "react-native";
-import { modalStyles } from "./modal.styles";
+import { useTheme } from "@/hooks/useTheme";
+import { createModalStyles } from "./modal.styles";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface BaseModalProps {
 }
 
 export function BaseModal({ isOpen, onClose, children }: BaseModalProps) {
+  const { theme } = useTheme();
+  const modalStyles = useMemo(() => createModalStyles(theme), [theme]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

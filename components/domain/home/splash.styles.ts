@@ -1,10 +1,11 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const splashStyles = StyleSheet.create({
+export const createSplashStyles = (theme: Theme) =>
+  StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
@@ -49,16 +50,16 @@ export const splashStyles = StyleSheet.create({
     fontSize: typography.size.xxxl,
     lineHeight: typography.lineHeight.xxxl,
     fontFamily: typography.fontFamily.bold,
-    color: colors.white,
+    color: theme.colors.text,
   },
   subtitle: {
-    color: colors.purple300,
+    color: theme.colors.textMuted,
     fontSize: typography.size.lg,
     lineHeight: typography.lineHeight.lg,
     fontFamily: typography.fontFamily.medium,
   },
   tagline: {
-    color: colors.whiteAlpha70,
+    color: theme.colors.textMuted,
     fontSize: typography.size.sm,
     lineHeight: typography.lineHeight.sm,
     fontFamily: typography.fontFamily.regular,
@@ -68,7 +69,7 @@ export const splashStyles = StyleSheet.create({
     width: "45%",
   },
   shadowWrapper: {
-    shadowColor: colors.purple500,
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 6 },
     elevation: 8,
   },

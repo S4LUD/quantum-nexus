@@ -14,8 +14,9 @@ import {
 import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { colors } from "@/constants/colors";
-import { tutorialPagerStyles } from "./tutorialPager.styles";
+import { createTutorialPagerStyles } from "./tutorialPager.styles";
 import { layout } from "@/constants/layout";
+import { useTheme } from "@/hooks/useTheme";
 
 interface TutorialPagerProps {
   onDone: () => void;
@@ -23,6 +24,11 @@ interface TutorialPagerProps {
 
 export function TutorialPager({ onDone }: TutorialPagerProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const { theme } = useTheme();
+  const tutorialPagerStyles = useMemo(
+    () => createTutorialPagerStyles(theme),
+    [theme],
+  );
 
   const pages = useMemo(
     () => [
@@ -52,13 +58,14 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                     size={layout.icon.sm}
                     color={colors.yellow400}
                     style={tutorialPagerStyles.listIcon}
+                    fill="none"
                   />
                   <Text style={tutorialPagerStyles.listInlineText}>
                     Efficiency after turn 20
                   </Text>
                 </View>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Build 12 or more Nodes
+                  • Build required Nodes (2P: 13 / 3P: 15 / 4P: 17)
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
                   • Claim 3 or more Protocols
@@ -380,35 +387,29 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
           <View style={tutorialPagerStyles.section}>
             <View style={tutorialPagerStyles.cardList}>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.bodyStrong}>
+                <Text style={tutorialPagerStyles.cardTitle}>
                   Multiple Paths to Victory
                 </Text>
-                <Text style={tutorialPagerStyles.bodyText}>
+                <Text style={tutorialPagerStyles.bodyMuted}>
                   Focus on efficiency, network size, or protocol mastery - or
                   mix strategies.
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.bodyStrong}>
-                  Flux is Powerful
-                </Text>
-                <Text style={tutorialPagerStyles.bodyText}>
+                <Text style={tutorialPagerStyles.cardTitle}>Flux is Powerful</Text>
+                <Text style={tutorialPagerStyles.bodyMuted}>
                   Use as wild energy, but limited supply. Reserve to gain Flux.
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.bodyStrong}>
-                  Node Effects Stack
-                </Text>
-                <Text style={tutorialPagerStyles.bodyText}>
+                <Text style={tutorialPagerStyles.cardTitle}>Node Effects Stack</Text>
+                <Text style={tutorialPagerStyles.bodyMuted}>
                   Effects are temporary and trigger after building nodes.
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.bodyStrong}>
-                  Timing Matters
-                </Text>
-                <Text style={tutorialPagerStyles.bodyText}>
+                <Text style={tutorialPagerStyles.cardTitle}>Timing Matters</Text>
+                <Text style={tutorialPagerStyles.bodyMuted}>
                   Efficiency threshold only triggers after turn 20 - plan
                   accordingly.
                 </Text>
@@ -418,7 +419,7 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
         ),
       },
     ],
-    [],
+    [tutorialPagerStyles],
   );
 
   const current = pages[currentPage];
@@ -449,7 +450,7 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
           onPress={handleClose}
           style={tutorialPagerStyles.closeButton}
         >
-          <Icon icon={X} size={layout.icon.md} color={colors.white} />
+          <Icon icon={X} size={layout.icon.md} color={theme.colors.text} />
         </Pressable>
       </View>
 
@@ -472,7 +473,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
             currentPage === 0 ? tutorialPagerStyles.footerButtonDisabled : null,
           ]}
         >
-          <Icon icon={ChevronLeft} size={layout.icon.md} color={colors.white} />
+          <Icon
+            icon={ChevronLeft}
+            size={layout.icon.md}
+            color={theme.colors.text}
+          />
           <Text style={tutorialPagerStyles.footerLabel}>Previous</Text>
         </Pressable>
 
@@ -500,7 +505,7 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
             <Icon
               icon={ChevronRight}
               size={layout.icon.md}
-              color={colors.white}
+              color={theme.colors.text}
             />
           </Pressable>
         ) : (
@@ -511,7 +516,7 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
               tutorialPagerStyles.footerButtonSuccess,
             ]}
           >
-            <Text style={tutorialPagerStyles.footerLabel}>Got it</Text>
+            <Text style={tutorialPagerStyles.footerLabelOnPrimary}>Got it</Text>
           </Pressable>
         )}
       </View>

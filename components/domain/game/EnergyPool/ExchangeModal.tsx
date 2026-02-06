@@ -3,7 +3,8 @@ import { Modal, Pressable, View } from "react-native";
 import { EnergyType } from "../game.types";
 import { EnergyBadge } from "./EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
-import { exchangeModalStyles } from "./exchangeModal.styles";
+import { createExchangeModalStyles } from "./exchangeModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 type ExchangeMode = "one" | "two";
 
@@ -45,6 +46,11 @@ export function ExchangeModal({
   onConfirm,
   onClose,
 }: ExchangeModalProps) {
+  const { theme } = useTheme();
+  const exchangeModalStyles = useMemo(
+    () => createExchangeModalStyles(theme),
+    [theme],
+  );
   const handleBackdropPress = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -86,7 +92,7 @@ export function ExchangeModal({
         </Pressable>
       );
     },
-    [onSelectTakeType, poolEnergy, takeType],
+    [exchangeModalStyles, onSelectTakeType, poolEnergy, takeType],
   );
 
   const renderGiveType = useCallback(
@@ -115,7 +121,7 @@ export function ExchangeModal({
         </Pressable>
       );
     },
-    [giveCounts, onToggleGive, playerEnergy],
+    [exchangeModalStyles, giveCounts, onToggleGive, playerEnergy],
   );
 
   const takeCount = mode === "two" ? EXCHANGE_TAKE_TWO : EXCHANGE_ONE;

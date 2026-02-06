@@ -1,17 +1,26 @@
-import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
+import { colors } from "@/constants/colors";
 import { StyleSheet } from "react-native";
+import { Theme } from "@/constants/theme";
 
-export const endGameStyles = StyleSheet.create({
+export const createEndGameStyles = (theme: Theme) =>
+  StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
   content: {
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     paddingTop: spacing.xl,
     paddingBottom: spacing.xl,
     paddingHorizontal: spacing.md,
+    gap: spacing.lg,
+    flexGrow: 1,
+  },
+  body: {
     gap: spacing.lg,
   },
   hero: {
@@ -19,12 +28,12 @@ export const endGameStyles = StyleSheet.create({
     gap: spacing.xs,
   },
   winnerCard: {
-    backgroundColor: colors.whiteAlpha10,
+    backgroundColor: theme.colors.surfaceMuted,
     borderRadius: layout.borderRadius.lg,
     padding: spacing.md,
     gap: spacing.sm,
     borderWidth: layout.borderWidth.thin,
-    borderColor: colors.yellow400,
+    borderColor: theme.colors.border,
   },
   statsRow: {
     flexDirection: "row",
@@ -34,13 +43,14 @@ export const endGameStyles = StyleSheet.create({
   statCard: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: colors.blackAlpha30,
+    backgroundColor:
+      theme.mode === "light" ? colors.gray100 : theme.colors.surfaceAlt,
     borderRadius: layout.borderRadius.md,
     paddingVertical: spacing.sm,
     gap: spacing.xxs,
   },
   statValue: {
-    color: colors.white,
+    color: theme.colors.text,
   },
   statValueRow: {
     flexDirection: "row",
@@ -48,7 +58,8 @@ export const endGameStyles = StyleSheet.create({
     gap: spacing.xxs,
   },
   victoryReason: {
-    backgroundColor: colors.blackAlpha30,
+    backgroundColor:
+      theme.mode === "light" ? colors.gray100 : theme.colors.surfaceAlt,
     borderRadius: layout.borderRadius.md,
     padding: spacing.sm,
     gap: spacing.xxs,
@@ -65,18 +76,18 @@ export const endGameStyles = StyleSheet.create({
     gap: spacing.sm,
     paddingVertical: spacing.xs,
     borderBottomWidth: layout.borderWidth.thin,
-    borderBottomColor: colors.whiteAlpha10,
+    borderBottomColor: theme.colors.borderSubtle,
   },
   rankIndex: {
     width: spacing.xl,
-    color: colors.white,
+    color: theme.colors.text,
   },
   rankName: {
     flex: 1,
-    color: colors.white,
+    color: theme.colors.text,
   },
   rankValue: {
-    color: colors.yellow400,
+    color: theme.colors.text,
   },
   rankValueRow: {
     flexDirection: "row",

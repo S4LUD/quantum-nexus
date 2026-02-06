@@ -1,7 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Modal, Pressable, View } from "react-native";
 import { Text } from "@/components/ui/Text/Text";
-import { alertModalStyles } from "./alertModal.styles";
+import { createAlertModalStyles } from "./alertModal.styles";
+import { useTheme } from "@/hooks/useTheme";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -18,6 +19,11 @@ export function AlertModal({
   actionLabel = "OK",
   onClose,
 }: AlertModalProps) {
+  const { theme } = useTheme();
+  const alertModalStyles = useMemo(
+    () => createAlertModalStyles(theme),
+    [theme],
+  );
   const handleBackdropPress = useCallback(() => {
     onClose();
   }, [onClose]);

@@ -1,17 +1,19 @@
 import { ENERGY_LIMIT } from "@/logic/rules";
 import { calculatePlayerOutputs, getTotalEnergy } from "@/logic/selectors";
-import { useCallback } from "react";
+import { canAffordNode } from "@/logic/gameEngine";
+import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 import { Star } from "lucide-react-native";
 import { EnergyIcon, EnergyBadge } from "../EnergyPool/EnergyIcon";
 import { Player, EnergyType, Node } from "../game.types";
 import { NodeCard } from "../NodeCard/NodeCard";
 import { ProtocolCard } from "../ProtocolCard/ProtocolCard";
-import { playerAreaStyles } from "./playerArea.styles";
+import { createPlayerAreaStyles } from "./playerArea.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
+import { useTheme } from "@/hooks/useTheme";
 
 interface PlayerAreaProps {
   player: Player;
@@ -28,6 +30,11 @@ export function PlayerArea({
   onReservedNodePress,
   disabled = false,
 }: PlayerAreaProps) {
+  const { theme } = useTheme();
+  const playerAreaStyles = useMemo(
+    () => createPlayerAreaStyles(theme),
+    [theme],
+  );
   const outputs = calculatePlayerOutputs(player);
   const totalEnergy = getTotalEnergy(player);
   const energyEntries = Object.entries(player.energy) as [EnergyType, number][];
@@ -37,26 +44,40 @@ export function PlayerArea({
         ? () => onReservedNodePress(node)
         : undefined;
       return (
-        <NodeCard key={node.id} node={node} size="sm" onPress={handlePress} />
+        <NodeCard
+          key={node.id}
+          node={node}
+          size="sm"
+          onPress={handlePress}
+          isAffordable={
+            isCurrentPlayer && !player.isBot && canAffordNode(node, player)
+          }
+        />
       );
     },
-    [onReservedNodePress],
+    [isCurrentPlayer, onReservedNodePress, player],
   );
 
   if (compact) {
-    const compactStyles = [
+    const compactContainerStyles = [
       playerAreaStyles.compactContainer,
       isCurrentPlayer ? playerAreaStyles.compactActive : null,
       disabled ? playerAreaStyles.compactDisabled : null,
     ];
+
     return (
-      <View style={compactStyles}>
+      <View style={compactContainerStyles}>
         <View style={playerAreaStyles.compactHeader}>
           <View>
             <Text variant="subtitle">{player.name}</Text>
             <View style={playerAreaStyles.compactEfficiencyRow}>
               <Text variant="caption">{player.efficiency}</Text>
-              <Icon icon={Star} size={layout.icon.sm} color={colors.yellow400} />
+              <Icon
+                icon={Star}
+                size={layout.icon.sm}
+                color={colors.yellow400}
+                fill="none"
+              />
               <Text variant="caption">Efficiency</Text>
             </View>
           </View>
@@ -130,7 +151,7 @@ export function PlayerArea({
         <View style={playerAreaStyles.outputRow}>
           {Object.entries(outputs).map(([type, count]) => (
             <View key={type} style={playerAreaStyles.outputItem}>
-              <EnergyIcon type={type as EnergyType} size="sm" />
+              <EnergyIcon type={type as EnergyType} size="sm" colored />
               <Text style={playerAreaStyles.outputValue}>x{String(count)}</Text>
             </View>
           ))}

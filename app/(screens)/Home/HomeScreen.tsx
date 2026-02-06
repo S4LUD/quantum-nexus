@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useGame } from "@/state/GameContext";
 import { useModal } from "@/hooks/useModal";
 import { Screen } from "@/components/layout/Screen";
-import { homeStyles } from "./home.styles";
+import { createHomeStyles } from "@/components/domain/home/home.styles";
 import { SplashScreen } from "@/components/domain/home/SplashScreen";
 import { MainMenu } from "@/components/domain/home/MainMenu";
 import { BaseModal } from "@/components/ui/Modal/BaseModal";
@@ -13,11 +13,14 @@ import { SettingsModal } from "@/components/domain/settings/SettingsModal";
 import { useTheme } from "@/hooks/useTheme";
 import { BotDifficulty } from "@/types";
 import { QuickPlayModal } from "@/components/domain/home/QuickPlayModal";
+import { useSound } from "@/hooks/useSound";
 
 export function HomeScreen() {
   const router = useRouter();
   const { initializeGame } = useGame();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme, theme } = useTheme();
+  const { isSoundEnabled, toggleSound } = useSound();
+  const homeStyles = useMemo(() => createHomeStyles(theme), [theme]);
   const [phase, setPhase] = useState<"splash" | "menu">("splash");
   const [botCount, setBotCount] = useState(1);
   const [botDifficulty, setBotDifficulty] =
@@ -69,6 +72,10 @@ export function HomeScreen() {
     toggleTheme();
   }, [toggleTheme]);
 
+  const handleToggleSound = useCallback(() => {
+    toggleSound();
+  }, [toggleSound]);
+
   const handleBotCountChange = useCallback((count: number) => {
     setBotCount(count);
   }, []);
@@ -109,6 +116,8 @@ export function HomeScreen() {
         <SettingsModal
           isDarkMode={isDarkMode}
           onToggleDarkMode={handleToggleTheme}
+          isSoundEnabled={isSoundEnabled}
+          onToggleSound={handleToggleSound}
           onClose={closeSettings}
         />
       </BaseModal>
