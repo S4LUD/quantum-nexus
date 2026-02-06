@@ -3,6 +3,7 @@ import { Modal, Pressable, View } from "react-native";
 import { Text } from "@/components/ui/Text/Text";
 import { createAlertModalStyles } from "./alertModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -16,14 +17,16 @@ export function AlertModal({
   isOpen,
   title,
   message,
-  actionLabel = "OK",
+  actionLabel,
   onClose,
 }: AlertModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const alertModalStyles = useMemo(
     () => createAlertModalStyles(theme),
     [theme],
   );
+  const resolvedActionLabel = actionLabel ?? t("common.ok");
   const handleBackdropPress = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -44,7 +47,9 @@ export function AlertModal({
           </View>
           <View style={alertModalStyles.footer}>
             <Pressable style={alertModalStyles.button} onPress={onClose}>
-              <Text style={alertModalStyles.buttonText}>{actionLabel}</Text>
+              <Text style={alertModalStyles.buttonText}>
+                {resolvedActionLabel}
+              </Text>
             </Pressable>
           </View>
         </Pressable>

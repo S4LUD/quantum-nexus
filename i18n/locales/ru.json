@@ -1,0 +1,295 @@
+{
+  "settings": {
+    "title": "Настройки",
+    "darkMode": "Темная тема",
+    "soundEffects": "Звуковые эффекты",
+    "colorBlindMode": "Режим для слабовидящих по цвету",
+    "theme": "Тема",
+    "enableDarkMode": "Включить темную тему",
+    "disableDarkMode": "Отключить темную тему",
+    "enabled": "Включено",
+    "disabled": "Выключено",
+    "language": "Язык",
+    "version": "Версия",
+    "gameMode": "Режим игры",
+    "platform": "Платформа",
+    "close": "Закрыть"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "Стратегическая игра по построению сети",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "Стройте свою сеть",
+    "tagline": "Собирайте энергию. Соединяйте узлы.",
+    "start": "Инициализировать систему"
+  },
+  "menu": {
+    "quickPlay": "Быстрый старт",
+    "quickPlaySubtitle": "Начать одиночную игру",
+    "multiplayer": "Мультиплеер",
+    "multiplayerSubtitle": "Игра с другими",
+    "tutorial": "Обучение",
+    "tutorialSubtitle": "Изучить правила",
+    "stats": "Статистика",
+    "settings": "Настройки",
+    "strategicNetworkBuilding": "Стратегическое построение сети",
+    "wip": "В разработке"
+  },
+  "tabs": {
+    "market": "Рынок",
+    "protocols": "Протоколы",
+    "players": "Игроки"
+  },
+  "common": {
+    "back": "Назад",
+    "ok": "ОК",
+    "close": "Закрыть",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "continue": "Продолжить",
+    "skip": "Пропустить"
+  },
+  "game": {
+    "turnLabel": "Ход {{count}}",
+    "startingPlayerNotice": "Первый игрок: {{name}}",
+    "player": "Игрок",
+    "node": "Узел",
+    "efficiency": "Эффективность",
+    "energy": "Энергия",
+    "nodes": "Узлы",
+    "protocols": "Протоколы",
+    "outputGeneration": "Генерация выхода",
+    "buildNode": "Построить узел",
+    "reserveNode": "Резервировать узел",
+    "insufficientEnergy": "Недостаточно энергии",
+    "energyCost": "Стоимость энергии",
+    "yourEnergy": "Ваша энергия",
+    "discountsApplied": "Скидки применены",
+    "providesOutput": "Дает выход",
+    "specialEffect": "Особый эффект",
+    "alreadyReserved": "Этот узел уже в вашем резерве",
+    "requirements": "Требования",
+    "effect": "Эффект",
+    "claimed": "Получено",
+    "victory": "Победа",
+    "finalRankings": "Итоговый рейтинг",
+    "victoryAchievedBy": "Победа достигнута через",
+    "wins": "Побеждает",
+    "networkSize": "Размер сети",
+    "protocolMastery": "Мастерство протоколов",
+    "efficiencyThreshold": "Порог эффективности",
+    "noActiveGame": "Активной игры нет."
+  },
+  "player": {
+    "you": "Вы",
+    "label": "Игрок {{number}}"
+  },
+  "categories": {
+    "research": "Исследование",
+    "production": "Производство",
+    "network": "Сеть",
+    "control": "Контроль"
+  },
+  "categoryDescriptions": {
+    "research": "Исследовательский узел дает особые способности и повышение эффективности.",
+    "production": "Производственный узел дает высокую эффективность при более высокой стоимости.",
+    "network": "Сетевой узел — сложные и ценные улучшения.",
+    "control": "Контрольный узел дает полезные эффекты и гибкость."
+  },
+  "effects": {
+    "multiplier": "Умножает генерацию выхода {{target}} на {{value}}x",
+    "discount": "Снижает стоимость {{target}} на {{value}} при построении узла",
+    "draw": "Позволяет просмотреть еще {{value}} узел(ов) из колоды",
+    "swap": "Позволяет обменять до {{value}} типов энергии"
+  },
+  "playerArea": {
+    "yourTurn": "ВАШ ХОД",
+    "energyHeld": "Энергия на руках",
+    "claimedProtocols": "Полученные протоколы",
+    "ownedNodes": "Ваши узлы ({{count}})",
+    "reservedNodes": "Резерв ({{count}}/{{max}})"
+  },
+  "energy": {
+    "solar": "Солнечная",
+    "hydro": "Гидро",
+    "plasma": "Плазма",
+    "neural": "Нейро",
+    "flux": "Флюкс",
+    "solarSubtitle": "Желтая/оранжевая энергия",
+    "hydroSubtitle": "Бирюзовая/синяя энергия",
+    "plasmaSubtitle": "Розовая/маджента энергия",
+    "neuralSubtitle": "Зеленая энергия",
+    "fluxSubtitle": "Дикая энергия (только через резерв)"
+  },
+  "alerts": {
+    "discardRequiredTitle": "Нужно сбросить",
+    "discardRequiredMessage": "Сбросьте {{count}} энергии перед следующим действием.",
+    "invalidActionTitle": "Недопустимое действие",
+    "invalidActionMessage": "Недопустимый сбор энергии",
+    "insufficientEnergyTitle": "Недостаточно энергии",
+    "insufficientEnergyMessage": "Недостаточно энергии, чтобы построить этот узел.",
+    "paymentErrorTitle": "Ошибка оплаты",
+    "paymentErrorMessage": "Не удалось сформировать корректную оплату.",
+    "noFluxTitle": "Flux отсутствует",
+    "noFluxMessage": "Для резерва узла требуется Flux.",
+    "reserveLimitTitle": "Лимит резерва",
+    "reserveLimitMessage": "Можно резервировать максимум 3 узла.",
+    "alreadyReservedTitle": "Уже в резерве",
+    "alreadyReservedMessage": "Этот узел уже в резерве.",
+    "unavailableTitle": "Недоступно",
+    "unavailableMessage": "Этот узел уже зарезервирован другим игроком.",
+    "exchangeErrorTitle": "Ошибка обмена",
+    "exchangeSelectTake": "Выберите энергию, которую хотите взять.",
+    "exchangeInvalid": "Невозможно выполнить обмен с текущим пулом или энергией."
+  },
+  "quickPlay": {
+    "title": "Настройка быстрого старта",
+    "bots": "Количество Bot",
+    "difficulty": "Сложность",
+    "botLabel_one": "{{count}} бот",
+    "botLabel_other": "{{count}} ботов",
+    "start": "Начать игру"
+  },
+  "difficulty": {
+    "easy": "Легко",
+    "medium": "Средне",
+    "hard": "Сложно"
+  },
+  "energyPool": {
+    "title": "Пул энергии",
+    "collectLabel": "Собрать {{count}} энергии",
+    "exchangeLabel": "Обменять энергию"
+  },
+  "exchange": {
+    "title": "Обмен энергии",
+    "subtitle": "Выберите обмен 1:1 или 2:3. Flux нельзя обменивать.",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "Отдать {{count}}",
+    "take": "Взять {{count}}",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить"
+  },
+  "swap": {
+    "title": "Свап энергии",
+    "give": "Отдать",
+    "take": "Взять",
+    "subtitle": "Выберите до {{count}} энергии для обмена.",
+    "confirm": "Подтвердить свап"
+  },
+  "draw": {
+    "title": "Взять узел",
+    "subtitle": "Выберите один узел для добавления в рынок."
+  },
+  "discard": {
+    "title": "Сбросить энергию",
+    "subtitle": "Выберите {{count}} энергии для сброса. Осталось: {{remaining}}.",
+    "confirm": "Сбросить {{count}} энергии"
+  },
+  "endgame": {
+    "networkComplete": "сеть завершена",
+    "playAgain": "Сыграть снова",
+    "mainMenu": "Главное меню"
+  },
+  "tutorial": {
+    "welcomeTitle": "Добро пожаловать в Quantum Nexus",
+    "welcomeBody1": "Стройте квантовую сеть, собирая энергию и создавая узлы.",
+    "welcomeBody2": "Победите первым через эффективность, размер сети или мастерство протоколов.",
+    "winConditions": "Условия победы",
+    "winConditionEfficiency": "• Достичь 20★ Efficiency после 20-го хода",
+    "winConditionNodes": "• Построить нужное количество узлов (2P: 13 / 3P: 15 / 4P: 17)",
+    "winConditionProtocols": "• Получить 3 или более протокола",
+    "energyTypesTitle": "Типы энергии",
+    "energyTypesBody": "Есть 4 типа энергии и Flux:",
+    "yourTurnTitle": "Ваш ход",
+    "yourTurnBody": "В свой ход выберите ОДНО действие:",
+    "collectTitle": "1. Сбор энергии",
+    "collectLine1": "• Взять 3 разных типа энергии, ИЛИ",
+    "collectLine2": "• Взять 2 одинаковых (если в пуле 4+)",
+    "collectLine3": "• Максимум 10 энергии всего",
+    "buildTitle": "2. Построить узел",
+    "buildLine1": "• Оплатить стоимость энергии",
+    "buildLine2": "• Добавить в сеть",
+    "buildLine3": "• Получить Efficiency",
+    "reserveTitle": "3. Резерв узла",
+    "reserveLine1": "• Резервировать на потом (макс. 3)",
+    "reserveLine2": "• Получить 1 Flux (если доступно)",
+    "reserveLine3": "• Построить из резерва в любое время",
+    "exchangeTitle": "4. Обмен энергии",
+    "exchangeLine1": "• Обмен 1:1 (отдать 1, взять 1)",
+    "exchangeLine2": "• Обмен 2:3 (взять 2 одинаковых, вернуть любые 3)",
+    "exchangeLine3": "• Flux нельзя обменивать",
+    "exchangeLine4": "• В пуле должна быть нужная энергия",
+    "nodesTitle": "Узлы",
+    "nodesBody": "Узлы — ядро вашей сети. Каждый узел дает:",
+    "nodeResearch": "Исследовательские узлы",
+    "nodeResearchDesc": "Особые способности и рост Efficiency",
+    "nodeProduction": "Производственные узлы",
+    "nodeProductionDesc": "Высокая Efficiency и высокая стоимость",
+    "nodeNetwork": "Сетевые узлы",
+    "nodeNetworkDesc": "Сложные и ценные дополнения",
+    "nodeControl": "Контрольные узлы",
+    "nodeControlDesc": "Утилитарные эффекты и гибкость",
+    "outputTitle": "Генерация выхода",
+    "outputBody": "Каждый узел генерирует 1 выход своего типа, который учитывается для условий протоколов и снижает соответствующую стоимость энергии на 1 при построении узла (только базовые энергии).",
+    "protocolsTitle": "Протоколы",
+    "protocolsBody": "Протоколы — мощные улучшения, которые можно получить:",
+    "protocolRequirements": "Требования",
+    "protocolRequirementsLine1": "Нужно достаточно OUTPUT generation (не удерживаемая энергия)",
+    "protocolRequirementsLine2": "OUTPUT не расходуется и подходит для нескольких протоколов",
+    "protocolClaiming": "Получение",
+    "protocolClaimingLine1": "Нужно нажать для получения (не автоматически)",
+    "protocolBenefits": "Преимущества",
+    "protocolBenefitsLine1": "Дает очки Efficiency и постоянные эффекты",
+    "protocolExamples": "Примеры: двойная генерация выхода, бесплатный резерв, энергообмен, снижение стоимости",
+    "strategyTitle": "Советы по стратегии",
+    "strategyMultipleTitle": "Несколько путей к победе",
+    "strategyMultipleBody": "Сфокусируйтесь на эффективности, размере сети или мастерстве протоколов — либо комбинируйте.",
+    "strategyFluxTitle": "Flux — мощный",
+    "strategyFluxBody": "Используется как универсальная энергия, но ограничен. Резервируйте, чтобы получить Flux.",
+    "strategyEffectsTitle": "Эффекты узлов складываются",
+    "strategyEffectsBody": "Эффекты временные и срабатывают после построения узла.",
+    "strategyTimingTitle": "Время имеет значение",
+    "strategyTimingBody": "Порог Efficiency действует только после 20-го хода — планируйте заранее.",
+    "previous": "Назад",
+    "next": "Далее",
+    "gotIt": "Понятно"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}} зарезервировал узел.",
+    "builtNode": "{{name}} построил узел.",
+    "builtReservedNode": "{{name}} построил зарезервированный узел.",
+    "claimedProtocol": "{{name}} заявил протокол.",
+    "exchangedEnergy": "{{name}} обменял энергию.",
+    "collectedEnergy": "{{name}} собрал энергию.",
+    "swappedEnergy": "{{name}} выполнил свап энергии.",
+    "noLegalAction": "{{name}} не имеет доступных действий."
+  },
+  "bot": {
+    "reserveNode": "{{name}} зарезервировал узел.",
+    "buildNode": "{{name}} построил узел.",
+    "buildReservedNode": "{{name}} построил зарезервированный узел.",
+    "claimProtocol": "{{name}} заявил протокол.",
+    "exchangeEnergy": "{{name}} обменял энергию.",
+    "collectEnergy": "{{name}} собрал энергию.",
+    "swapEnergy": "{{name}} выполнил свап энергии.",
+    "noLegalAction": "{{name}} не имеет доступных действий."
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} множ.",
+      "discount": "-{{value}} стоимость",
+      "draw": "+{{value}} добор",
+      "swap": "свап"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "Множитель",
+    "discount": "Скидка",
+    "draw": "Добор",
+    "swap": "свап"
+  }
+}

@@ -34,6 +34,7 @@ import { DrawModal } from "./Effects/DrawModal";
 import { SwapModal } from "./Effects/SwapModal";
 import { useTheme } from "@/hooks/useTheme";
 import { useSound } from "@/hooks/useSound";
+import { useTranslation } from "react-i18next";
 
 interface GameBoardProps {
   gameState: GameState;
@@ -50,6 +51,7 @@ export function GameBoard({
 }: GameBoardProps) {
   const { theme } = useTheme();
   const { play } = useSound();
+  const { t } = useTranslation();
   const gameBoardStyles = useMemo(() => createGameBoardStyles(theme), [theme]);
   const [selectedEnergy, setSelectedEnergy] = useState<EnergyType[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -175,8 +177,8 @@ export function GameBoard({
   function handleCollectEnergy() {
     if (isDiscarding) {
       openAlert(
-        "Discard required",
-        `Discard ${discardCount} energy before taking another action.`,
+        t("alerts.discardRequiredTitle"),
+        t("alerts.discardRequiredMessage", { count: discardCount }),
       );
       return;
     }
@@ -187,8 +189,8 @@ export function GameBoard({
     );
     if (!validation.valid) {
       openAlert(
-        "Invalid action",
-        validation.error || "Invalid energy collection",
+        t("alerts.invalidActionTitle"),
+        validation.error || t("alerts.invalidActionMessage"),
       );
       return;
     }
@@ -217,8 +219,8 @@ export function GameBoard({
   const handleOpenExchange = useCallback(() => {
     if (isDiscarding) {
       openAlert(
-        "Discard required",
-        `Discard ${discardCount} energy before taking another action.`,
+        t("alerts.discardRequiredTitle"),
+        t("alerts.discardRequiredMessage", { count: discardCount }),
       );
       return;
     }
@@ -226,7 +228,7 @@ export function GameBoard({
     setExchangeTakeType(null);
     setExchangeGiveSelection([]);
     setIsExchangeOpen(true);
-  }, [discardCount, isDiscarding, openAlert]);
+  }, [discardCount, isDiscarding, openAlert, t]);
 
   const handleCloseExchange = useCallback(() => {
     setIsExchangeOpen(false);
@@ -268,7 +270,7 @@ export function GameBoard({
 
   const handleConfirmExchange = useCallback(() => {
     if (!exchangeTakeType) {
-      openAlert("Exchange error", "Select an energy to take.");
+      openAlert(t("alerts.exchangeErrorTitle"), t("alerts.exchangeSelectTake"));
       return;
     }
     const takeCount = exchangeMode === "two" ? 2 : 1;
@@ -281,8 +283,8 @@ export function GameBoard({
     );
     if (!canExchange) {
       openAlert(
-        "Exchange error",
-        "Cannot complete this exchange with current pool or energy.",
+        t("alerts.exchangeErrorTitle"),
+        t("alerts.exchangeInvalid"),
       );
       return;
     }
@@ -305,14 +307,15 @@ export function GameBoard({
     gameState,
     openAlert,
     play,
+    t,
   ]);
 
   const handleNodePress = useCallback(
     (node: Node) => {
       if (isDiscarding) {
         openAlert(
-          "Discard required",
-          `Discard ${discardCount} energy before taking another action.`,
+          t("alerts.discardRequiredTitle"),
+          t("alerts.discardRequiredMessage", { count: discardCount }),
         );
         return;
       }
@@ -320,7 +323,7 @@ export function GameBoard({
       setSelectedNode(node);
       setIsNodeModalOpen(true);
     },
-    [discardCount, isDiscarding, openAlert],
+    [discardCount, isDiscarding, openAlert, t],
   );
 
   const handleReservedNodePress = useCallback(
@@ -333,19 +336,25 @@ export function GameBoard({
   function handleBuildNode(node: Node) {
     if (isDiscarding) {
       openAlert(
-        "Discard required",
-        `Discard ${discardCount} energy before taking another action.`,
+        t("alerts.discardRequiredTitle"),
+        t("alerts.discardRequiredMessage", { count: discardCount }),
       );
       return;
     }
     if (!canAffordNode(node, currentPlayer)) {
-      openAlert("Insufficient energy", "Not enough energy to build this node.");
+      openAlert(
+        t("alerts.insufficientEnergyTitle"),
+        t("alerts.insufficientEnergyMessage"),
+      );
       return;
     }
 
     const payment = generateNodePayment(node, currentPlayer);
     if (!payment) {
-      openAlert("Payment error", "Cannot generate a valid payment.");
+      openAlert(
+        t("alerts.paymentErrorTitle"),
+        t("alerts.paymentErrorMessage"),
+      );
       return;
     }
 
@@ -405,17 +414,17 @@ export function GameBoard({
   function handleReserveNode(node: Node) {
     if (isDiscarding) {
       openAlert(
-        "Discard required",
-        `Discard ${discardCount} energy before taking another action.`,
+        t("alerts.discardRequiredTitle"),
+        t("alerts.discardRequiredMessage", { count: discardCount }),
       );
       return;
     }
     if (gameState.energyPool.flux <= 0) {
-      openAlert("No Flux available", "Flux is required to reserve a node.");
+      openAlert(t("alerts.noFluxTitle"), t("alerts.noFluxMessage"));
       return;
     }
     if (currentPlayer.reservedNodes.length >= 3) {
-      openAlert("Reserve limit", "Maximum 3 reserved nodes.");
+      openAlert(t("alerts.reserveLimitTitle"), t("alerts.reserveLimitMessage"));
       return;
     }
 
@@ -423,7 +432,10 @@ export function GameBoard({
       (reserved) => reserved.id === node.id,
     );
     if (alreadyReserved) {
-      openAlert("Already reserved", "This node is already reserved.");
+      openAlert(
+        t("alerts.alreadyReservedTitle"),
+        t("alerts.alreadyReservedMessage"),
+      );
       return;
     }
 
@@ -431,7 +443,10 @@ export function GameBoard({
       player.reservedNodes.some((reserved) => reserved.id === node.id),
     );
     if (reservedByOthers) {
-      openAlert("Unavailable", "This node is reserved by another player.");
+      openAlert(
+        t("alerts.unavailableTitle"),
+        t("alerts.unavailableMessage"),
+      );
       return;
     }
 
@@ -450,8 +465,8 @@ export function GameBoard({
   function handleProtocolClaim(protocol: Protocol) {
     if (isDiscarding) {
       openAlert(
-        "Discard required",
-        `Discard ${discardCount} energy before taking another action.`,
+        t("alerts.discardRequiredTitle"),
+        t("alerts.discardRequiredMessage", { count: discardCount }),
       );
       return;
     }
@@ -627,9 +642,14 @@ export function GameBoard({
   ]);
 
   const marketRows = useMemo(() => {
-    const categories = ["Research", "Production", "Network", "Control"];
-    return categories.map((label, index) => ({
-      label,
+    const categories: Node["category"][] = [
+      "research",
+      "production",
+      "network",
+      "control",
+    ];
+    return categories.map((category, index) => ({
+      category,
       nodes: gameState.marketNodes[index] || [],
     }));
   }, [gameState.marketNodes]);
@@ -659,8 +679,10 @@ export function GameBoard({
     });
 
     return (
-      <View key={row.label} style={gameBoardStyles.section}>
-        <Text style={gameBoardStyles.sectionLabel}>{row.label} Nodes</Text>
+      <View key={row.category} style={gameBoardStyles.section}>
+        <Text style={gameBoardStyles.sectionLabel}>
+          {t(`categories.${row.category}`)} {t("game.nodes")}
+        </Text>
         <View style={gameBoardStyles.sectionRow}>
           <ScrollView
             horizontal

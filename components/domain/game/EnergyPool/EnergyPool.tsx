@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 interface EnergyPoolProps {
   energyPool: Record<EnergyType, number>;
@@ -25,6 +26,7 @@ export function EnergyPool({
   disabled = false,
 }: EnergyPoolProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const energyPoolStyles = useMemo(
     () => createEnergyPoolStyles(theme),
     [theme],
@@ -64,17 +66,17 @@ export function EnergyPool({
     <View
       style={energyPoolStyles.container}
     >
-      <Text variant="caption">Energy Pool</Text>
+      <Text variant="caption">{t("energyPool.title")}</Text>
       <View style={energyPoolStyles.energyRow}>{energyButtons}</View>
       {selectedEnergy.length > 0 && (
         <Button
-          label={`Collect ${selectedEnergy.length} Energy`}
+          label={t("energyPool.collectLabel", { count: selectedEnergy.length })}
           onPress={onCollect}
           disabled={disabled}
         />
       )}
       <Button
-        label="Exchange Energy"
+        label={t("energyPool.exchangeLabel")}
         variant="secondary"
         onPress={onExchange}
         disabled={disabled}

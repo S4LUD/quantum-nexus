@@ -5,6 +5,7 @@ import { EnergyBadge } from "./EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
 import { createEnergyDiscardModalStyles } from "./energyDiscardModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface EnergyDiscardModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function EnergyDiscardModal({
   onConfirm,
 }: EnergyDiscardModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const energyDiscardModalStyles = useMemo(
     () => createEnergyDiscardModalStyles(theme),
     [theme],
@@ -86,10 +88,14 @@ export function EnergyDiscardModal({
       <View style={energyDiscardModalStyles.backdrop}>
         <View style={energyDiscardModalStyles.modal}>
           <View style={energyDiscardModalStyles.header}>
-            <Text style={energyDiscardModalStyles.title}>Discard Energy</Text>
+            <Text style={energyDiscardModalStyles.title}>
+              {t("discard.title")}
+            </Text>
             <Text style={energyDiscardModalStyles.subtitle}>
-              Select {String(discardCount)} energy to discard. Remaining:{" "}
-              {String(remaining)}.
+              {t("discard.subtitle", {
+                count: discardCount,
+                remaining,
+              })}
             </Text>
           </View>
           <View style={energyDiscardModalStyles.energyRow}>
@@ -107,7 +113,7 @@ export function EnergyDiscardModal({
               ]}
             >
               <Text style={energyDiscardModalStyles.confirmText}>
-                Discard {String(discardCount)} Energy
+                {t("discard.confirm", { count: discardCount })}
               </Text>
             </Pressable>
           </View>

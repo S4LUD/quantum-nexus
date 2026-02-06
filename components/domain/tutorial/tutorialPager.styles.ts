@@ -180,19 +180,19 @@ export const createTutorialPagerStyles = (theme: Theme) => {
     lineHeight: typography.lineHeight.sm,
   },
   energySolar: {
-    backgroundColor: `rgba(240,177,0,${accentAlpha})`,
+    backgroundColor: theme.energy.backgrounds.solar,
   },
   energyHydro: {
-    backgroundColor: `rgba(0,184,219,${accentAlpha})`,
+    backgroundColor: theme.energy.backgrounds.hydro,
   },
   energyPlasma: {
-    backgroundColor: `rgba(246,51,154,${accentAlpha})`,
+    backgroundColor: theme.energy.backgrounds.plasma,
   },
   energyNeural: {
-    backgroundColor: `rgba(0,201,80,${accentAlpha})`,
+    backgroundColor: theme.energy.backgrounds.neural,
   },
   energyFlux: {
-    backgroundColor: `rgba(173,70,255,${accentAlpha})`,
+    backgroundColor: theme.energy.backgrounds.flux,
   },
   cardList: {
     gap: spacing.sm,

@@ -1,0 +1,295 @@
+{
+  "settings": {
+    "title": "设置",
+    "darkMode": "深色模式",
+    "soundEffects": "音效",
+    "colorBlindMode": "色觉辅助",
+    "theme": "主题",
+    "enableDarkMode": "启用深色模式",
+    "disableDarkMode": "停用深色模式",
+    "enabled": "已启用",
+    "disabled": "已停用",
+    "language": "语言",
+    "version": "版本",
+    "gameMode": "游戏模式",
+    "platform": "平台",
+    "close": "关闭"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "战略网络构建游戏",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "构建您的网络",
+    "tagline": "收集 能量，连接 节点。",
+    "start": "初始化系统"
+  },
+  "menu": {
+    "quickPlay": "快速开始",
+    "quickPlaySubtitle": "开始单人游戏",
+    "multiplayer": "多人游戏",
+    "multiplayerSubtitle": "与其他玩家一起玩",
+    "tutorial": "教程",
+    "tutorialSubtitle": "学习玩法",
+    "stats": "统计",
+    "settings": "设置",
+    "strategicNetworkBuilding": "战略网络构建",
+    "wip": "开发中"
+  },
+  "tabs": {
+    "market": "市场",
+    "protocols": "协议",
+    "players": "玩家"
+  },
+  "common": {
+    "back": "返回",
+    "ok": "确定",
+    "close": "关闭",
+    "cancel": "取消",
+    "confirm": "确认",
+    "continue": "继续",
+    "skip": "跳过"
+  },
+  "game": {
+    "turnLabel": "回合 {{count}}",
+    "startingPlayerNotice": "先手玩家：{{name}}",
+    "player": "玩家",
+    "node": "节点",
+    "efficiency": "效率",
+    "energy": "能量",
+    "nodes": "节点",
+    "protocols": "协议",
+    "outputGeneration": "输出生成",
+    "buildNode": "建造节点",
+    "reserveNode": "保留节点",
+    "insufficientEnergy": "能量不足",
+    "energyCost": "能量消耗",
+    "yourEnergy": "您的能量",
+    "discountsApplied": "已应用折扣",
+    "providesOutput": "提供输出",
+    "specialEffect": "特殊效果",
+    "alreadyReserved": "该节点已被您保留",
+    "requirements": "条件",
+    "effect": "效果",
+    "claimed": "已获得",
+    "victory": "胜利",
+    "finalRankings": "最终排名",
+    "victoryAchievedBy": "胜利方式",
+    "wins": "获胜",
+    "networkSize": "网络规模",
+    "protocolMastery": "协议制霸",
+    "efficiencyThreshold": "效率阈值",
+    "noActiveGame": "没有正在进行的游戏。"
+  },
+  "player": {
+    "you": "你",
+    "label": "玩家 {{number}}"
+  },
+  "categories": {
+    "research": "研究",
+    "production": "生产",
+    "network": "网络",
+    "control": "控制"
+  },
+  "categoryDescriptions": {
+    "research": "研究节点提供特殊能力与效率加成。",
+    "production": "生产节点具有高效率，但成本更高。",
+    "network": "网络节点是复杂且高价值的扩展。",
+    "control": "控制节点提供实用效果与灵活性。"
+  },
+  "effects": {
+    "multiplier": "将 {{target}} 的输出生成提升至 {{value}} 倍",
+    "discount": "建造 节点 时将 {{target}} 成本降低 {{value}}",
+    "draw": "可额外查看 {{value}} 张 节点",
+    "swap": "可交换最多 {{value}} 种 能量"
+  },
+  "playerArea": {
+    "yourTurn": "您的回合",
+    "energyHeld": "持有的 能量",
+    "claimedProtocols": "已获得的协议",
+    "ownedNodes": "已拥有的节点（{{count}}）",
+    "reservedNodes": "保留（{{count}}/{{max}}）"
+  },
+  "energy": {
+    "solar": "太阳能",
+    "hydro": "水能",
+    "plasma": "等离子",
+    "neural": "神经",
+    "flux": "通量",
+    "solarSubtitle": "黄色/橙色 能量",
+    "hydroSubtitle": "青色/蓝色能量",
+    "plasmaSubtitle": "粉色/洋红能量",
+    "neuralSubtitle": "绿色能量",
+    "fluxSubtitle": "通配能量（仅通过保留获得）"
+  },
+  "alerts": {
+    "discardRequiredTitle": "需要弃置",
+    "discardRequiredMessage": "在执行下一步前，请弃置 {{count}} 个能量。",
+    "invalidActionTitle": "无效操作",
+    "invalidActionMessage": "无效的能量收集",
+    "insufficientEnergyTitle": "能量不足",
+    "insufficientEnergyMessage": "能量不足以建造此节点。",
+    "paymentErrorTitle": "支付错误",
+    "paymentErrorMessage": "无法生成有效的支付。",
+    "noFluxTitle": "没有 Flux",
+    "noFluxMessage": "保留节点需要 Flux。",
+    "reserveLimitTitle": "保留上限",
+    "reserveLimitMessage": "最多可保留 3 个节点。",
+    "alreadyReservedTitle": "已保留",
+    "alreadyReservedMessage": "该节点已被保留。",
+    "unavailableTitle": "不可用",
+    "unavailableMessage": "该节点已被其他玩家保留。",
+    "exchangeErrorTitle": "交换错误",
+    "exchangeSelectTake": "请选择要获取的能量。",
+    "exchangeInvalid": "当前能量池或持有能量无法完成交换。"
+  },
+  "quickPlay": {
+    "title": "快速开始设置",
+    "bots": "Bot 数量",
+    "difficulty": "难度",
+    "botLabel_one": "{{count}} 个机器人",
+    "botLabel_other": "{{count}} 个机器人",
+    "start": "开始游戏"
+  },
+  "difficulty": {
+    "easy": "简单",
+    "medium": "普通",
+    "hard": "困难"
+  },
+  "energyPool": {
+    "title": "能量池",
+    "collectLabel": "收集 {{count}} 个能量",
+    "exchangeLabel": "交换能量"
+  },
+  "exchange": {
+    "title": "交换 能量",
+    "subtitle": "请选择 1:1 或 2:3 交换方式。Flux 不可交换。",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "交出 {{count}}",
+    "take": "获取 {{count}}",
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "swap": {
+    "title": "能量 交换",
+    "give": "交出",
+    "take": "获取",
+    "subtitle": "请选择最多 {{count}} 个 能量 用于交换。",
+    "confirm": "确认 交换"
+  },
+  "draw": {
+    "title": "抽取 节点",
+    "subtitle": "请选择一张 节点 放入市场。"
+  },
+  "discard": {
+    "title": "弃置 能量",
+    "subtitle": "请选择弃置 {{count}} 个 能量。剩余：{{remaining}}。",
+    "confirm": "弃置 {{count}} 个 能量"
+  },
+  "endgame": {
+    "networkComplete": "网络 已完成",
+    "playAgain": "再来一局",
+    "mainMenu": "主菜单"
+  },
+  "tutorial": {
+    "welcomeTitle": "欢迎来到 Quantum Nexus",
+    "welcomeBody1": "通过收集 能量 并构建 节点 来建立量子计算网络。",
+    "welcomeBody2": "最先通过 Efficiency、网络 规模或 协议 制霸达成胜利。",
+    "winConditions": "胜利条件",
+    "winConditionEfficiency": "• 第20回合后达到 20★ Efficiency",
+    "winConditionNodes": "• 建造规定数量的节点（2人:13 / 3人:15 / 4人:17）",
+    "winConditionProtocols": "• 获得 3 个或更多协议",
+    "energyTypesTitle": "能量 类型",
+    "energyTypesBody": "共有 4 种 能量 与 Flux：",
+    "yourTurnTitle": "您的回合",
+    "yourTurnBody": "在您的回合，请选择以下一项行动：",
+    "collectTitle": "1. 收集 能量",
+    "collectLine1": "• 取 3 种不同的 能量，或",
+    "collectLine2": "• 取 2 个相同 能量（池中≥4）",
+    "collectLine3": "• 最多持有 10 个 能量",
+    "buildTitle": "2. 建造 节点",
+    "buildLine1": "• 支付 能量 成本",
+    "buildLine2": "• 加入您的 网络",
+    "buildLine3": "• 获得 Efficiency",
+    "reserveTitle": "3. 保留 节点",
+    "reserveLine1": "• 保留以供之后 建造（最多 3 个）",
+    "reserveLine2": "• 获得 1 个 Flux（若可用）",
+    "reserveLine3": "• 可随时从 保留 中 建造",
+    "exchangeTitle": "4. 交换 能量",
+    "exchangeLine1": "• 1:1 交换（给 1 取 1）",
+    "exchangeLine2": "• 2:3 交换（取同种 2 个，返还任意 3 个）",
+    "exchangeLine3": "• Flux 不可交换",
+    "exchangeLine4": "• 能量池必须有可取的能量",
+    "nodesTitle": "节点",
+    "nodesBody": "节点 是 网络 的核心。每个 节点 提供：",
+    "nodeResearch": "Research 节点",
+    "nodeResearchDesc": "特殊能力与 Efficiency 加成",
+    "nodeProduction": "Production 节点",
+    "nodeProductionDesc": "高 Efficiency，高成本",
+    "nodeNetwork": "网络节点",
+    "nodeNetworkDesc": "复杂且高价值的扩展",
+    "nodeControl": "Control 节点",
+    "nodeControlDesc": "实用效果与灵活性",
+    "outputTitle": "输出生成",
+    "outputBody": "每个 节点 生成其类型的 1 点输出，该输出用于 协议 条件，并在 建造 节点 时将对应 能量 成本降低 1（仅限基础 能量）。",
+    "protocolsTitle": "协议",
+    "protocolsBody": "协议 是可获得的强力升级：",
+    "protocolRequirements": "条件",
+    "protocolRequirementsLine1": "需要足够的 OUTPUT 生成（非持有 能量）",
+    "protocolRequirementsLine2": "OUTPUT 不会被消耗，可用于多个 协议",
+    "protocolClaiming": "获得",
+    "protocolClaimingLine1": "需要主动点击获得（非自动）",
+    "protocolBenefits": "收益",
+    "protocolBenefitsLine1": "提供 Efficiency 点数与持续效果",
+    "protocolExamples": "示例：输出翻倍、免费 保留、能量 swap、成本降低",
+    "strategyTitle": "策略提示",
+    "strategyMultipleTitle": "多条胜利路径",
+    "strategyMultipleBody": "可专注于 Efficiency、网络 规模或 协议 制霸，也可组合策略。",
+    "strategyFluxTitle": "Flux 很强大",
+    "strategyFluxBody": "作为通配 能量 但数量有限，请通过 保留 获取。",
+    "strategyEffectsTitle": "节点 效果叠加",
+    "strategyEffectsBody": "效果为临时效果，建造 节点 后触发。",
+    "strategyTimingTitle": "时机很重要",
+    "strategyTimingBody": "Efficiency 判定仅在第 20 回合后生效，请提前规划。",
+    "previous": "上一页",
+    "next": "下一页",
+    "gotIt": "知道了"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}}已保留一个节点。",
+    "builtNode": "{{name}}已建造一个节点。",
+    "builtReservedNode": "{{name}}已建造一个保留的节点。",
+    "claimedProtocol": "{{name}}已宣告获得一个协议。",
+    "exchangedEnergy": "{{name}}已交换能量。",
+    "collectedEnergy": "{{name}}已收集能量。",
+    "swappedEnergy": "{{name}}已交换能量。",
+    "noLegalAction": "{{name}}当前无可执行的行动。"
+  },
+  "bot": {
+    "reserveNode": "{{name}}已保留一个节点。",
+    "buildNode": "{{name}}已建造一个节点。",
+    "buildReservedNode": "{{name}}已建造一个保留的节点。",
+    "claimProtocol": "{{name}}已宣告获得一个协议。",
+    "exchangeEnergy": "{{name}}已交换能量。",
+    "collectEnergy": "{{name}}已收集能量。",
+    "swapEnergy": "{{name}}已交换能量。",
+    "noLegalAction": "{{name}}当前无可执行的行动。"
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} 倍",
+      "discount": "-{{value}} 成本",
+      "draw": "+{{value}} 抽取",
+      "swap": "交换"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "倍率",
+    "discount": "折扣",
+    "draw": "抽取",
+    "swap": "交换"
+  }
+}

@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/Text/Text";
 import { useTheme } from "@/hooks/useTheme";
 import { useMemo } from "react";
 import { colors } from "@/constants/colors";
+import { useTranslation } from "react-i18next";
 
 export type GameTab = "market" | "protocols" | "players";
 
@@ -25,6 +26,7 @@ export function GameTabs({
   playersBadgeCount = 0,
 }: GameTabsProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const gameTabsStyles = useMemo(() => createGameTabsStyles(theme), [theme]);
   const tabs: {
     key: GameTab;
@@ -32,29 +34,32 @@ export function GameTabs({
     icon: typeof Grid3x3;
     accent: string;
     badgeCount: number;
-  }[] = [
-    {
-      key: "market",
-      label: "Market",
-      icon: Grid3x3,
-      accent: colors.cyan400,
-      badgeCount: marketBadgeCount,
-    },
-    {
-      key: "protocols",
-      label: "Protocols",
-      icon: Zap,
-      accent: colors.purple400,
-      badgeCount: protocolsBadgeCount,
-    },
-    {
-      key: "players",
-      label: "Players",
-      icon: Users,
-      accent: colors.green400,
-      badgeCount: playersBadgeCount,
-    },
-  ];
+  }[] = useMemo(
+    () => [
+      {
+        key: "market",
+        label: t("tabs.market"),
+        icon: Grid3x3,
+        accent: colors.cyan400,
+        badgeCount: marketBadgeCount,
+      },
+      {
+        key: "protocols",
+        label: t("tabs.protocols"),
+        icon: Zap,
+        accent: colors.purple400,
+        badgeCount: protocolsBadgeCount,
+      },
+      {
+        key: "players",
+        label: t("tabs.players"),
+        icon: Users,
+        accent: colors.green400,
+        badgeCount: playersBadgeCount,
+      },
+    ],
+    [marketBadgeCount, protocolsBadgeCount, playersBadgeCount, t],
+  );
 
   const formatBadge = (count: number) => (count > 9 ? "9+" : String(count));
 

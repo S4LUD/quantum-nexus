@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Animated, Easing, Image, View } from "react-native";
+import { Animated, Easing, Image, Pressable, View } from "react-native";
 import { createSplashStyles } from "./splash.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface SplashScreenProps {
   onStart: () => void;
+  onOpenTerms: () => void;
+  onOpenPrivacy: () => void;
 }
 
 interface ParticleConfig {
@@ -30,8 +33,13 @@ const PARTICLE_COLORS = [
   "rgba(234,179,8,0.6)",
 ];
 
-export function SplashScreen({ onStart }: SplashScreenProps) {
+export function SplashScreen({
+  onStart,
+  onOpenTerms,
+  onOpenPrivacy,
+}: SplashScreenProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const splashStyles = useMemo(() => createSplashStyles(theme), [theme]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const logoFloat = useRef(new Animated.Value(0)).current;
@@ -130,6 +138,14 @@ export function SplashScreen({ onStart }: SplashScreenProps) {
     onStart();
   };
 
+  const handleOpenTerms = () => {
+    onOpenTerms();
+  };
+
+  const handleOpenPrivacy = () => {
+    onOpenPrivacy();
+  };
+
   const renderGridLine = (index: number) => (
     <View
       key={`grid-h-${index}`}
@@ -185,13 +201,33 @@ export function SplashScreen({ onStart }: SplashScreenProps) {
         />
       </Animated.View>
 
-      <Text style={splashStyles.title}>Quantum Nexus</Text>
+      <Text style={splashStyles.title}>{t("home.title")}</Text>
 
-      <Text style={splashStyles.subtitle}>Build Your Network</Text>
-      <Text style={splashStyles.tagline}>Harness energy. Connect nodes.</Text>
+      <Text style={splashStyles.subtitle}>{t("home.subtitle")}</Text>
+      <Text style={splashStyles.tagline}>{t("home.tagline")}</Text>
 
       <View style={splashStyles.actions}>
-        <Button label="Initialize System" onPress={handleStart} />
+        <Button
+          label={t("home.start")}
+          onPress={handleStart}
+          containerStyle={splashStyles.startButton}
+          textStyle={splashStyles.startButtonText}
+        />
+      </View>
+
+      <View style={splashStyles.legalRow}>
+        <Text style={splashStyles.legalText}>{t("legal.splashPrefix")}</Text>
+        <Pressable onPress={handleOpenTerms} style={splashStyles.legalLink}>
+          <Text style={splashStyles.legalLinkText}>
+            {t("legal.terms.title")}
+          </Text>
+        </Pressable>
+        <Text style={splashStyles.legalText}>{t("legal.splashAnd")}</Text>
+        <Pressable onPress={handleOpenPrivacy} style={splashStyles.legalLink}>
+          <Text style={splashStyles.legalLinkText}>
+            {t("legal.privacy.title")}
+          </Text>
+        </Pressable>
       </View>
 
       <View style={splashStyles.particleLayer}>

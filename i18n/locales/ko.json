@@ -1,0 +1,295 @@
+{
+  "settings": {
+    "title": "설정",
+    "darkMode": "다크 모드",
+    "soundEffects": "효과음",
+    "colorBlindMode": "색각 지원",
+    "theme": "테마",
+    "enableDarkMode": "다크 모드 사용",
+    "disableDarkMode": "다크 모드 해제",
+    "enabled": "사용 중",
+    "disabled": "사용 안 함",
+    "language": "언어",
+    "version": "버전",
+    "gameMode": "게임 모드",
+    "platform": "플랫폼",
+    "close": "닫기"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "전략적 네트워크 구축 게임",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "네트워크를 구축하세요",
+    "tagline": "에너지를 모으고 노드를 연결하세요.",
+    "start": "시스템 초기화"
+  },
+  "menu": {
+    "quickPlay": "빠른 플레이",
+    "quickPlaySubtitle": "솔로 게임 시작",
+    "multiplayer": "멀티플레이",
+    "multiplayerSubtitle": "다른 플레이어와 함께",
+    "tutorial": "튜토리얼",
+    "tutorialSubtitle": "플레이 방법 배우기",
+    "stats": "통계",
+    "settings": "설정",
+    "strategicNetworkBuilding": "전략적 네트워크 구축",
+    "wip": "개발 중"
+  },
+  "tabs": {
+    "market": "마켓",
+    "protocols": "프로토콜",
+    "players": "플레이어"
+  },
+  "common": {
+    "back": "뒤로",
+    "ok": "확인",
+    "close": "닫기",
+    "cancel": "취소",
+    "confirm": "확인",
+    "continue": "계속",
+    "skip": "건너뛰기"
+  },
+  "game": {
+    "turnLabel": "턴 {{count}}",
+    "startingPlayerNotice": "선 플레이어: {{name}}",
+    "player": "플레이어",
+    "node": "노드",
+    "efficiency": "효율",
+    "energy": "에너지",
+    "nodes": "노드",
+    "protocols": "프로토콜",
+    "outputGeneration": "출력 생성",
+    "buildNode": "노드 건설",
+    "reserveNode": "노드 예약",
+    "insufficientEnergy": "에너지가 부족합니다",
+    "energyCost": "에너지 비용",
+    "yourEnergy": "보유 에너지",
+    "discountsApplied": "할인 적용됨",
+    "providesOutput": "출력 제공",
+    "specialEffect": "특수 효과",
+    "alreadyReserved": "이미 예약된 노드입니다",
+    "requirements": "요구 사항",
+    "effect": "효과",
+    "claimed": "획득됨",
+    "victory": "승리",
+    "finalRankings": "최종 순위",
+    "victoryAchievedBy": "승리 조건",
+    "wins": "승리",
+    "networkSize": "네트워크 규모",
+    "protocolMastery": "프로토콜 제패",
+    "efficiencyThreshold": "효율 기준",
+    "noActiveGame": "진행 중인 게임이 없습니다."
+  },
+  "player": {
+    "you": "당신",
+    "label": "플레이어 {{number}}"
+  },
+  "categories": {
+    "research": "리서치",
+    "production": "프로덕션",
+    "network": "네트워크",
+    "control": "컨트롤"
+  },
+  "categoryDescriptions": {
+    "research": "리서치 노드는 특수 능력과 효율 상승을 제공합니다.",
+    "production": "프로덕션 노드는 높은 효율을 제공하지만 비용이 큽니다.",
+    "network": "네트워크 노드는 복잡하고 높은 가치를 지닙니다.",
+    "control": "컨트롤 노드는 유틸리티 효과와 유연성을 제공합니다."
+  },
+  "effects": {
+    "multiplier": "{{target}} 출력 생성을 {{value}}배로 만듭니다",
+    "discount": "노드 건설 시 {{target}} 비용을 {{value}}만큼 줄입니다",
+    "draw": "덱에서 추가로 {{value}}개의 노드를 확인할 수 있습니다",
+    "swap": "최대 {{value}}종의 에너지를 스왑할 수 있습니다"
+  },
+  "playerArea": {
+    "yourTurn": "당신의 턴",
+    "energyHeld": "보유 에너지",
+    "claimedProtocols": "획득한 프로토콜",
+    "ownedNodes": "보유 노드 ({{count}})",
+    "reservedNodes": "예약 ({{count}}/{{max}})"
+  },
+  "energy": {
+    "solar": "솔라",
+    "hydro": "하이드로",
+    "plasma": "플라즈마",
+    "neural": "뉴럴",
+    "flux": "플럭스",
+    "solarSubtitle": "노랑/주황 에너지",
+    "hydroSubtitle": "청록/파랑 에너지",
+    "plasmaSubtitle": "핑크/자홍 에너지",
+    "neuralSubtitle": "초록 에너지",
+    "fluxSubtitle": "와일드 에너지 (예약로만 획득)"
+  },
+  "alerts": {
+    "discardRequiredTitle": "버리기가 필요합니다",
+    "discardRequiredMessage": "다음 행동 전에 에너지 {{count}}개를 버리세요.",
+    "invalidActionTitle": "잘못된 행동",
+    "invalidActionMessage": "잘못된 에너지 수집입니다",
+    "insufficientEnergyTitle": "에너지 부족",
+    "insufficientEnergyMessage": "이 노드를 건설하기에 에너지가 부족합니다.",
+    "paymentErrorTitle": "결제 오류",
+    "paymentErrorMessage": "유효한 결제를 생성할 수 없습니다.",
+    "noFluxTitle": "Flux 없음",
+    "noFluxMessage": "노드를 예약하려면 Flux가 필요합니다.",
+    "reserveLimitTitle": "예약 한도",
+    "reserveLimitMessage": "최대 3개의 노드만 예약할 수 있습니다.",
+    "alreadyReservedTitle": "이미 예약됨",
+    "alreadyReservedMessage": "이 노드는 이미 예약되어 있습니다.",
+    "unavailableTitle": "사용 불가",
+    "unavailableMessage": "이 노드는 다른 플레이어가 예약했습니다.",
+    "exchangeErrorTitle": "교환 오류",
+    "exchangeSelectTake": "받을 에너지를 선택해 주세요.",
+    "exchangeInvalid": "현재 풀 또는 보유 에너지로는 교환할 수 없습니다."
+  },
+  "quickPlay": {
+    "title": "빠른 플레이 설정",
+    "bots": "Bot 수",
+    "difficulty": "난이도",
+    "botLabel_one": "Bot {{count}}명",
+    "botLabel_other": "Bot {{count}}명",
+    "start": "게임 시작"
+  },
+  "difficulty": {
+    "easy": "쉬움",
+    "medium": "보통",
+    "hard": "어려움"
+  },
+  "energyPool": {
+    "title": "에너지 풀",
+    "collectLabel": "에너지 {{count}}개 수집",
+    "exchangeLabel": "에너지 교환"
+  },
+  "exchange": {
+    "title": "에너지 교환",
+    "subtitle": "1:1 또는 2:3 교환을 선택하세요. Flux는 교환할 수 없습니다.",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "내기 {{count}}",
+    "take": "받기 {{count}}",
+    "cancel": "취소",
+    "confirm": "확인"
+  },
+  "swap": {
+    "title": "에너지 스왑",
+    "give": "내기",
+    "take": "받기",
+    "subtitle": "최대 {{count}}개의 에너지를 선택해 교환하세요.",
+    "confirm": "스왑 확인"
+  },
+  "draw": {
+    "title": "노드 뽑기",
+    "subtitle": "마켓에 추가할 노드를 하나 선택하세요."
+  },
+  "discard": {
+    "title": "에너지 버리기",
+    "subtitle": "에너지 {{count}}개를 선택해 버리세요. 남은 수: {{remaining}}.",
+    "confirm": "에너지 {{count}}개 버리기"
+  },
+  "endgame": {
+    "networkComplete": "네트워크 완성",
+    "playAgain": "다시 플레이",
+    "mainMenu": "메인 메뉴"
+  },
+  "tutorial": {
+    "welcomeTitle": "Quantum Nexus에 오신 것을 환영합니다",
+    "welcomeBody1": "에너지를 모으고 노드를 구축해 양자 네트워크를 만드세요.",
+    "welcomeBody2": "Efficiency, 네트워크 규모 또는 프로토콜 mastery로 가장 먼저 승리하세요.",
+    "winConditions": "승리 조건",
+    "winConditionEfficiency": "• 20턴 이후 20★ Efficiency 달성",
+    "winConditionNodes": "• 필요 수만큼 노드 건설 (2인:13 / 3인:15 / 4인:17)",
+    "winConditionProtocols": "• 프로토콜 3개 이상 획득",
+    "energyTypesTitle": "에너지 종류",
+    "energyTypesBody": "4가지 에너지와 Flux가 있습니다:",
+    "yourTurnTitle": "당신의 턴",
+    "yourTurnBody": "자신의 턴에 다음 중 한 가지 행동을 선택하세요:",
+    "collectTitle": "1. 에너지 수집",
+    "collectLine1": "• 서로 다른 에너지 3개를 취하거나",
+    "collectLine2": "• 같은 에너지 2개를 취합니다 (풀에 4개 이상)",
+    "collectLine3": "• 에너지는 최대 10개까지 보유",
+    "buildTitle": "2. 노드 건설",
+    "buildLine1": "• 에너지 비용을 지불",
+    "buildLine2": "• 네트워크에 추가",
+    "buildLine3": "• Efficiency 획득",
+    "reserveTitle": "3. 노드 예약",
+    "reserveLine1": "• 나중을 위해 보관 (최대 3개)",
+    "reserveLine2": "• Flux 1개 획득 (가능한 경우)",
+    "reserveLine3": "• 예약된 노드는 언제든 건설 가능",
+    "exchangeTitle": "4. 에너지 교환",
+    "exchangeLine1": "• 1:1 교환 (1개 내고 1개 받기)",
+    "exchangeLine2": "• 2:3 교환 (같은 에너지 2개 받고, 아무 3개 반환)",
+    "exchangeLine3": "• Flux는 교환 불가",
+    "exchangeLine4": "• 풀에 받을 에너지가 있어야 합니다",
+    "nodesTitle": "노드s",
+    "nodesBody": "노드는 네트워크의 핵심입니다. 각 노드는 다음을 제공합니다:",
+    "nodeResearch": "Research 노드s",
+    "nodeResearchDesc": "특수 능력과 Efficiency 상승",
+    "nodeProduction": "Production 노드s",
+    "nodeProductionDesc": "높은 Efficiency, 높은 비용",
+    "nodeNetwork": "네트워크 노드",
+    "nodeNetworkDesc": "복잡하고 고가치의 추가 요소",
+    "nodeControl": "Control 노드s",
+    "nodeControlDesc": "유틸리티 효과와 유연성",
+    "outputTitle": "출력 생성",
+    "outputBody": "각 노드는 해당 타입의 출력 1을 생성하며, 프로토콜 조건에 포함되고 노드 건설 시 해당 에너지 비용을 1 줄입니다(기본 에너지만).",
+    "protocolsTitle": "프로토콜s",
+    "protocolsBody": "프로토콜s는 강력한 업그레이드입니다:",
+    "protocolRequirements": "요구 사항",
+    "protocolRequirementsLine1": "충분한 OUTPUT 생성이 필요합니다(보유 에너지가 아님)",
+    "protocolRequirementsLine2": "OUTPUT은 소모되지 않으며 여러 프로토콜에 사용됩니다",
+    "protocolClaiming": "획득",
+    "protocolClaimingLine1": "직접 탭하여 획득해야 합니다(자동 아님)",
+    "protocolBenefits": "혜택",
+    "protocolBenefitsLine1": "Efficiency 점수와 지속 효과를 제공합니다",
+    "protocolExamples": "예: 출력 생성 2배, 무료 예약, 에너지 스왑, 비용 절감",
+    "strategyTitle": "전략 팁",
+    "strategyMultipleTitle": "여러 승리 경로",
+    "strategyMultipleBody": "Efficiency, 네트워크 규모, 프로토콜 mastery 중 하나에 집중하거나 조합하세요.",
+    "strategyFluxTitle": "Flux는 강력합니다",
+    "strategyFluxBody": "와일드 에너지이지만 수량이 제한됩니다. 예약로 Flux를 얻으세요.",
+    "strategyEffectsTitle": "노드 효과 연계",
+    "strategyEffectsBody": "효과는 일시적이며 노드 건설 후 발동됩니다.",
+    "strategyTimingTitle": "타이밍이 중요합니다",
+    "strategyTimingBody": "Efficiency 판정은 20턴 이후에만 적용됩니다. 미리 계획하세요.",
+    "previous": "이전",
+    "next": "다음",
+    "gotIt": "확인"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}}님이 노드를 예약했습니다.",
+    "builtNode": "{{name}}님이 노드를 건설했습니다.",
+    "builtReservedNode": "{{name}}님이 예약된 노드를 건설했습니다.",
+    "claimedProtocol": "{{name}}님이 프로토콜을 획득했습니다.",
+    "exchangedEnergy": "{{name}}님이 에너지를 교환했습니다.",
+    "collectedEnergy": "{{name}}님이 에너지를 수집했습니다.",
+    "swappedEnergy": "{{name}}님이 에너지를 스왑했습니다.",
+    "noLegalAction": "{{name}}님은 실행 가능한 행동이 없습니다."
+  },
+  "bot": {
+    "reserveNode": "{{name}}님이 노드를 예약했습니다.",
+    "buildNode": "{{name}}님이 노드를 건설했습니다.",
+    "buildReservedNode": "{{name}}님이 예약된 노드를 건설했습니다.",
+    "claimProtocol": "{{name}}님이 프로토콜을 획득했습니다.",
+    "exchangeEnergy": "{{name}}님이 에너지를 교환했습니다.",
+    "collectEnergy": "{{name}}님이 에너지를 수집했습니다.",
+    "swapEnergy": "{{name}}님이 에너지를 스왑했습니다.",
+    "noLegalAction": "{{name}}님은 실행 가능한 행동이 없습니다."
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} 배",
+      "discount": "-{{value}} 비용",
+      "draw": "+{{value}} 드로우",
+      "swap": "스왑"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "배수",
+    "discount": "할인",
+    "draw": "드로우",
+    "swap": "스왑"
+  }
+}

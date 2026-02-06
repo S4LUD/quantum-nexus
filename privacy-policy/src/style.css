@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-[radial-gradient(circle_at_top,#1d2540_0%,#0e1118_55%)] text-ink;
+  }
+}

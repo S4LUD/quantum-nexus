@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/Icon/Icon";
 import { Text } from "@/components/ui/Text/Text";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
+import { useTranslation } from "react-i18next";
 
 interface GameHeaderProps {
   title: string;
@@ -23,6 +24,7 @@ export function GameHeader({
   onBack,
 }: GameHeaderProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const gameHeaderStyles = useMemo(
     () => createGameHeaderStyles(theme),
     [theme],
@@ -38,7 +40,7 @@ export function GameHeader({
           <Icon icon={ArrowLeft} size={16} color={theme.colors.text} />
         </Pressable>
         <Text variant="caption" style={gameHeaderStyles.captionMuted}>
-          Turn {turnCount}
+          {t("game.turnLabel", { count: turnCount })}
         </Text>
       </View>
       <View style={gameHeaderStyles.center}>

@@ -1,0 +1,295 @@
+{
+  "settings": {
+    "title": "設定",
+    "darkMode": "ダークモード",
+    "soundEffects": "効果音",
+    "colorBlindMode": "色覚サポート",
+    "theme": "テーマ",
+    "enableDarkMode": "ダークモードを有効にする",
+    "disableDarkMode": "ダークモードを無効にする",
+    "enabled": "有効",
+    "disabled": "無効",
+    "language": "言語",
+    "version": "バージョン",
+    "gameMode": "ゲームモード",
+    "platform": "プラットフォーム",
+    "close": "閉じる"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "戦略的ネットワーク構築ゲーム",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "ネットワークを構築する",
+    "tagline": "エネルギーを集め、ノードを繋ぐ。",
+    "start": "システムを初期化"
+  },
+  "menu": {
+    "quickPlay": "クイックプレイ",
+    "quickPlaySubtitle": "ソロゲームを開始",
+    "multiplayer": "マルチプレイ",
+    "multiplayerSubtitle": "他のプレイヤーと遊ぶ",
+    "tutorial": "チュートリアル",
+    "tutorialSubtitle": "遊び方を学ぶ",
+    "stats": "統計",
+    "settings": "設定",
+    "strategicNetworkBuilding": "戦略的ネットワーク構築",
+    "wip": "作業中"
+  },
+  "tabs": {
+    "market": "マーケット",
+    "protocols": "プロトコル",
+    "players": "プレイヤー"
+  },
+  "common": {
+    "back": "戻る",
+    "ok": "OK",
+    "close": "閉じる",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "continue": "続行",
+    "skip": "スキップ"
+  },
+  "game": {
+    "turnLabel": "ターン {{count}}",
+    "startingPlayerNotice": "先手プレイヤー: {{name}}",
+    "player": "プレイヤー",
+    "node": "ノード",
+    "efficiency": "効率",
+    "energy": "エネルギー",
+    "nodes": "ノード",
+    "protocols": "プロトコル",
+    "outputGeneration": "出力生成",
+    "buildNode": "ノードを建設",
+    "reserveNode": "ノードをリザーブ",
+    "insufficientEnergy": "エネルギーが不足しています",
+    "energyCost": "エネルギーコスト",
+    "yourEnergy": "あなたのエネルギー",
+    "discountsApplied": "割引適用済み",
+    "providesOutput": "出力を提供",
+    "specialEffect": "特別効果",
+    "alreadyReserved": "すでにリザーブ済みのノードです",
+    "requirements": "要件",
+    "effect": "効果",
+    "claimed": "獲得済み",
+    "victory": "勝利",
+    "finalRankings": "最終順位",
+    "victoryAchievedBy": "勝利条件",
+    "wins": "勝利",
+    "networkSize": "ネットワーク規模",
+    "protocolMastery": "プロトコル制覇",
+    "efficiencyThreshold": "効率のしきい値",
+    "noActiveGame": "進行中のゲームがありません。"
+  },
+  "player": {
+    "you": "あなた",
+    "label": "プレイヤー{{number}}"
+  },
+  "categories": {
+    "research": "リサーチ",
+    "production": "プロダクション",
+    "network": "ネットワーク",
+    "control": "コントロール"
+  },
+  "categoryDescriptions": {
+    "research": "リサーチノードは特別な能力と効率の強化を提供します。",
+    "production": "プロダクションノードは高効率ですが高コストです。",
+    "network": "ネットワークノードは複雑で高価値の追加要素です。",
+    "control": "コントロールノードはユーティリティ効果と柔軟性を提供します。"
+  },
+  "effects": {
+    "multiplier": "{{target}}の出力生成を{{value}}倍にします",
+    "discount": "ノードを建設する際の{{target}}コストを{{value}}減らします",
+    "draw": "デッキから追加で{{value}}枚のノードを確認できます",
+    "swap": "最大{{value}}種類のエネルギーをスワップできます"
+  },
+  "playerArea": {
+    "yourTurn": "あなたのターン",
+    "energyHeld": "保持中のエネルギー",
+    "claimedProtocols": "獲得済みプロトコル",
+    "ownedNodes": "所持ノード（{{count}}）",
+    "reservedNodes": "リザーブ（{{count}}/{{max}}）"
+  },
+  "energy": {
+    "solar": "ソーラー",
+    "hydro": "ハイドロ",
+    "plasma": "プラズマ",
+    "neural": "ニューラル",
+    "flux": "フラックス",
+    "solarSubtitle": "黄/オレンジ系のエネルギー",
+    "hydroSubtitle": "シアン/青系のエネルギー",
+    "plasmaSubtitle": "ピンク/マゼンタ系のエネルギー",
+    "neuralSubtitle": "緑系のエネルギー",
+    "fluxSubtitle": "ワイルドエネルギー（リザーブでのみ獲得）"
+  },
+  "alerts": {
+    "discardRequiredTitle": "破棄が必要です",
+    "discardRequiredMessage": "次の行動の前にエネルギーを{{count}}枚破棄してください。",
+    "invalidActionTitle": "無効な行動",
+    "invalidActionMessage": "無効なエネルギー収集です",
+    "insufficientEnergyTitle": "エネルギー不足",
+    "insufficientEnergyMessage": "このノードを建設するエネルギーが足りません。",
+    "paymentErrorTitle": "支払いエラー",
+    "paymentErrorMessage": "有効な支払いを生成できません。",
+    "noFluxTitle": "Fluxがありません",
+    "noFluxMessage": "ノードのリザーブにはFluxが必要です。",
+    "reserveLimitTitle": "リザーブ上限",
+    "reserveLimitMessage": "リザーブできるノードは最大3つです。",
+    "alreadyReservedTitle": "すでにリザーブ済み",
+    "alreadyReservedMessage": "このノードはすでにリザーブされています。",
+    "unavailableTitle": "利用不可",
+    "unavailableMessage": "このノードは他のプレイヤーがリザーブしています。",
+    "exchangeErrorTitle": "交換エラー",
+    "exchangeSelectTake": "取得するエネルギーを選択してください。",
+    "exchangeInvalid": "現在のプールまたは手持ちでは交換できません。"
+  },
+  "quickPlay": {
+    "title": "クイックプレイ設定",
+    "bots": "Bot数",
+    "difficulty": "難易度",
+    "botLabel_one": "{{count}}体のボット",
+    "botLabel_other": "{{count}}体のボット",
+    "start": "ゲーム開始"
+  },
+  "difficulty": {
+    "easy": "簡単",
+    "medium": "普通",
+    "hard": "難しい"
+  },
+  "energyPool": {
+    "title": "エネルギープール",
+    "collectLabel": "エネルギーを{{count}}枚収集",
+    "exchangeLabel": "エネルギーを交換"
+  },
+  "exchange": {
+    "title": "エネルギー交換",
+    "subtitle": "1:1 または 2:3 の交換を選択してください。Fluxは交換できません。",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "渡す {{count}}",
+    "take": "取る {{count}}",
+    "cancel": "キャンセル",
+    "confirm": "確認"
+  },
+  "swap": {
+    "title": "エネルギー スワップ",
+    "give": "渡す",
+    "take": "取る",
+    "subtitle": "最大{{count}}枚のエネルギーを渡し、受け取るものを選択してください。",
+    "confirm": "スワップを確定"
+  },
+  "draw": {
+    "title": "ノードを引く",
+    "subtitle": "マーケットに入れるノードを1つ選択してください。"
+  },
+  "discard": {
+    "title": "エネルギーを破棄",
+    "subtitle": "エネルギーを{{count}}枚選択して破棄してください。残り: {{remaining}}。",
+    "confirm": "エネルギーを{{count}}枚破棄"
+  },
+  "endgame": {
+    "networkComplete": "ネットワーク完成",
+    "playAgain": "もう一度プレイ",
+    "mainMenu": "メインメニュー"
+  },
+  "tutorial": {
+    "welcomeTitle": "Quantum Nexusへようこそ",
+    "welcomeBody1": "エネルギーを集めてノードを構築し、量子計算ネットワークを作りましょう。",
+    "welcomeBody2": "Efficiency、ネットワーク規模、またはプロトコルの制覇で最初に勝利を目指します。",
+    "winConditions": "勝利条件",
+    "winConditionEfficiency": "• 20ターン後に20★のEfficiencyに到達",
+    "winConditionNodes": "• 必要数のノードを建設（2人:13 / 3人:15 / 4人:17）",
+    "winConditionProtocols": "• プロトコルを3つ以上獲得",
+    "energyTypesTitle": "エネルギーの種類",
+    "energyTypesBody": "4種類のエネルギーとFluxがあります:",
+    "yourTurnTitle": "あなたのターン",
+    "yourTurnBody": "自分のターンでは、次のいずれか1つの行動を選びます:",
+    "collectTitle": "1. エネルギーを収集",
+    "collectLine1": "• 異なる3種類のエネルギーを取る、または",
+    "collectLine2": "• 同種2枚を取る（プールに4枚以上ある場合）",
+    "collectLine3": "• エネルギーは最大10枚まで",
+    "buildTitle": "2. ノードを建設",
+    "buildLine1": "• エネルギーコストを支払う",
+    "buildLine2": "• ネットワークに追加する",
+    "buildLine3": "• Efficiencyを獲得する",
+    "reserveTitle": "3. ノードをリザーブ",
+    "reserveLine1": "• 取っておき、後で建設（最大3）",
+    "reserveLine2": "• Fluxを1枚獲得（利用可能な場合）",
+    "reserveLine3": "• リザーブからいつでも建設可能",
+    "exchangeTitle": "4. エネルギーを交換",
+    "exchangeLine1": "• 1:1 交換（1枚渡して1枚取る）",
+    "exchangeLine2": "• 2:3 交換（同種2枚を取り、3枚返す）",
+    "exchangeLine3": "• Fluxは交換不可",
+    "exchangeLine4": "• プールに必要なエネルギーがある必要があります",
+    "nodesTitle": "ノード",
+    "nodesBody": "ノードはネットワークの中核です。各ノードは次を提供します:",
+    "nodeResearch": "Research ノード",
+    "nodeResearchDesc": "特別な能力とEfficiencyの強化",
+    "nodeProduction": "Production ノード",
+    "nodeProductionDesc": "高Efficiencyだが高コスト",
+    "nodeNetwork": "ネットワーク ノード",
+    "nodeNetworkDesc": "複雑で高価値の追加要素",
+    "nodeControl": "Control ノード",
+    "nodeControlDesc": "ユーティリティ効果と柔軟性",
+    "outputTitle": "出力生成",
+    "outputBody": "各ノードは自分のタイプの出力を1つ生成し、プロトコルの要件に使われ、ノードを建設する際に該当エネルギーコストを1減らします（基本エネルギーのみ）。",
+    "protocolsTitle": "プロトコル",
+    "protocolsBody": "プロトコルは獲得できる強力なアップグレードです:",
+    "protocolRequirements": "要件",
+    "protocolRequirementsLine1": "必要なOUTPUT生成（保持エネルギーではない）が必要",
+    "protocolRequirementsLine2": "OUTPUTは消費されず、複数のプロトコルに適用可能",
+    "protocolClaiming": "獲得",
+    "protocolClaimingLine1": "タップして能動的に獲得する必要があります（自動ではありません）",
+    "protocolBenefits": "効果",
+    "protocolBenefitsLine1": "Efficiencyポイントと継続的な特別効果を提供します",
+    "protocolExamples": "例: 出力生成の倍化、無料リザーブ、エネルギー swap、コスト削減",
+    "strategyTitle": "戦略のヒント",
+    "strategyMultipleTitle": "複数の勝利ルート",
+    "strategyMultipleBody": "Efficiency、ネットワーク規模、プロトコル制覇のいずれか、または組み合わせで戦略を立てましょう。",
+    "strategyFluxTitle": "Fluxは強力",
+    "strategyFluxBody": "ワイルドエネルギーですが供給は限定的です。リザーブでFluxを獲得しましょう。",
+    "strategyEffectsTitle": "ノード効果の連鎖",
+    "strategyEffectsBody": "効果は一時的で、ノードの建設後に発動します。",
+    "strategyTimingTitle": "タイミングが重要",
+    "strategyTimingBody": "Efficiencyの判定は20ターン後から有効です。計画的に進めましょう。",
+    "previous": "前へ",
+    "next": "次へ",
+    "gotIt": "了解"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}}さんがノードを予約しました。",
+    "builtNode": "{{name}}さんがノードを建設しました。",
+    "builtReservedNode": "{{name}}さんが予約済みのノードを建設しました。",
+    "claimedProtocol": "{{name}}さんがプロトコルを取得しました。",
+    "exchangedEnergy": "{{name}}さんがエネルギーを交換しました。",
+    "collectedEnergy": "{{name}}さんがエネルギーを収集しました。",
+    "swappedEnergy": "{{name}}さんがエネルギーをスワップしました。",
+    "noLegalAction": "{{name}}さんは実行可能な行動がありませんでした。"
+  },
+  "bot": {
+    "reserveNode": "{{name}}さんがノードを予約しました。",
+    "buildNode": "{{name}}さんがノードを建設しました。",
+    "buildReservedNode": "{{name}}さんが予約済みのノードを建設しました。",
+    "claimProtocol": "{{name}}さんがプロトコルを取得しました。",
+    "exchangeEnergy": "{{name}}さんがエネルギーを交換しました。",
+    "collectEnergy": "{{name}}さんがエネルギーを収集しました。",
+    "swapEnergy": "{{name}}さんがエネルギーをスワップしました。",
+    "noLegalAction": "{{name}}さんは実行可能な行動がありませんでした。"
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} 倍",
+      "discount": "-{{value}} コスト",
+      "draw": "+{{value}} ドロー",
+      "swap": "スワップ"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "倍率",
+    "discount": "割引",
+    "draw": "ドロー",
+    "swap": "スワップ"
+  }
+}

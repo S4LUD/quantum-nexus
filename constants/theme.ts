@@ -1,5 +1,7 @@
 import { colors, gradients, GradientTuple } from "./colors";
 
+type EnergyKey = "solar" | "hydro" | "plasma" | "neural" | "flux";
+
 export type ThemeMode = "dark" | "light";
 
 export type ThemeColors = {
@@ -29,14 +31,83 @@ export type ThemeGradients = {
   bottomBar: GradientTuple;
 };
 
+export type ThemeEnergy = {
+  colors: Record<EnergyKey, string>;
+  gradients: Record<EnergyKey, GradientTuple>;
+  backgrounds: Record<EnergyKey, string>;
+};
+
 export type Theme = {
   mode: ThemeMode;
+  colorBlind: boolean;
   colors: ThemeColors;
   gradients: ThemeGradients;
+  energy: ThemeEnergy;
 };
+
+function hexToRgba(hex: string, alpha: number): string {
+  const normalized = hex.replace("#", "");
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((char) => char + char)
+          .join("")
+      : normalized;
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+const baseEnergyColors: Record<EnergyKey, string> = {
+  solar: colors.yellow400,
+  hydro: colors.cyan400,
+  plasma: colors.pink400,
+  neural: colors.green400,
+  flux: colors.purple400,
+};
+
+const colorBlindEnergyColors: Record<EnergyKey, string> = {
+  solar: colors.cbSolar,
+  hydro: colors.cbHydro,
+  plasma: colors.cbPlasma,
+  neural: colors.cbNeural,
+  flux: colors.cbFlux,
+};
+
+function buildEnergyTheme(
+  isColorBlind: boolean,
+  accentAlpha: number,
+): ThemeEnergy {
+  const energyColors = isColorBlind
+    ? colorBlindEnergyColors
+    : baseEnergyColors;
+  const energyGradients = {
+    solar: isColorBlind ? gradients.energySolarCb : gradients.energySolar,
+    hydro: isColorBlind ? gradients.energyHydroCb : gradients.energyHydro,
+    plasma: isColorBlind ? gradients.energyPlasmaCb : gradients.energyPlasma,
+    neural: isColorBlind ? gradients.energyNeuralCb : gradients.energyNeural,
+    flux: isColorBlind ? gradients.energyFluxCb : gradients.energyFlux,
+  };
+  const energyBackgrounds = {
+    solar: hexToRgba(energyColors.solar, accentAlpha),
+    hydro: hexToRgba(energyColors.hydro, accentAlpha),
+    plasma: hexToRgba(energyColors.plasma, accentAlpha),
+    neural: hexToRgba(energyColors.neural, accentAlpha),
+    flux: hexToRgba(energyColors.flux, accentAlpha),
+  };
+
+  return {
+    colors: energyColors,
+    gradients: energyGradients,
+    backgrounds: energyBackgrounds,
+  };
+}
 
 const darkTheme: Theme = {
   mode: "dark",
+  colorBlind: false,
   colors: {
     background: colors.slate950,
     surface: colors.slate900,
@@ -62,10 +133,12 @@ const darkTheme: Theme = {
     tabBar: gradients.tabBar,
     bottomBar: gradients.bottomBar,
   },
+  energy: buildEnergyTheme(false, 0.2),
 };
 
 const lightTheme: Theme = {
   mode: "light",
+  colorBlind: false,
   colors: {
     background: colors.gray300,
     surface: colors.white,
@@ -91,8 +164,17 @@ const lightTheme: Theme = {
     tabBar: ["rgba(255,255,255,0.92)", "rgba(255,255,255,0.92)"] as GradientTuple,
     bottomBar: ["rgba(255,255,255,0.95)", "rgba(230,244,254,0.95)"] as GradientTuple,
   },
+  energy: buildEnergyTheme(false, 0.16),
 };
 
-export function getTheme(mode: ThemeMode): Theme {
-  return mode === "light" ? lightTheme : darkTheme;
+export function getTheme(mode: ThemeMode, colorBlind = false): Theme {
+  const base = mode === "light" ? lightTheme : darkTheme;
+  if (!colorBlind) {
+    return base;
+  }
+  return {
+    ...base,
+    colorBlind: true,
+    energy: buildEnergyTheme(true, base.mode === "light" ? 0.16 : 0.2),
+  };
 }

@@ -11,6 +11,7 @@ import { Text } from "@/components/ui/Text/Text";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { useTheme } from "@/hooks/useTheme";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ProtocolCardProps {
   protocol: Protocol;
@@ -26,6 +27,7 @@ export function ProtocolCard({
   compact = false,
 }: ProtocolCardProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const protocolCardStyles = useMemo(
     () => createProtocolCardStyles(theme),
     [theme],
@@ -102,12 +104,16 @@ export function ProtocolCard({
                 fill="none"
               />
             </View>
-            <Text style={protocolCardStyles.efficiencyLabel}>Efficiency</Text>
+            <Text style={protocolCardStyles.efficiencyLabel}>
+              {t("game.efficiency")}
+            </Text>
           </View>
         </View>
 
         <View style={protocolCardStyles.requirements}>
-          <Text style={protocolCardStyles.sectionLabel}>Requirements</Text>
+          <Text style={protocolCardStyles.sectionLabel}>
+            {t("game.requirements")}
+          </Text>
           <View style={protocolCardStyles.requirementsRow}>
             {Object.entries(protocol.requirements).map(([type, count]) => (
               <View key={type} style={protocolCardStyles.requirementItem}>
@@ -121,14 +127,18 @@ export function ProtocolCard({
         </View>
 
         <View style={protocolCardStyles.effect}>
-          <Text style={protocolCardStyles.effectLabel}>Effect:</Text>
+          <Text style={protocolCardStyles.effectLabel}>
+            {t("game.effect")}:
+          </Text>
           <Text style={protocolCardStyles.effectValue}>{protocol.effect}</Text>
         </View>
 
         {isClaimed ? (
           <View style={protocolCardStyles.claimedOverlay}>
             <CheckCircle color={colors.green400} size={layout.icon.xl} />
-            <Text style={protocolCardStyles.claimedLabel}>CLAIMED</Text>
+            <Text style={protocolCardStyles.claimedLabel}>
+              {t("game.claimed")}
+            </Text>
           </View>
         ) : null}
       </LinearGradient>

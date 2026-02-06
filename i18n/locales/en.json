@@ -1,0 +1,332 @@
+{
+  "settings": {
+    "title": "Settings",
+    "darkMode": "Dark Mode",
+    "soundEffects": "Sound Effects",
+    "colorBlindMode": "Color Blind Mode",
+    "theme": "Theme",
+    "enableDarkMode": "Enable Dark Mode",
+    "disableDarkMode": "Disable Dark Mode",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "language": "Language",
+    "version": "Version",
+    "gameMode": "Game Mode",
+    "platform": "Platform",
+    "close": "Close"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "Strategic Network Building Game",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only.",
+    "sectionTitle": "Legal",
+    "splashPrefix": "By continuing, you agree to",
+    "splashAnd": "and",
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated February 6, 2026",
+      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
+      "sections": {
+        "licenseTitle": "License",
+        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
+        "acceptableTitle": "Acceptable Use",
+        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
+        "contentTitle": "User Content",
+        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
+        "liabilityTitle": "Disclaimer",
+        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
+        "changesTitle": "Changes",
+        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated February 6, 2026",
+      "intro": "Quantum Nexus is an offline-only game. We do not collect or share personal data.",
+      "sections": {
+        "dataTitle": "Data Collection",
+        "dataBody": "No accounts, analytics, ads, or crash reporting are used. We do not collect identifiers or usage data.",
+        "permissionsTitle": "Permissions",
+        "permissionsBody": "The app does not request device permissions beyond standard platform requirements.",
+        "storageTitle": "Local Storage",
+        "storageBody": "Game progress is stored locally on your device. Uninstalling the app removes local data.",
+        "childrenTitle": "Children's Privacy",
+        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
+        "changesTitle": "Changes",
+        "changesBody": "If this policy changes, we will update the date shown here."
+      }
+    }
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "Build Your Network",
+    "tagline": "Harness energy. Connect nodes.",
+    "start": "Initialize System"
+  },
+  "menu": {
+    "quickPlay": "Quick Play",
+    "quickPlaySubtitle": "Start solo game",
+    "multiplayer": "Multiplayer",
+    "multiplayerSubtitle": "Play with others",
+    "tutorial": "Tutorial",
+    "tutorialSubtitle": "Learn how to play",
+    "stats": "Stats",
+    "settings": "Settings",
+    "strategicNetworkBuilding": "Strategic Network Building",
+    "wip": "WIP"
+  },
+  "tabs": {
+    "market": "Market",
+    "protocols": "Protocols",
+    "players": "Players"
+  },
+  "common": {
+    "back": "Back",
+    "ok": "OK",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "skip": "Skip"
+  },
+  "game": {
+    "turnLabel": "Turn {{count}}",
+    "startingPlayerNotice": "Starting player: {{name}}",
+    "player": "Player",
+    "node": "Node",
+    "efficiency": "Efficiency",
+    "energy": "Energy",
+    "nodes": "Nodes",
+    "protocols": "Protocols",
+    "outputGeneration": "Output Generation",
+    "buildNode": "Build Node",
+    "reserveNode": "Reserve Node",
+    "insufficientEnergy": "Insufficient Energy",
+    "energyCost": "Energy Cost",
+    "yourEnergy": "Your Energy",
+    "discountsApplied": "Discounts Applied",
+    "providesOutput": "Provides output",
+    "specialEffect": "Special Effect",
+    "alreadyReserved": "Already in your reserved nodes",
+    "requirements": "Requirements",
+    "effect": "Effect",
+    "claimed": "CLAIMED",
+    "victory": "Victory",
+    "finalRankings": "Final Rankings",
+    "victoryAchievedBy": "Victory Achieved By",
+    "wins": "Wins",
+    "networkSize": "Network Size",
+    "protocolMastery": "Protocol Mastery",
+    "efficiencyThreshold": "Efficiency Threshold",
+    "noActiveGame": "No active game."
+  },
+  "player": {
+    "you": "You",
+    "label": "Player {{number}}"
+  },
+  "categories": {
+    "research": "Research",
+    "production": "Production",
+    "network": "Network",
+    "control": "Control"
+  },
+  "categoryDescriptions": {
+    "research": "Research nodes provide special abilities and efficiency boosts.",
+    "production": "Production nodes offer high efficiency with greater costs.",
+    "network": "Network nodes are complex, high-value additions to your system.",
+    "control": "Control nodes provide utility effects and flexibility."
+  },
+  "effects": {
+    "multiplier": "Multiplies {{target}} output generation by {{value}}x",
+    "discount": "Reduces {{target}} costs by {{value}} when building nodes",
+    "draw": "Allows viewing {{value}} additional node(s) from deck",
+    "swap": "Enables swapping up to {{value}} energy types"
+  },
+  "playerArea": {
+    "yourTurn": "YOUR TURN",
+    "energyHeld": "Energy Held",
+    "claimedProtocols": "Claimed Protocols",
+    "ownedNodes": "Owned Nodes ({{count}})",
+    "reservedNodes": "Reserved ({{count}}/{{max}})"
+  },
+  "energy": {
+    "solar": "Solar",
+    "hydro": "Hydro",
+    "plasma": "Plasma",
+    "neural": "Neural",
+    "flux": "Flux",
+    "solarSubtitle": "Yellow/Orange energy",
+    "hydroSubtitle": "Cyan/Blue energy",
+    "plasmaSubtitle": "Pink/Magenta energy",
+    "neuralSubtitle": "Green energy",
+    "fluxSubtitle": "Wild energy (gained by reserving only)"
+  },
+  "alerts": {
+    "discardRequiredTitle": "Discard required",
+    "discardRequiredMessage": "Discard {{count}} energy before taking another action.",
+    "invalidActionTitle": "Invalid action",
+    "invalidActionMessage": "Invalid energy collection",
+    "insufficientEnergyTitle": "Insufficient energy",
+    "insufficientEnergyMessage": "Not enough energy to build this node.",
+    "paymentErrorTitle": "Payment error",
+    "paymentErrorMessage": "Cannot generate a valid payment.",
+    "noFluxTitle": "No Flux available",
+    "noFluxMessage": "Flux is required to reserve a node.",
+    "reserveLimitTitle": "Reserve limit",
+    "reserveLimitMessage": "Maximum 3 reserved nodes.",
+    "alreadyReservedTitle": "Already reserved",
+    "alreadyReservedMessage": "This node is already reserved.",
+    "unavailableTitle": "Unavailable",
+    "unavailableMessage": "This node is reserved by another player.",
+    "exchangeErrorTitle": "Exchange error",
+    "exchangeSelectTake": "Select an energy to take.",
+    "exchangeInvalid": "Cannot complete this exchange with current pool or energy."
+  },
+  "quickPlay": {
+    "title": "Quick Play Setup",
+    "bots": "Bot Count",
+    "difficulty": "Difficulty",
+    "botLabel_one": "{{count}} Bot",
+    "botLabel_other": "{{count}} Bots",
+    "start": "Start Game"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "energyPool": {
+    "title": "Energy Pool",
+    "collectLabel": "Collect {{count}} Energy",
+    "exchangeLabel": "Exchange Energy"
+  },
+  "exchange": {
+    "title": "Exchange Energy",
+    "subtitle": "Choose 1:1 or 2:3 exchange. Flux cannot be exchanged.",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "Give {{count}}",
+    "take": "Take {{count}}",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "swap": {
+    "title": "Swap Energy",
+    "give": "Give",
+    "take": "Take",
+    "subtitle": "Select up to {{count}} energy to give and take.",
+    "confirm": "Confirm Swap"
+  },
+  "draw": {
+    "title": "Draw Nodes",
+    "subtitle": "Select one node to inject into the market."
+  },
+  "discard": {
+    "title": "Discard Energy",
+    "subtitle": "Select {{count}} energy to discard. Remaining: {{remaining}}.",
+    "confirm": "Discard {{count}} Energy"
+  },
+  "endgame": {
+    "networkComplete": "Network Complete",
+    "playAgain": "Play Again",
+    "mainMenu": "Main Menu"
+  },
+  "tutorial": {
+    "welcomeTitle": "Welcome to Quantum Nexus",
+    "welcomeBody1": "Build a quantum computing network by collecting energy and constructing nodes.",
+    "welcomeBody2": "Be the first to achieve victory through efficiency, network size, or protocol mastery.",
+    "winConditions": "Win Conditions",
+    "winConditionEfficiency": "• Reach 20★ Efficiency after turn 20",
+    "winConditionNodes": "• Build required Nodes (2P: 13 / 3P: 15 / 4P: 17)",
+    "winConditionProtocols": "• Claim 3 or more Protocols",
+    "energyTypesTitle": "Energy Types",
+    "energyTypesBody": "There are 4 energy types plus Flux:",
+    "yourTurnTitle": "Your Turn",
+    "yourTurnBody": "On your turn, choose ONE action:",
+    "collectTitle": "1. Collect Energy",
+    "collectLine1": "• Take 3 different energy types, OR",
+    "collectLine2": "• Take 2 of the same type (if 4+ available)",
+    "collectLine3": "• Maximum 10 energy total",
+    "buildTitle": "2. Build a Node",
+    "buildLine1": "• Pay the energy cost",
+    "buildLine2": "• Add to your network",
+    "buildLine3": "• Gain efficiency points",
+    "reserveTitle": "3. Reserve a Node",
+    "reserveLine1": "• Set aside for later (max 3)",
+    "reserveLine2": "• Gain 1 Flux energy (if available)",
+    "reserveLine3": "• Build from reserves anytime",
+    "exchangeTitle": "4. Exchange Energy",
+    "exchangeLine1": "• 1:1 exchange (give 1, take 1)",
+    "exchangeLine2": "• 2:3 exchange (take 2 same, give any 3)",
+    "exchangeLine3": "• Flux cannot be exchanged",
+    "exchangeLine4": "• Pool must have energy to take",
+    "nodesTitle": "Nodes",
+    "nodesBody": "Nodes are the core of your network. Each provides:",
+    "nodeResearch": "Research Nodes",
+    "nodeResearchDesc": "Special abilities and efficiency boosts",
+    "nodeProduction": "Production Nodes",
+    "nodeProductionDesc": "High efficiency, greater costs",
+    "nodeNetwork": "Network Nodes",
+    "nodeNetworkDesc": "Complex, high-value additions",
+    "nodeControl": "Control Nodes",
+    "nodeControlDesc": "Utility effects and flexibility",
+    "outputTitle": "Output Generation",
+    "outputBody": "Each node generates 1 output of its type, which counts toward Protocol requirements and reduces that energy cost by 1 when building nodes (base energies only).",
+    "protocolsTitle": "Protocols",
+    "protocolsBody": "Protocols are powerful upgrades you can claim:",
+    "protocolRequirements": "Requirements",
+    "protocolRequirementsLine1": "Must have enough OUTPUT generation (not energy held)",
+    "protocolRequirementsLine2": "Outputs are not spent and can qualify for multiple Protocols",
+    "protocolClaiming": "Claiming",
+    "protocolClaimingLine1": "Must actively tap to claim (not automatic)",
+    "protocolBenefits": "Benefits",
+    "protocolBenefitsLine1": "Provides efficiency points + ongoing special effects",
+    "protocolExamples": "Examples: Double output generation, free reserves, energy swaps, cost reductions",
+    "strategyTitle": "Strategy Tips",
+    "strategyMultipleTitle": "Multiple Paths to Victory",
+    "strategyMultipleBody": "Focus on efficiency, network size, or protocol mastery - or mix strategies.",
+    "strategyFluxTitle": "Flux is Powerful",
+    "strategyFluxBody": "Use as wild energy, but limited supply. Reserve to gain Flux.",
+    "strategyEffectsTitle": "Node Effects Stack",
+    "strategyEffectsBody": "Effects are temporary and trigger after building nodes.",
+    "strategyTimingTitle": "Timing Matters",
+    "strategyTimingBody": "Efficiency threshold only triggers after turn 20 - plan accordingly.",
+    "previous": "Previous",
+    "next": "Next",
+    "gotIt": "Got it"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}} reserved a node.",
+    "builtNode": "{{name}} built a node.",
+    "builtReservedNode": "{{name}} built a reserved node.",
+    "claimedProtocol": "{{name}} claimed a protocol.",
+    "exchangedEnergy": "{{name}} exchanged energy.",
+    "collectedEnergy": "{{name}} collected energy.",
+    "swappedEnergy": "{{name}} swapped energy.",
+    "noLegalAction": "{{name}} had no legal action."
+  },
+  "bot": {
+    "reserveNode": "{{name}} reserved a node.",
+    "buildNode": "{{name}} built a node.",
+    "buildReservedNode": "{{name}} built a reserved node.",
+    "claimProtocol": "{{name}} claimed a protocol.",
+    "exchangeEnergy": "{{name}} exchanged energy.",
+    "collectEnergy": "{{name}} collected energy.",
+    "swapEnergy": "{{name}} swapped energy.",
+    "noLegalAction": "{{name}} had no legal action."
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} Mult",
+      "discount": "-{{value}} Cost",
+      "draw": "+{{value}} Draw",
+      "swap": "Swap"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "Multiplier",
+    "discount": "Discount",
+    "draw": "Draw",
+    "swap": "Swap"
+  }
+}

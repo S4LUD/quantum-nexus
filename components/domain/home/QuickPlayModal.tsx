@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { createQuickPlayModalStyles } from "./quickPlayModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface QuickPlayModalProps {
   botCount: number;
@@ -26,6 +27,7 @@ export function QuickPlayModal({
   onStart,
 }: QuickPlayModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const quickPlayModalStyles = useMemo(
     () => createQuickPlayModalStyles(theme),
     [theme],
@@ -50,12 +52,12 @@ export function QuickPlayModal({
           ]}
         >
           <Text style={quickPlayModalStyles.optionText}>
-            {String(count)} Bot{count > 1 ? "s" : ""}
+            {t("quickPlay.botLabel", { count })}
           </Text>
         </Pressable>
       );
     },
-    [botCount, onSelectBotCount, quickPlayModalStyles],
+    [botCount, onSelectBotCount, quickPlayModalStyles, t],
   );
 
   const renderDifficulty = useCallback(
@@ -74,12 +76,12 @@ export function QuickPlayModal({
           ]}
         >
           <Text style={quickPlayModalStyles.optionText}>
-            {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+            {t(`difficulty.${difficulty}`)}
           </Text>
         </Pressable>
       );
     },
-    [botDifficulty, onSelectDifficulty, quickPlayModalStyles],
+    [botDifficulty, onSelectDifficulty, quickPlayModalStyles, t],
   );
 
   const botCountOptions = useMemo(
@@ -97,19 +99,23 @@ export function QuickPlayModal({
       style={quickPlayModalStyles.gradient}
     >
       <View style={quickPlayModalStyles.container}>
-        <Text style={quickPlayModalStyles.title}>Quick Play Setup</Text>
+        <Text style={quickPlayModalStyles.title}>{t("quickPlay.title")}</Text>
 
         <View style={quickPlayModalStyles.section}>
-          <Text style={quickPlayModalStyles.sectionLabel}>Bot Count</Text>
+          <Text style={quickPlayModalStyles.sectionLabel}>
+            {t("quickPlay.bots")}
+          </Text>
           <View style={quickPlayModalStyles.optionsRow}>{botCountOptions}</View>
         </View>
 
         <View style={quickPlayModalStyles.section}>
-          <Text style={quickPlayModalStyles.sectionLabel}>Difficulty</Text>
+          <Text style={quickPlayModalStyles.sectionLabel}>
+            {t("quickPlay.difficulty")}
+          </Text>
           <View style={quickPlayModalStyles.optionsRow}>{difficultyOptions}</View>
         </View>
 
-        <Button label="Start Game" onPress={handleStart} />
+        <Button label={t("quickPlay.start")} onPress={handleStart} />
       </View>
     </LinearGradient>
   );

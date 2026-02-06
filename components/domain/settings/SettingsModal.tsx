@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
-import { Animated, Pressable, View, Platform } from "react-native";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Animated, Pressable, ScrollView, View, Platform } from "react-native";
 import { X, Moon, Sun, Volume2, VolumeX, Palette } from "lucide-react-native";
 import Constants from "expo-constants";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { Icon } from "@/components/ui/Icon/Icon";
@@ -9,12 +10,19 @@ import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { createSettingsModalStyles } from "./settingsModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { SupportedLanguage, languageLabels } from "@/i18n";
 
 interface SettingsModalProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
+  isColorBlind: boolean;
+  onToggleColorBlind: () => void;
+  language: SupportedLanguage;
+  onSelectLanguage: (language: SupportedLanguage) => void;
+  onOpenTerms: () => void;
+  onOpenPrivacy: () => void;
   onClose: () => void;
 }
 
@@ -23,9 +31,16 @@ export function SettingsModal({
   onToggleDarkMode,
   isSoundEnabled,
   onToggleSound,
+  isColorBlind,
+  onToggleColorBlind,
+  language,
+  onSelectLanguage,
+  onOpenTerms,
+  onOpenPrivacy,
   onClose,
 }: SettingsModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const settingsModalStyles = useMemo(
     () => createSettingsModalStyles(theme),
     [theme],
@@ -33,6 +48,9 @@ export function SettingsModal({
   const toggleAnim = useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
   const soundToggleAnim = useRef(
     new Animated.Value(isSoundEnabled ? 1 : 0),
+  ).current;
+  const colorBlindToggleAnim = useRef(
+    new Animated.Value(isColorBlind ? 1 : 0),
   ).current;
 
   useEffect(() => {
@@ -50,6 +68,14 @@ export function SettingsModal({
       useNativeDriver: true,
     }).start();
   }, [isSoundEnabled, soundToggleAnim]);
+
+  useEffect(() => {
+    Animated.timing(colorBlindToggleAnim, {
+      toValue: isColorBlind ? 1 : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [isColorBlind, colorBlindToggleAnim]);
 
   const translateX = useMemo(() => {
     const travel =
@@ -69,6 +95,15 @@ export function SettingsModal({
     });
   }, [soundToggleAnim]);
 
+  const colorBlindTranslateX = useMemo(() => {
+    const travel =
+      layout.toggle.width - layout.toggle.thumb - layout.toggle.padding * 2;
+    return colorBlindToggleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, travel],
+    });
+  }, [colorBlindToggleAnim]);
+
   const handleToggle = () => {
     onToggleDarkMode();
   };
@@ -76,6 +111,40 @@ export function SettingsModal({
   const handleSoundToggle = () => {
     onToggleSound();
   };
+
+  const handleColorBlindToggle = () => {
+    onToggleColorBlind();
+  };
+
+  const handleSelectEnglish = useCallback(() => {
+    onSelectLanguage("en");
+  }, [onSelectLanguage]);
+  const handleSelectChinese = useCallback(() => {
+    onSelectLanguage("zh");
+  }, [onSelectLanguage]);
+  const handleSelectJapanese = useCallback(() => {
+    onSelectLanguage("ja");
+  }, [onSelectLanguage]);
+  const handleSelectKorean = useCallback(() => {
+    onSelectLanguage("ko");
+  }, [onSelectLanguage]);
+  const handleSelectThai = useCallback(() => {
+    onSelectLanguage("th");
+  }, [onSelectLanguage]);
+  const handleSelectIndonesian = useCallback(() => {
+    onSelectLanguage("id");
+  }, [onSelectLanguage]);
+  const handleSelectRussian = useCallback(() => {
+    onSelectLanguage("ru");
+  }, [onSelectLanguage]);
+
+  const handleOpenTerms = useCallback(() => {
+    onOpenTerms();
+  }, [onOpenTerms]);
+
+  const handleOpenPrivacy = useCallback(() => {
+    onOpenPrivacy();
+  }, [onOpenPrivacy]);
 
   const handleClose = () => {
     onClose();
@@ -92,13 +161,20 @@ export function SettingsModal({
   return (
     <View style={settingsModalStyles.wrapper}>
       <View style={settingsModalStyles.header}>
-        <Text style={settingsModalStyles.title}>Settings</Text>
-        <Pressable onPress={handleClose} style={settingsModalStyles.closeButton}>
+        <Text style={settingsModalStyles.title}>{t("settings.title")}</Text>
+        <Pressable
+          onPress={handleClose}
+          style={settingsModalStyles.closeButton}
+        >
           <Icon icon={X} size={layout.icon.lg} color={theme.colors.text} />
         </Pressable>
       </View>
 
-      <View style={settingsModalStyles.content}>
+      <ScrollView
+        contentContainerStyle={settingsModalStyles.content}
+        style={settingsModalStyles.contentScroll}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={settingsModalStyles.row}>
           <View style={settingsModalStyles.rowLeft}>
             <Icon
@@ -108,9 +184,11 @@ export function SettingsModal({
               fill="none"
             />
             <View>
-              <Text style={settingsModalStyles.rowTitle}>Dark Mode</Text>
+              <Text style={settingsModalStyles.rowTitle}>
+                {t("settings.darkMode")}
+              </Text>
               <Text style={settingsModalStyles.rowSubtitle}>
-                {isDarkMode ? "Enabled" : "Disabled"}
+                {isDarkMode ? t("settings.enabled") : t("settings.disabled")}
               </Text>
             </View>
           </View>
@@ -139,9 +217,13 @@ export function SettingsModal({
               fill="none"
             />
             <View>
-              <Text style={settingsModalStyles.rowTitle}>Sound Effects</Text>
+              <Text style={settingsModalStyles.rowTitle}>
+                {t("settings.soundEffects")}
+              </Text>
               <Text style={settingsModalStyles.rowSubtitle}>
-                {isSoundEnabled ? "Enabled" : "Disabled"}
+                {isSoundEnabled
+                  ? t("settings.enabled")
+                  : t("settings.disabled")}
               </Text>
             </View>
           </View>
@@ -161,7 +243,7 @@ export function SettingsModal({
           </Pressable>
         </View>
 
-        <View style={[settingsModalStyles.row, settingsModalStyles.disabledRow]}>
+        <View style={settingsModalStyles.row}>
           <View style={settingsModalStyles.rowLeft}>
             <Icon
               icon={Palette}
@@ -170,40 +252,178 @@ export function SettingsModal({
               fill="none"
             />
             <View>
-              <Text style={settingsModalStyles.rowTitle}>Color Blind Mode</Text>
-              <Text style={settingsModalStyles.rowSubtitle}>Coming soon</Text>
+              <Text style={settingsModalStyles.rowTitle}>
+                {t("settings.colorBlindMode")}
+              </Text>
+              <Text style={settingsModalStyles.rowSubtitle}>
+                {isColorBlind ? t("settings.enabled") : t("settings.disabled")}
+              </Text>
             </View>
           </View>
-          <View style={settingsModalStyles.toggleDisabled}>
-            <View style={settingsModalStyles.toggleThumbDisabled} />
+          <Pressable
+            onPress={handleColorBlindToggle}
+            style={[
+              settingsModalStyles.toggle,
+              isColorBlind ? settingsModalStyles.toggleActive : null,
+            ]}
+          >
+            <Animated.View
+              style={[
+                settingsModalStyles.toggleThumb,
+                { transform: [{ translateX: colorBlindTranslateX }] },
+              ]}
+            />
+          </Pressable>
+        </View>
+
+        <View style={settingsModalStyles.section}>
+          <Text style={settingsModalStyles.sectionTitle}>
+            {t("settings.language")}
+          </Text>
+          <View style={settingsModalStyles.languageGrid}>
+            <Pressable
+              onPress={handleSelectEnglish}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "en"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.en}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectChinese}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "zh"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.zh}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectJapanese}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "ja"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.ja}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectKorean}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "ko"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.ko}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectThai}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "th"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.th}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectIndonesian}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "id"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.id}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleSelectRussian}
+              style={[
+                settingsModalStyles.languageChip,
+                language === "ru"
+                  ? settingsModalStyles.languageChipActive
+                  : null,
+              ]}
+            >
+              <Text style={settingsModalStyles.languageLabel}>
+                {languageLabels.ru}
+              </Text>
+            </Pressable>
           </View>
         </View>
 
         <View style={settingsModalStyles.infoCard}>
           <View style={settingsModalStyles.infoRow}>
-            <Text style={settingsModalStyles.infoLabel}>Version</Text>
+            <Text style={settingsModalStyles.infoLabel}>
+              {t("settings.version")}
+            </Text>
             <Text style={settingsModalStyles.infoValue}>{appVersion}</Text>
           </View>
           <View style={settingsModalStyles.infoRow}>
-            <Text style={settingsModalStyles.infoLabel}>Game Mode</Text>
-            <Text style={settingsModalStyles.infoValue}>Quantum Nexus</Text>
+            <Text style={settingsModalStyles.infoLabel}>
+              {t("settings.gameMode")}
+            </Text>
+            <Text style={settingsModalStyles.infoValue}>{t("home.title")}</Text>
           </View>
           <View style={settingsModalStyles.infoRow}>
-            <Text style={settingsModalStyles.infoLabel}>Platform</Text>
+            <Text style={settingsModalStyles.infoLabel}>
+              {t("settings.platform")}
+            </Text>
             <Text style={settingsModalStyles.infoValue}>{platformLabel}</Text>
           </View>
         </View>
 
         <View style={settingsModalStyles.legal}>
-          <Text style={settingsModalStyles.legalText}>Quantum Nexus © 2026</Text>
+          <Text style={settingsModalStyles.legalText}>{t("legal.title")}</Text>
           <Text style={settingsModalStyles.legalText}>
-            Strategic Network Building Game
+            {t("legal.subtitle")}
           </Text>
+          <View style={settingsModalStyles.legalActions}>
+            <Pressable
+              onPress={handleOpenTerms}
+              style={settingsModalStyles.legalButton}
+            >
+              <Text style={settingsModalStyles.legalButtonText}>
+                {t("legal.terms.title")}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={handleOpenPrivacy}
+              style={settingsModalStyles.legalButton}
+            >
+              <Text style={settingsModalStyles.legalButtonText}>
+                {t("legal.privacy.title")}
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       <View style={settingsModalStyles.footer}>
-        <Button label="Close" onPress={handleClose} />
+        <Button label={t("settings.close")} onPress={handleClose} />
       </View>
     </View>
   );

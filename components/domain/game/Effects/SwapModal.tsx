@@ -5,6 +5,7 @@ import { EnergyBadge } from "../EnergyPool/EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
 import { createSwapModalStyles } from "./swapModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface SwapModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function SwapModal({
   onSkip,
 }: SwapModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const swapModalStyles = useMemo(() => createSwapModalStyles(theme), [theme]);
   const [giveSelection, setGiveSelection] = useState<EnergyType[]>([]);
   const [takeSelection, setTakeSelection] = useState<EnergyType[]>([]);
@@ -205,26 +207,26 @@ export function SwapModal({
       <Pressable style={swapModalStyles.backdrop} onPress={handleSkip}>
         <Pressable style={swapModalStyles.card} onPress={handleCardPress}>
           <View style={swapModalStyles.header}>
-            <Text style={swapModalStyles.title}>Swap Energy</Text>
+            <Text style={swapModalStyles.title}>{t("swap.title")}</Text>
             <Text style={swapModalStyles.subtitle}>
-              Select up to {String(maxSwaps)} energy to give and take.
+              {t("swap.subtitle", { count: maxSwaps })}
             </Text>
           </View>
           <View style={swapModalStyles.section}>
-            <Text style={swapModalStyles.sectionTitle}>Give</Text>
+            <Text style={swapModalStyles.sectionTitle}>{t("swap.give")}</Text>
             <View style={swapModalStyles.energyRow}>
               {energyTypes.map(renderGiveButton)}
             </View>
           </View>
           <View style={swapModalStyles.section}>
-            <Text style={swapModalStyles.sectionTitle}>Take</Text>
+            <Text style={swapModalStyles.sectionTitle}>{t("swap.take")}</Text>
             <View style={swapModalStyles.energyRow}>
               {energyTypes.map(renderTakeButton)}
             </View>
           </View>
           <View style={swapModalStyles.footer}>
             <Pressable style={swapModalStyles.skipButton} onPress={handleSkip}>
-              <Text style={swapModalStyles.skipText}>Skip</Text>
+              <Text style={swapModalStyles.skipText}>{t("common.skip")}</Text>
             </Pressable>
             <Pressable
               style={[
@@ -234,7 +236,9 @@ export function SwapModal({
               onPress={handleConfirm}
               disabled={!canConfirm}
             >
-              <Text style={swapModalStyles.confirmText}>Confirm Swap</Text>
+              <Text style={swapModalStyles.confirmText}>
+                {t("swap.confirm")}
+              </Text>
             </Pressable>
           </View>
         </Pressable>

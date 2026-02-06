@@ -5,6 +5,7 @@ import { Node } from "../game.types";
 import { NodeCard } from "../NodeCard/NodeCard";
 import { createDrawModalStyles } from "./drawModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface DrawModalProps {
   isOpen: boolean;
@@ -17,12 +18,14 @@ interface DrawModalProps {
 export function DrawModal({
   isOpen,
   options,
-  title = "Draw Nodes",
+  title,
   onSelect,
   onSkip,
 }: DrawModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const drawModalStyles = useMemo(() => createDrawModalStyles(theme), [theme]);
+  const resolvedTitle = title ?? t("draw.title");
   const handleBackdropPress = useCallback(() => {
     onSkip();
   }, [onSkip]);
@@ -58,9 +61,9 @@ export function DrawModal({
       <Pressable style={drawModalStyles.backdrop} onPress={handleBackdropPress}>
         <Pressable style={drawModalStyles.card} onPress={handleCardPress}>
           <View style={drawModalStyles.header}>
-            <Text style={drawModalStyles.title}>{title}</Text>
+            <Text style={drawModalStyles.title}>{resolvedTitle}</Text>
             <Text style={drawModalStyles.subtitle}>
-              Select one node to inject into the market.
+              {t("draw.subtitle")}
             </Text>
           </View>
           <ScrollView
@@ -72,7 +75,7 @@ export function DrawModal({
           </ScrollView>
           <View style={drawModalStyles.footer}>
             <Pressable style={drawModalStyles.skipButton} onPress={onSkip}>
-              <Text style={drawModalStyles.skipText}>Skip</Text>
+              <Text style={drawModalStyles.skipText}>{t("common.skip")}</Text>
             </Pressable>
           </View>
         </Pressable>

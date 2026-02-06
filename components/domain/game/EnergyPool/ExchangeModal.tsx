@@ -5,6 +5,7 @@ import { EnergyBadge } from "./EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
 import { createExchangeModalStyles } from "./exchangeModal.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 type ExchangeMode = "one" | "two";
 
@@ -47,6 +48,7 @@ export function ExchangeModal({
   onClose,
 }: ExchangeModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const exchangeModalStyles = useMemo(
     () => createExchangeModalStyles(theme),
     [theme],
@@ -78,6 +80,7 @@ export function ExchangeModal({
       const handlePress = () => {
         onSelectTakeType(type);
       };
+      const label = t(`energy.${type}`);
       return (
         <Pressable
           key={`take-${type}`}
@@ -88,11 +91,11 @@ export function ExchangeModal({
           ]}
         >
           <EnergyBadge type={type} count={poolEnergy[type]} size="sm" />
-          <Text style={exchangeModalStyles.energyLabel}>{type}</Text>
+          <Text style={exchangeModalStyles.energyLabel}>{label}</Text>
         </Pressable>
       );
     },
-    [exchangeModalStyles, onSelectTakeType, poolEnergy, takeType],
+    [exchangeModalStyles, onSelectTakeType, poolEnergy, t, takeType],
   );
 
   const renderGiveType = useCallback(
@@ -101,6 +104,7 @@ export function ExchangeModal({
       const handlePress = () => {
         onToggleGive(type);
       };
+      const label = t(`energy.${type}`);
       return (
         <Pressable
           key={`give-${type}`}
@@ -116,12 +120,12 @@ export function ExchangeModal({
               -{String(count)}
             </Text>
           ) : (
-            <Text style={exchangeModalStyles.energyLabel}>{type}</Text>
+            <Text style={exchangeModalStyles.energyLabel}>{label}</Text>
           )}
         </Pressable>
       );
     },
-    [exchangeModalStyles, giveCounts, onToggleGive, playerEnergy],
+    [exchangeModalStyles, giveCounts, onToggleGive, playerEnergy, t],
   );
 
   const takeCount = mode === "two" ? EXCHANGE_TAKE_TWO : EXCHANGE_ONE;
@@ -143,9 +147,11 @@ export function ExchangeModal({
       >
         <Pressable style={exchangeModalStyles.card} onPress={handleCardPress}>
           <View style={exchangeModalStyles.header}>
-            <Text style={exchangeModalStyles.title}>Exchange Energy</Text>
+            <Text style={exchangeModalStyles.title}>
+              {t("exchange.title")}
+            </Text>
             <Text style={exchangeModalStyles.subtitle}>
-              Choose 1:1 or 2:3 exchange. Flux cannot be exchanged.
+              {t("exchange.subtitle")}
             </Text>
           </View>
 
@@ -154,25 +160,29 @@ export function ExchangeModal({
               style={[
                 exchangeModalStyles.modeButton,
                 mode === "one" ? exchangeModalStyles.modeButtonActive : null,
-              ]}
+              ]} 
               onPress={handleModeOne}
             >
-              <Text style={exchangeModalStyles.modeText}>1 : 1</Text>
+              <Text style={exchangeModalStyles.modeText}>
+                {t("exchange.modeOne")}
+              </Text>
             </Pressable>
             <Pressable
               style={[
                 exchangeModalStyles.modeButton,
                 mode === "two" ? exchangeModalStyles.modeButtonActive : null,
-              ]}
+              ]} 
               onPress={handleModeTwo}
             >
-              <Text style={exchangeModalStyles.modeText}>2 : 3</Text>
+              <Text style={exchangeModalStyles.modeText}>
+                {t("exchange.modeTwo")}
+              </Text>
             </Pressable>
           </View>
 
           <View style={exchangeModalStyles.section}>
             <Text style={exchangeModalStyles.sectionLabel}>
-              Take {String(takeCount)}
+              {t("exchange.take", { count: takeCount })}
             </Text>
             <View style={exchangeModalStyles.energyRow}>
               {BASE_ENERGY_TYPES.map(renderTakeType)}
@@ -181,7 +191,7 @@ export function ExchangeModal({
 
           <View style={exchangeModalStyles.section}>
             <Text style={exchangeModalStyles.sectionLabel}>
-              Give {String(giveNeeded)}
+              {t("exchange.give", { count: giveNeeded })}
             </Text>
             <View style={exchangeModalStyles.energyRow}>
               {BASE_ENERGY_TYPES.map(renderGiveType)}
@@ -193,7 +203,9 @@ export function ExchangeModal({
               style={exchangeModalStyles.cancelButton}
               onPress={onClose}
             >
-              <Text style={exchangeModalStyles.cancelText}>Cancel</Text>
+              <Text style={exchangeModalStyles.cancelText}>
+                {t("exchange.cancel")}
+              </Text>
             </Pressable>
             <Pressable
               style={[
@@ -203,7 +215,9 @@ export function ExchangeModal({
               onPress={onConfirm}
               disabled={!canConfirm}
             >
-              <Text style={exchangeModalStyles.confirmText}>Confirm</Text>
+              <Text style={exchangeModalStyles.confirmText}>
+                {t("exchange.confirm")}
+              </Text>
             </Pressable>
           </View>
         </Pressable>

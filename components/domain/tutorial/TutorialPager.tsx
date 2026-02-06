@@ -17,6 +17,7 @@ import { colors } from "@/constants/colors";
 import { createTutorialPagerStyles } from "./tutorialPager.styles";
 import { layout } from "@/constants/layout";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface TutorialPagerProps {
   onDone: () => void;
@@ -25,6 +26,7 @@ interface TutorialPagerProps {
 export function TutorialPager({ onDone }: TutorialPagerProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const tutorialPagerStyles = useMemo(
     () => createTutorialPagerStyles(theme),
     [theme],
@@ -33,25 +35,23 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
   const pages = useMemo(
     () => [
       {
-        title: "Welcome to Quantum Nexus",
+        title: t("tutorial.welcomeTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <Text style={tutorialPagerStyles.bodyText}>
-              Build a quantum computing network by collecting energy and
-              constructing nodes.
+              {t("tutorial.welcomeBody1")}
             </Text>
             <Text style={tutorialPagerStyles.bodyText}>
-              Be the first to achieve victory through efficiency, network size,
-              or protocol mastery.
+              {t("tutorial.welcomeBody2")}
             </Text>
             <View style={tutorialPagerStyles.callout}>
               <Text style={tutorialPagerStyles.calloutTitle}>
-                Win Conditions
+                {t("tutorial.winConditions")}
               </Text>
               <View style={tutorialPagerStyles.list}>
                 <View style={tutorialPagerStyles.listRow}>
                   <Text style={tutorialPagerStyles.listInlineText}>
-                    • Reach 20
+                    {t("tutorial.winConditionEfficiency").split("★")[0]}
                   </Text>
                   <Icon
                     icon={Star}
@@ -61,14 +61,14 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                     fill="none"
                   />
                   <Text style={tutorialPagerStyles.listInlineText}>
-                    Efficiency after turn 20
+                    {t("tutorial.winConditionEfficiency").split("★")[1]}
                   </Text>
                 </View>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Build required Nodes (2P: 13 / 3P: 15 / 4P: 17)
+                  {t("tutorial.winConditionNodes")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Claim 3 or more Protocols
+                  {t("tutorial.winConditionProtocols")}
                 </Text>
               </View>
             </View>
@@ -76,11 +76,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
         ),
       },
       {
-        title: "Energy Types",
+        title: t("tutorial.energyTypesTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <Text style={tutorialPagerStyles.bodyText}>
-              There are 4 energy types plus Flux:
+              {t("tutorial.energyTypesBody")}
             </Text>
             <View style={tutorialPagerStyles.energyList}>
               <View
@@ -96,9 +96,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   fill="none"
                 />
                 <View>
-                  <Text style={tutorialPagerStyles.energyTitle}>Solar</Text>
+                  <Text style={tutorialPagerStyles.energyTitle}>
+                    {t("energy.solar")}
+                  </Text>
                   <Text style={tutorialPagerStyles.energySubtitle}>
-                    Yellow/Orange energy
+                    {t("energy.solarSubtitle")}
                   </Text>
                 </View>
               </View>
@@ -115,9 +117,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   fill="none"
                 />
                 <View>
-                  <Text style={tutorialPagerStyles.energyTitle}>Hydro</Text>
+                  <Text style={tutorialPagerStyles.energyTitle}>
+                    {t("energy.hydro")}
+                  </Text>
                   <Text style={tutorialPagerStyles.energySubtitle}>
-                    Cyan/Blue energy
+                    {t("energy.hydroSubtitle")}
                   </Text>
                 </View>
               </View>
@@ -134,9 +138,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   fill="none"
                 />
                 <View>
-                  <Text style={tutorialPagerStyles.energyTitle}>Plasma</Text>
+                  <Text style={tutorialPagerStyles.energyTitle}>
+                    {t("energy.plasma")}
+                  </Text>
                   <Text style={tutorialPagerStyles.energySubtitle}>
-                    Pink/Magenta energy
+                    {t("energy.plasmaSubtitle")}
                   </Text>
                 </View>
               </View>
@@ -153,9 +159,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   fill="none"
                 />
                 <View>
-                  <Text style={tutorialPagerStyles.energyTitle}>Neural</Text>
+                  <Text style={tutorialPagerStyles.energyTitle}>
+                    {t("energy.neural")}
+                  </Text>
                   <Text style={tutorialPagerStyles.energySubtitle}>
-                    Green energy
+                    {t("energy.neuralSubtitle")}
                   </Text>
                 </View>
               </View>
@@ -172,9 +180,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   fill="none"
                 />
                 <View>
-                  <Text style={tutorialPagerStyles.energyTitle}>Flux</Text>
+                  <Text style={tutorialPagerStyles.energyTitle}>
+                    {t("energy.flux")}
+                  </Text>
                   <Text style={tutorialPagerStyles.energySubtitle}>
-                    Wild energy (gained by reserving only)
+                    {t("energy.fluxSubtitle")}
                   </Text>
                 </View>
               </View>
@@ -183,70 +193,70 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
         ),
       },
       {
-        title: "Your Turn",
+        title: t("tutorial.yourTurnTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <Text style={tutorialPagerStyles.bodyText}>
-              On your turn, choose ONE action:
+              {t("tutorial.yourTurnBody")}
             </Text>
             <View style={tutorialPagerStyles.cardList}>
               <View style={tutorialPagerStyles.card}>
                 <Text style={tutorialPagerStyles.cardTitle}>
-                  1. Collect Energy
+                  {t("tutorial.collectTitle")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Take 3 different energy types, OR
+                  {t("tutorial.collectLine1")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Take 2 of the same type (if 4+ available)
+                  {t("tutorial.collectLine2")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Maximum 10 energy total
+                  {t("tutorial.collectLine3")}
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
                 <Text style={tutorialPagerStyles.cardTitle}>
-                  2. Build a Node
+                  {t("tutorial.buildTitle")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Pay the energy cost
+                  {t("tutorial.buildLine1")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Add to your network
+                  {t("tutorial.buildLine2")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Gain efficiency points
+                  {t("tutorial.buildLine3")}
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
                 <Text style={tutorialPagerStyles.cardTitle}>
-                  3. Reserve a Node
+                  {t("tutorial.reserveTitle")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Set aside for later (max 3)
+                  {t("tutorial.reserveLine1")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Gain 1 Flux energy (if available)
+                  {t("tutorial.reserveLine2")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Build from reserves anytime
+                  {t("tutorial.reserveLine3")}
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
                 <Text style={tutorialPagerStyles.cardTitle}>
-                  4. Exchange Energy
+                  {t("tutorial.exchangeTitle")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • 1:1 exchange (give 1, take 1)
+                  {t("tutorial.exchangeLine1")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • 2:3 exchange (take 2 same, give any 3)
+                  {t("tutorial.exchangeLine2")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Flux cannot be exchanged
+                  {t("tutorial.exchangeLine3")}
                 </Text>
                 <Text style={tutorialPagerStyles.listItem}>
-                  • Pool must have energy to take
+                  {t("tutorial.exchangeLine4")}
                 </Text>
               </View>
             </View>
@@ -254,11 +264,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
         ),
       },
       {
-        title: "Nodes",
+        title: t("tutorial.nodesTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <Text style={tutorialPagerStyles.bodyText}>
-              Nodes are the core of your network. Each provides:
+              {t("tutorial.nodesBody")}
             </Text>
             <View style={tutorialPagerStyles.nodeList}>
               <View
@@ -268,10 +278,10 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                 ]}
               >
                 <Text style={tutorialPagerStyles.energyTitle}>
-                  Research Nodes
+                  {t("tutorial.nodeResearch")}
                 </Text>
                 <Text style={tutorialPagerStyles.energySubtitle}>
-                  Special abilities and efficiency boosts
+                  {t("tutorial.nodeResearchDesc")}
                 </Text>
               </View>
               <View
@@ -281,10 +291,10 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                 ]}
               >
                 <Text style={tutorialPagerStyles.energyTitle}>
-                  Production Nodes
+                  {t("tutorial.nodeProduction")}
                 </Text>
                 <Text style={tutorialPagerStyles.energySubtitle}>
-                  High efficiency, greater costs
+                  {t("tutorial.nodeProductionDesc")}
                 </Text>
               </View>
               <View
@@ -294,10 +304,10 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                 ]}
               >
                 <Text style={tutorialPagerStyles.energyTitle}>
-                  Network Nodes
+                  {t("tutorial.nodeNetwork")}
                 </Text>
                 <Text style={tutorialPagerStyles.energySubtitle}>
-                  Complex, high-value additions
+                  {t("tutorial.nodeNetworkDesc")}
                 </Text>
               </View>
               <View
@@ -307,32 +317,30 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                 ]}
               >
                 <Text style={tutorialPagerStyles.energyTitle}>
-                  Control Nodes
+                  {t("tutorial.nodeControl")}
                 </Text>
                 <Text style={tutorialPagerStyles.energySubtitle}>
-                  Utility effects and flexibility
+                  {t("tutorial.nodeControlDesc")}
                 </Text>
               </View>
             </View>
             <View style={tutorialPagerStyles.callout}>
               <Text style={tutorialPagerStyles.calloutTitle}>
-                Output Generation
+                {t("tutorial.outputTitle")}
               </Text>
               <Text style={tutorialPagerStyles.bodyText}>
-                Each node generates 1 output of its type, which counts toward
-                Protocol requirements and reduces that energy cost by 1 when
-                building nodes (base energies only).
+                {t("tutorial.outputBody")}
               </Text>
             </View>
           </View>
         ),
       },
       {
-        title: "Protocols",
+        title: t("tutorial.protocolsTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <Text style={tutorialPagerStyles.bodyText}>
-              Protocols are powerful upgrades you can claim:
+              {t("tutorial.protocolsBody")}
             </Text>
             <View style={tutorialPagerStyles.protocolList}>
               <View
@@ -341,12 +349,14 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   tutorialPagerStyles.protocolRequirements,
                 ]}
               >
-                <Text style={tutorialPagerStyles.cardTitle}>Requirements</Text>
-                <Text style={tutorialPagerStyles.bodyText}>
-                  Must have enough OUTPUT generation (not energy held)
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.protocolRequirements")}
                 </Text>
                 <Text style={tutorialPagerStyles.bodyText}>
-                  Outputs are not spent and can qualify for multiple Protocols
+                  {t("tutorial.protocolRequirementsLine1")}
+                </Text>
+                <Text style={tutorialPagerStyles.bodyText}>
+                  {t("tutorial.protocolRequirementsLine2")}
                 </Text>
               </View>
               <View
@@ -355,9 +365,11 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   tutorialPagerStyles.protocolClaiming,
                 ]}
               >
-                <Text style={tutorialPagerStyles.cardTitle}>Claiming</Text>
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.protocolClaiming")}
+                </Text>
                 <Text style={tutorialPagerStyles.bodyText}>
-                  Must actively tap to claim (not automatic)
+                  {t("tutorial.protocolClaimingLine1")}
                 </Text>
               </View>
               <View
@@ -366,52 +378,57 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   tutorialPagerStyles.protocolBenefits,
                 ]}
               >
-                <Text style={tutorialPagerStyles.cardTitle}>Benefits</Text>
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.protocolBenefits")}
+                </Text>
                 <Text style={tutorialPagerStyles.bodyText}>
-                  Provides efficiency points + ongoing special effects
+                  {t("tutorial.protocolBenefitsLine1")}
                 </Text>
               </View>
             </View>
             <View style={tutorialPagerStyles.callout}>
               <Text style={tutorialPagerStyles.bodyText}>
-                Examples: Double output generation, free reserves, energy swaps,
-                cost reductions
+                {t("tutorial.protocolExamples")}
               </Text>
             </View>
           </View>
         ),
       },
       {
-        title: "Strategy Tips",
+        title: t("tutorial.strategyTitle"),
         content: (
           <View style={tutorialPagerStyles.section}>
             <View style={tutorialPagerStyles.cardList}>
               <View style={tutorialPagerStyles.card}>
                 <Text style={tutorialPagerStyles.cardTitle}>
-                  Multiple Paths to Victory
+                  {t("tutorial.strategyMultipleTitle")}
                 </Text>
                 <Text style={tutorialPagerStyles.bodyMuted}>
-                  Focus on efficiency, network size, or protocol mastery - or
-                  mix strategies.
-                </Text>
-              </View>
-              <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.cardTitle}>Flux is Powerful</Text>
-                <Text style={tutorialPagerStyles.bodyMuted}>
-                  Use as wild energy, but limited supply. Reserve to gain Flux.
+                  {t("tutorial.strategyMultipleBody")}
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.cardTitle}>Node Effects Stack</Text>
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.strategyFluxTitle")}
+                </Text>
                 <Text style={tutorialPagerStyles.bodyMuted}>
-                  Effects are temporary and trigger after building nodes.
+                  {t("tutorial.strategyFluxBody")}
                 </Text>
               </View>
               <View style={tutorialPagerStyles.card}>
-                <Text style={tutorialPagerStyles.cardTitle}>Timing Matters</Text>
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.strategyEffectsTitle")}
+                </Text>
                 <Text style={tutorialPagerStyles.bodyMuted}>
-                  Efficiency threshold only triggers after turn 20 - plan
-                  accordingly.
+                  {t("tutorial.strategyEffectsBody")}
+                </Text>
+              </View>
+              <View style={tutorialPagerStyles.card}>
+                <Text style={tutorialPagerStyles.cardTitle}>
+                  {t("tutorial.strategyTimingTitle")}
+                </Text>
+                <Text style={tutorialPagerStyles.bodyMuted}>
+                  {t("tutorial.strategyTimingBody")}
                 </Text>
               </View>
             </View>
@@ -419,7 +436,7 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
         ),
       },
     ],
-    [tutorialPagerStyles],
+    [t, tutorialPagerStyles],
   );
 
   const current = pages[currentPage];
@@ -478,7 +495,9 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
             size={layout.icon.md}
             color={theme.colors.text}
           />
-          <Text style={tutorialPagerStyles.footerLabel}>Previous</Text>
+          <Text style={tutorialPagerStyles.footerLabel}>
+            {t("tutorial.previous")}
+          </Text>
         </Pressable>
 
         <View style={tutorialPagerStyles.dots}>
@@ -501,7 +520,9 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
               tutorialPagerStyles.footerButtonPrimary,
             ]}
           >
-            <Text style={tutorialPagerStyles.footerLabel}>Next</Text>
+            <Text style={tutorialPagerStyles.footerLabel}>
+              {t("tutorial.next")}
+            </Text>
             <Icon
               icon={ChevronRight}
               size={layout.icon.md}
@@ -516,7 +537,9 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
               tutorialPagerStyles.footerButtonSuccess,
             ]}
           >
-            <Text style={tutorialPagerStyles.footerLabelOnPrimary}>Got it</Text>
+            <Text style={tutorialPagerStyles.footerLabelOnPrimary}>
+              {t("tutorial.gotIt")}
+            </Text>
           </Pressable>
         )}
       </View>

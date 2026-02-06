@@ -14,6 +14,8 @@ import { Icon } from "@/components/ui/Icon/Icon";
 import { colors } from "@/constants/colors";
 import { layout } from "@/constants/layout";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
+import { getLocalizedPlayerName } from "@/utils/helpers";
 
 interface PlayerAreaProps {
   player: Player;
@@ -31,9 +33,14 @@ export function PlayerArea({
   disabled = false,
 }: PlayerAreaProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const playerAreaStyles = useMemo(
     () => createPlayerAreaStyles(theme),
     [theme],
+  );
+  const displayName = useMemo(
+    () => getLocalizedPlayerName(player.name, t),
+    [player.name, t],
   );
   const outputs = calculatePlayerOutputs(player);
   const totalEnergy = getTotalEnergy(player);
@@ -69,7 +76,7 @@ export function PlayerArea({
       <View style={compactContainerStyles}>
         <View style={playerAreaStyles.compactHeader}>
           <View>
-            <Text variant="subtitle">{player.name}</Text>
+            <Text variant="subtitle">{displayName}</Text>
             <View style={playerAreaStyles.compactEfficiencyRow}>
               <Text variant="caption">{player.efficiency}</Text>
               <Icon
@@ -78,11 +85,11 @@ export function PlayerArea({
                 color={colors.yellow400}
                 fill="none"
               />
-              <Text variant="caption">Efficiency</Text>
+              <Text variant="caption">{t("game.efficiency")}</Text>
             </View>
           </View>
           <View>
-            <Text variant="caption">Nodes</Text>
+            <Text variant="caption">{t("game.nodes")}</Text>
             <Text variant="subtitle">{String(player.nodes.length)}</Text>
           </View>
         </View>
@@ -107,38 +114,44 @@ export function PlayerArea({
     <View style={containerStyles}>
       <View style={playerAreaStyles.header}>
         <View>
-          <Text variant="title">{player.name}</Text>
+          <Text variant="title">{displayName}</Text>
           {isCurrentPlayer ? (
-            <Text style={playerAreaStyles.turnTag}>YOUR TURN</Text>
+            <Text style={playerAreaStyles.turnTag}>
+              {t("playerArea.yourTurn")}
+            </Text>
           ) : null}
         </View>
         <View style={playerAreaStyles.efficiencyBlock}>
           <Text style={playerAreaStyles.efficiencyValue}>
             {String(player.efficiency)}
           </Text>
-          <Text style={playerAreaStyles.efficiencyLabel}>Efficiency</Text>
+          <Text style={playerAreaStyles.efficiencyLabel}>
+            {t("game.efficiency")}
+          </Text>
         </View>
       </View>
 
       <View style={playerAreaStyles.statsRow}>
         <View style={playerAreaStyles.statCard}>
           <Text variant="subtitle">{String(player.nodes.length)}</Text>
-          <Text variant="caption">Nodes</Text>
+          <Text variant="caption">{t("game.nodes")}</Text>
         </View>
         <View style={playerAreaStyles.statCard}>
           <Text variant="subtitle">{String(player.protocols.length)}</Text>
-          <Text variant="caption">Protocols</Text>
+          <Text variant="caption">{t("game.protocols")}</Text>
         </View>
         <View style={playerAreaStyles.statCard}>
           <Text variant="subtitle">
             {String(totalEnergy)}/{String(ENERGY_LIMIT)}
           </Text>
-          <Text variant="caption">Energy</Text>
+          <Text variant="caption">{t("game.energy")}</Text>
         </View>
       </View>
 
       <View style={playerAreaStyles.section}>
-        <Text style={playerAreaStyles.sectionLabel}>Energy Held</Text>
+        <Text style={playerAreaStyles.sectionLabel}>
+          {t("playerArea.energyHeld")}
+        </Text>
         <View style={playerAreaStyles.badgeRow}>
           {energyEntries.map(([type, count]) => (
             <EnergyBadge key={type} type={type} count={count} size="sm" />
@@ -147,7 +160,9 @@ export function PlayerArea({
       </View>
 
       <View style={playerAreaStyles.section}>
-        <Text style={playerAreaStyles.sectionLabel}>Output Generation</Text>
+        <Text style={playerAreaStyles.sectionLabel}>
+          {t("game.outputGeneration")}
+        </Text>
         <View style={playerAreaStyles.outputRow}>
           {Object.entries(outputs).map(([type, count]) => (
             <View key={type} style={playerAreaStyles.outputItem}>
@@ -161,7 +176,7 @@ export function PlayerArea({
       {player.nodes.length > 0 ? (
         <View style={playerAreaStyles.section}>
           <Text style={playerAreaStyles.sectionLabel}>
-            Owned Nodes ({player.nodes.length})
+            {t("playerArea.ownedNodes", { count: player.nodes.length })}
           </Text>
           <View style={playerAreaStyles.horizontalRow}>
             {player.nodes.slice(0, 5).map((node) => (
@@ -174,7 +189,10 @@ export function PlayerArea({
       {player.reservedNodes.length > 0 ? (
         <View style={playerAreaStyles.section}>
           <Text style={playerAreaStyles.sectionLabel}>
-            Reserved ({player.reservedNodes.length}/3)
+            {t("playerArea.reservedNodes", {
+              count: player.reservedNodes.length,
+              max: 3,
+            })}
           </Text>
           <View style={playerAreaStyles.horizontalRow}>
             {player.reservedNodes.map(renderReservedNode)}
@@ -184,7 +202,9 @@ export function PlayerArea({
 
       {player.protocols.length > 0 ? (
         <View style={playerAreaStyles.section}>
-          <Text style={playerAreaStyles.sectionLabel}>Claimed Protocols</Text>
+          <Text style={playerAreaStyles.sectionLabel}>
+            {t("playerArea.claimedProtocols")}
+          </Text>
           <View style={playerAreaStyles.protocolList}>
             {player.protocols.map((protocol) => (
               <ProtocolCard key={protocol.id} protocol={protocol} compact />

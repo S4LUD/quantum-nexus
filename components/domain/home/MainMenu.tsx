@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Easing, Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Play, Users, BookOpen, Settings, Trophy } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/components/ui/Text/Text";
 import { layout } from "@/constants/layout";
 import { createMainMenuStyles } from "./mainMenu.styles";
@@ -34,6 +35,7 @@ const PARTICLE_COLORS = [
   "rgba(236,72,153,0.6)",
   "rgba(234,179,8,0.6)",
 ];
+const SHOW_MULTIPLAYER = false;
 
 export function MainMenu({
   onQuickPlay,
@@ -41,6 +43,7 @@ export function MainMenu({
   onSettings,
 }: MainMenuProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const mainMenuStyles = useMemo(() => createMainMenuStyles(theme), [theme]);
   const particlesRef = useRef<ParticleConfig[] | null>(null);
   if (!particlesRef.current) {
@@ -122,20 +125,20 @@ export function MainMenu({
 
   const handleDisabled = useCallback(() => {}, []);
 
-  const mainActions = useMemo(
-    () => [
+  const mainActions = useMemo(() => {
+    const actions = [
       {
         key: "quick",
-        title: "Quick Play",
-        subtitle: "Start solo game",
+        title: t("menu.quickPlay"),
+        subtitle: t("menu.quickPlaySubtitle"),
         icon: Play,
         gradient: theme.gradients.primaryButton,
         onPress: handleQuickPlay,
       },
       {
         key: "multi",
-        title: "Multiplayer",
-        subtitle: "Play with others",
+        title: t("menu.multiplayer"),
+        subtitle: t("menu.multiplayerSubtitle"),
         icon: Users,
         gradient: theme.gradients.secondaryButton,
         onPress: handleDisabled,
@@ -143,34 +146,37 @@ export function MainMenu({
       },
       {
         key: "tutorial",
-        title: "Tutorial",
-        subtitle: "Learn how to play",
+        title: t("menu.tutorial"),
+        subtitle: t("menu.tutorialSubtitle"),
         icon: BookOpen,
         gradient: theme.gradients.tabBar,
         onPress: handleTutorial,
         isGlass: true,
       },
-    ],
-    [handleDisabled, handleQuickPlay, handleTutorial, theme.gradients],
-  );
+    ];
+
+    return SHOW_MULTIPLAYER
+      ? actions
+      : actions.filter((action) => action.key !== "multi");
+  }, [handleDisabled, handleQuickPlay, handleTutorial, t, theme.gradients]);
 
   const bottomActions = useMemo(
     () => [
       {
         key: "stats",
-        label: "Stats",
+        label: t("menu.stats"),
         icon: Trophy,
         onPress: handleDisabled,
         disabled: true,
       },
       {
         key: "settings",
-        label: "Settings",
+        label: t("menu.settings"),
         icon: Settings,
         onPress: handleSettings,
       },
     ],
-    [handleSettings, handleDisabled],
+    [handleSettings, handleDisabled, t],
   );
 
   const renderMainAction = (action: (typeof mainActions)[number]) => (
@@ -214,11 +220,11 @@ export function MainMenu({
             {action.subtitle}
           </Text>
         </View>
-        {action.key === "multi" ? (
-          <View style={mainMenuStyles.inProgressBadge}>
-            <Text style={mainMenuStyles.inProgressText}>WIP</Text>
-          </View>
-        ) : null}
+          {action.key === "multi" ? (
+            <View style={mainMenuStyles.inProgressBadge}>
+              <Text style={mainMenuStyles.inProgressText}>{t("menu.wip")}</Text>
+            </View>
+          ) : null}
       </LinearGradient>
     </Pressable>
   );
@@ -289,8 +295,10 @@ export function MainMenu({
       </View>
 
       <View style={mainMenuStyles.header}>
-        <Text style={mainMenuStyles.title}>Quantum Nexus</Text>
-        <Text style={mainMenuStyles.subtitle}>Strategic Network Building</Text>
+        <Text style={mainMenuStyles.title}>{t("home.title")}</Text>
+        <Text style={mainMenuStyles.subtitle}>
+          {t("menu.strategicNetworkBuilding")}
+        </Text>
       </View>
 
       <View style={mainMenuStyles.actions}>

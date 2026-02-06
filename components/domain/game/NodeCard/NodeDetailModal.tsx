@@ -19,6 +19,7 @@ import { EnergyIcon } from "../EnergyPool/EnergyIcon";
 import { EnergyType, Node, NodeCategory, Player } from "../game.types";
 import { createNodeDetailStyles } from "./nodeDetail.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface NodeDetailModalProps {
   node: Node;
@@ -38,6 +39,7 @@ export function NodeDetailModal({
   onReserve,
 }: NodeDetailModalProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const nodeDetailStyles = useMemo(
     () => createNodeDetailStyles(theme),
     [theme],
@@ -57,47 +59,54 @@ export function NodeDetailModal({
       description: string;
       accent: string;
     }
-  > = {
-    research: {
-      label: "Research",
-      gradient: gradients.research,
-      icon: Eye,
-      description:
-        "Research nodes provide special abilities and efficiency boosts.",
-      accent: colors.cyan400,
-    },
-    production: {
-      label: "Production",
-      gradient: gradients.production,
-      icon: TrendingUp,
-      description: "Production nodes offer high efficiency with greater costs.",
-      accent: colors.pink400,
-    },
-    network: {
-      label: "Network",
-      gradient: gradients.network,
-      icon: Zap,
-      description:
-        "Network nodes are complex, high-value additions to your system.",
-      accent: colors.orange400,
-    },
-    control: {
-      label: "Control",
-      gradient: gradients.control,
-      icon: ArrowRightLeft,
-      description: "Control nodes provide utility effects and flexibility.",
-      accent: colors.green400,
-    },
-  };
+  > = useMemo(
+    () => ({
+      research: {
+        label: t("categories.research"),
+        gradient: gradients.research,
+        icon: Eye,
+        description: t("categoryDescriptions.research"),
+        accent: colors.cyan400,
+      },
+      production: {
+        label: t("categories.production"),
+        gradient: gradients.production,
+        icon: TrendingUp,
+        description: t("categoryDescriptions.production"),
+        accent: colors.pink400,
+      },
+      network: {
+        label: t("categories.network"),
+        gradient: gradients.network,
+        icon: Zap,
+        description: t("categoryDescriptions.network"),
+        accent: colors.orange400,
+      },
+      control: {
+        label: t("categories.control"),
+        gradient: gradients.control,
+        icon: ArrowRightLeft,
+        description: t("categoryDescriptions.control"),
+        accent: colors.green400,
+      },
+    }),
+    [t],
+  );
 
   const effectDescriptions = useMemo(
     () => ({
-      multiplier: `Multiplies ${node.effectTarget} output generation by ${node.effectValue}x`,
-      discount: `Reduces ${node.effectTarget} costs by ${node.effectValue} when building nodes`,
-      draw: `Allows viewing ${node.effectValue} additional node(s) from deck`,
-      swap: `Enables swapping up to ${node.effectValue} energy types`,
+      multiplier: t("effects.multiplier", {
+        target: t(`energy.${node.effectTarget}`),
+        value: node.effectValue,
+      }),
+      discount: t("effects.discount", {
+        target: t(`energy.${node.effectTarget}`),
+        value: node.effectValue,
+      }),
+      draw: t("effects.draw", { value: node.effectValue }),
+      swap: t("effects.swap", { value: node.effectValue }),
     }),
-    [node.effectTarget, node.effectValue],
+    [node.effectTarget, node.effectValue, t],
   );
 
   const config = categoryConfig[node.category];
@@ -252,13 +261,13 @@ export function NodeDetailModal({
                   <View style={nodeDetailStyles.categoryBadge}>
                     <CategoryIcon color={config.accent} size={layout.icon.sm} />
                     <Text style={nodeDetailStyles.badgeText}>
-                      {config.label} Node
+                      {config.label} {t("game.node")}
                     </Text>
                   </View>
                   {node.efficiency > 0 ? (
                     <View style={nodeDetailStyles.efficiencyBadge}>
                       <Text style={nodeDetailStyles.badgeText}>
-                        {node.efficiency} Efficiency
+                        {node.efficiency} {t("game.efficiency")}
                       </Text>
                     </View>
                   ) : null}
@@ -267,10 +276,10 @@ export function NodeDetailModal({
                 <View style={nodeDetailStyles.hero}>
                   <EnergyIcon type={node.outputType} size="lg" colored />
                   <Text style={nodeDetailStyles.heroTitle}>
-                    {node.outputType}
+                    {t(`energy.${node.outputType}`)}
                   </Text>
                   <Text style={nodeDetailStyles.heroSubtitle}>
-                    Provides output
+                    {t("game.providesOutput")}
                   </Text>
                 </View>
               </LinearGradient>
@@ -284,7 +293,7 @@ export function NodeDetailModal({
                   {node.effectType ? (
                     <View style={nodeDetailStyles.section}>
                       <Text style={nodeDetailStyles.sectionLabel}>
-                        Special Effect
+                        {t("game.specialEffect")}
                       </Text>
                       <View style={nodeDetailStyles.effectRow}>
                         <View style={nodeDetailStyles.effectIcon}>
@@ -296,7 +305,7 @@ export function NodeDetailModal({
                         </View>
                         <View style={nodeDetailStyles.effectContent}>
                           <Text style={nodeDetailStyles.effectTitle}>
-                            {node.effectType}
+                            {t(`effectsTitle.${node.effectType}`)}
                           </Text>
                           <Text style={nodeDetailStyles.effectText}>
                             {effectDescriptions[node.effectType]}
@@ -314,7 +323,7 @@ export function NodeDetailModal({
 
                   <View style={nodeDetailStyles.section}>
                     <Text style={nodeDetailStyles.sectionLabel}>
-                      Energy Cost
+                      {t("game.energyCost")}
                     </Text>
                     <View style={nodeDetailStyles.energyRow}>
                       {costEntries.map(renderCostItem)}
@@ -322,7 +331,7 @@ export function NodeDetailModal({
                     {discountsApplied ? (
                       <View style={nodeDetailStyles.discountNote}>
                         <Text style={nodeDetailStyles.discountTitle}>
-                          Discounts Applied
+                          {t("game.discountsApplied")}
                         </Text>
                         <View style={nodeDetailStyles.discountList}>
                           {discountEntries.map(renderDiscountLine)}
@@ -333,7 +342,7 @@ export function NodeDetailModal({
 
                   <View style={nodeDetailStyles.section}>
                     <Text style={nodeDetailStyles.sectionLabel}>
-                      Your Energy
+                      {t("game.yourEnergy")}
                     </Text>
                     <View style={nodeDetailStyles.energyRow}>
                       {energyEntries.map(renderEnergyItem)}
@@ -370,7 +379,9 @@ export function NodeDetailModal({
                         : null,
                     ]}
                   >
-                    {isAffordable ? "Build Node" : "Insufficient Energy"}
+                    {isAffordable
+                      ? t("game.buildNode")
+                      : t("game.insufficientEnergy")}
                   </Text>
                 </Pressable>
 
@@ -386,12 +397,12 @@ export function NodeDetailModal({
                     ]}
                   >
                     <Text style={nodeDetailStyles.secondaryButtonText}>
-                      Reserve Node
+                      {t("game.reserveNode")}
                     </Text>
                   </Pressable>
                 ) : (
                   <Text style={nodeDetailStyles.reservedNote}>
-                    Already in your reserved nodes
+                    {t("game.alreadyReserved")}
                   </Text>
                 )}
               </View>

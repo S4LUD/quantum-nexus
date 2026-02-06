@@ -60,14 +60,19 @@ interface BotPlanDecision {
 
 interface BotDecision {
   nextState: GameState;
-  notice: string;
+  notice: BotNotice[];
   debug: string;
 }
 
 interface BotResult {
   nextState: GameState;
   winner: Player | null;
-  notice: string;
+  notice: BotNotice[];
+}
+
+interface BotNotice {
+  key: string;
+  params?: Record<string, string | number>;
 }
 
 export function selectBotMove(
@@ -76,7 +81,7 @@ export function selectBotMove(
 ): BotResult {
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
   if (!currentPlayer.isBot) {
-    return { nextState: gameState, winner: null, notice: "" };
+    return { nextState: gameState, winner: null, notice: [] };
   }
 
   const { nextState, notice, debug } = chooseBotAction(
@@ -136,7 +141,7 @@ function chooseBotAction(
       const target = protocols[0];
       return makeDecision(
         applyProtocolClaim(gameState, player, target),
-        `${player.name} claimed a protocol.`,
+        makeNotice("botNotice.claimedProtocol", { name: player.name }),
         [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(
           " | ",
         ),
@@ -148,7 +153,7 @@ function chooseBotAction(
         gameState,
         player,
         target,
-        `${player.name} built a node.`,
+        makeNotice("botNotice.builtNode", { name: player.name }),
         [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
       );
     }
@@ -158,7 +163,7 @@ function chooseBotAction(
         gameState,
         player,
         target,
-        `${player.name} built a reserved node.`,
+        makeNotice("botNotice.builtReservedNode", { name: player.name }),
         [...debugLines, `Chosen reserved: ${formatNode(target)}`].join(" | "),
       );
     }
@@ -176,7 +181,7 @@ function chooseBotAction(
     if (reserveTarget) {
       return makeDecision(
         applyNodeReservation(gameState, player, reserveTarget, true),
-        `${player.name} reserved a node.`,
+        makeNotice("botNotice.reservedNode", { name: player.name }),
         [...debugLines, `Reserved: ${formatNode(reserveTarget)}`].join(" | "),
       );
     }
@@ -197,7 +202,7 @@ function chooseBotAction(
         gameState,
         player,
         target,
-        `${player.name} built a node.`,
+        makeNotice("botNotice.builtNode", { name: player.name }),
         [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
       );
     }
@@ -205,7 +210,7 @@ function chooseBotAction(
       const target = protocols[0];
       return makeDecision(
         applyProtocolClaim(gameState, player, target),
-        `${player.name} claimed a protocol.`,
+        makeNotice("botNotice.claimedProtocol", { name: player.name }),
         [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(
           " | ",
         ),
@@ -222,7 +227,7 @@ function chooseBotAction(
       );
       return makeDecision(
         nextState,
-        `${player.name} exchanged energy.`,
+        makeNotice("botNotice.exchangedEnergy", { name: player.name }),
         [
           ...debugLines,
           `Exchange: take=${exchangePlan.takeType}x${exchangePlan.takeCount}`,
@@ -244,7 +249,7 @@ function chooseBotAction(
     if (reserveTarget) {
       return makeDecision(
         applyNodeReservation(gameState, player, reserveTarget, true),
-        `${player.name} reserved a node.`,
+        makeNotice("botNotice.reservedNode", { name: player.name }),
         [...debugLines, `Reserved: ${formatNode(reserveTarget)}`].join(" | "),
       );
     }
@@ -275,7 +280,7 @@ function chooseBotAction(
     const target = pickBestProtocol(protocols);
     return makeDecision(
       applyProtocolClaim(gameState, player, target),
-      `${player.name} claimed a protocol.`,
+      makeNotice("botNotice.claimedProtocol", { name: player.name }),
       [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(" | "),
     );
   }
@@ -285,7 +290,7 @@ function chooseBotAction(
         gameState,
         player,
         denyTarget,
-        `${player.name} built a node.`,
+        makeNotice("botNotice.builtNode", { name: player.name }),
         [...debugLines, `Race deny build: ${formatNode(denyTarget)}`].join(
           " | ",
         ),
@@ -294,7 +299,7 @@ function chooseBotAction(
     if (canReserveNode(gameState, player, denyTarget)) {
       return makeDecision(
         applyNodeReservation(gameState, player, denyTarget, true),
-        `${player.name} reserved a node.`,
+        makeNotice("botNotice.reservedNode", { name: player.name }),
         [...debugLines, `Race deny reserve: ${formatNode(denyTarget)}`].join(
           " | ",
         ),
@@ -308,14 +313,14 @@ function chooseBotAction(
         gameState,
         player,
         denyTarget,
-        `${player.name} built a node.`,
+        makeNotice("botNotice.builtNode", { name: player.name }),
         [...debugLines, `Deny build: ${formatNode(denyTarget)}`].join(" | "),
       );
     }
     if (canReserveNode(gameState, player, denyTarget)) {
       return makeDecision(
         applyNodeReservation(gameState, player, denyTarget, true),
-        `${player.name} reserved a node.`,
+        makeNotice("botNotice.reservedNode", { name: player.name }),
         [...debugLines, `Deny reserve: ${formatNode(denyTarget)}`].join(" | "),
       );
     }
@@ -326,7 +331,7 @@ function chooseBotAction(
       gameState,
       player,
       target,
-      `${player.name} built a node.`,
+      makeNotice("botNotice.builtNode", { name: player.name }),
       [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
     );
   }
@@ -343,7 +348,7 @@ function chooseBotAction(
       gameState,
       player,
       target,
-      `${player.name} built a node.`,
+      makeNotice("botNotice.builtNode", { name: player.name }),
       [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
     );
   }
@@ -353,7 +358,7 @@ function chooseBotAction(
       gameState,
       player,
       target,
-      `${player.name} built a node.`,
+      makeNotice("botNotice.builtNode", { name: player.name }),
       [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
     );
   }
@@ -361,7 +366,7 @@ function chooseBotAction(
     const target = pickBestProtocol(protocols);
     return makeDecision(
       applyProtocolClaim(gameState, player, target),
-      `${player.name} claimed a protocol.`,
+      makeNotice("botNotice.claimedProtocol", { name: player.name }),
       [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(" | "),
     );
   }
@@ -381,7 +386,7 @@ function chooseBotAction(
     );
     return makeDecision(
       nextState,
-      `${player.name} exchanged energy.`,
+      makeNotice("botNotice.exchangedEnergy", { name: player.name }),
       [
         ...debugLines,
         `Exchange: take=${exchangePlan.takeType}x${exchangePlan.takeCount}`,
@@ -403,7 +408,7 @@ function chooseBotAction(
   if (reserveTarget) {
     return makeDecision(
       applyNodeReservation(gameState, player, reserveTarget, true),
-      `${player.name} reserved a node.`,
+      makeNotice("botNotice.reservedNode", { name: player.name }),
       [...debugLines, `Reserved: ${formatNode(reserveTarget)}`].join(" | "),
     );
   }
@@ -782,7 +787,7 @@ function buildNodeWithEffects(
   gameState: GameState,
   player: Player,
   node: Node,
-  notice: string,
+  notice: BotNotice[],
   debug: string,
 ): BotDecision {
   const payment = generateNodePayment(node, player);
@@ -812,7 +817,7 @@ function buildNodeWithEffects(
 
 function resolveSwapIfNeeded(
   gameState: GameState,
-  notice: string,
+  notice: BotNotice[],
   debug: string,
 ): BotDecision {
   const player = gameState.players[gameState.currentPlayerIndex];
@@ -841,7 +846,14 @@ function resolveSwapIfNeeded(
     swapPlan.give,
     swapPlan.take,
   );
-  return makeDecision(nextState, `${notice} Swapped energy.`, debug);
+  return makeDecision(
+    nextState,
+    [
+      ...notice,
+      { key: "botNotice.swappedEnergy", params: { name: player.name } },
+    ],
+    debug,
+  );
 }
 
 function planSwap(
@@ -947,7 +959,7 @@ function collectEnergyTurn(
     if (reserveTarget) {
       return makeDecision(
         applyNodeReservation(gameState, player, reserveTarget, true),
-        `${player.name} reserved a node.`,
+        makeNotice("botNotice.reservedNode", { name: player.name }),
         `${player.name} [${difficulty}] action=reserve ${formatNode(reserveTarget)}`,
       );
     }
@@ -962,13 +974,13 @@ function collectEnergyTurn(
       );
       return makeDecision(
         nextState,
-        `${player.name} exchanged energy.`,
+        makeNotice("botNotice.exchangedEnergy", { name: player.name }),
         `Energy reason=exchange desired=${desiredSummary} take=${formatEnergyList(Array(exchangePlan.takeCount).fill(exchangePlan.takeType))} give=${formatEnergyList(exchangePlan.give)}`,
       );
     }
     return makeDecision(
       gameState,
-      `${player.name} had no legal action.`,
+      makeNotice("botNotice.noLegalAction", { name: player.name }),
       `Energy reason=none desired=${desiredSummary}`,
     );
   }
@@ -987,13 +999,13 @@ function collectEnergyTurn(
     );
     return makeDecision(
       discardedState,
-      `${player.name} collected energy.`,
+      makeNotice("botNotice.collectedEnergy", { name: player.name }),
       `Energy reason=collect desired=${desiredSummary} selected=${formatEnergyList(selection)} discard=${formatEnergyList(discards)}`,
     );
   }
   return makeDecision(
     nextState,
-    `${player.name} collected energy.`,
+    makeNotice("botNotice.collectedEnergy", { name: player.name }),
     `Energy reason=collect desired=${desiredSummary} selected=${formatEnergyList(selection)}`,
   );
 }
@@ -1277,10 +1289,17 @@ function mergeDebug(result: BotDecision, debugLines: string[]): BotDecision {
 
 function makeDecision(
   nextState: GameState,
-  notice: string,
+  notice: BotNotice[],
   debug: string,
 ): BotDecision {
   return { nextState, notice, debug };
+}
+
+function makeNotice(
+  key: string,
+  params?: Record<string, string | number>,
+): BotNotice[] {
+  return [{ key, params }];
 }
 
 function advanceTurn(gameState: GameState): GameState {

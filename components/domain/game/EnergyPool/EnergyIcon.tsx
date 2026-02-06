@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Zap, Droplet, Flame, Brain, Sparkles } from "lucide-react-native";
-import { colors, gradients } from "@/constants/colors";
 import {
   energyBadgeSizes,
   energyIconSizes,
@@ -19,42 +18,12 @@ interface EnergyIconProps {
   colored?: boolean;
 }
 
-type GradientTuple = readonly [string, string, ...string[]];
-
-const iconConfig: Record<
-  EnergyType,
-  { icon: typeof Zap; gradient: GradientTuple; label: string; color: string }
-> = {
-  solar: {
-    icon: Zap,
-    gradient: gradients.energySolar as GradientTuple,
-    label: "Solar",
-    color: colors.yellow400,
-  },
-  hydro: {
-    icon: Droplet,
-    gradient: gradients.energyHydro as GradientTuple,
-    label: "Hydro",
-    color: colors.cyan400,
-  },
-  plasma: {
-    icon: Flame,
-    gradient: gradients.energyPlasma as GradientTuple,
-    label: "Plasma",
-    color: colors.pink400,
-  },
-  neural: {
-    icon: Brain,
-    gradient: gradients.energyNeural as GradientTuple,
-    label: "Neural",
-    color: colors.green400,
-  },
-  flux: {
-    icon: Sparkles,
-    gradient: gradients.energyFlux as GradientTuple,
-    label: "Flux",
-    color: colors.purple400,
-  },
+const iconMap: Record<EnergyType, { icon: typeof Zap; label: string }> = {
+  solar: { icon: Zap, label: "Solar" },
+  hydro: { icon: Droplet, label: "Hydro" },
+  plasma: { icon: Flame, label: "Plasma" },
+  neural: { icon: Brain, label: "Neural" },
+  flux: { icon: Sparkles, label: "Flux" },
 };
 
 export function EnergyIcon({
@@ -68,11 +37,11 @@ export function EnergyIcon({
     () => createEnergyIconStyles(theme),
     [theme],
   );
-  const config = iconConfig[type];
+  const config = iconMap[type];
   const Icon = config.icon;
   const iconSize =
     typeof size === "number" ? size : energyIconSizes[size];
-  const iconColor = colored ? config.color : theme.colors.text;
+  const iconColor = colored ? theme.energy.colors[type] : theme.colors.text;
 
   return (
     <View style={energyIconStyles.iconRow}>
@@ -96,7 +65,7 @@ export function EnergyBadge({ type, count, size = "md" }: EnergyBadgeProps) {
     () => createEnergyIconStyles(theme),
     [theme],
   );
-  const config = iconConfig[type];
+  const config = iconMap[type];
   const Icon = config.icon;
   const badgeStyle = energyBadgeSizes[size];
   const iconColor =
@@ -116,7 +85,7 @@ export function EnergyBadge({ type, count, size = "md" }: EnergyBadgeProps) {
 
   return (
     <LinearGradient
-      colors={config.gradient}
+      colors={theme.energy.gradients[type]}
       style={[energyIconStyles.badge, badgeStyle.container]}
     >
       <Icon

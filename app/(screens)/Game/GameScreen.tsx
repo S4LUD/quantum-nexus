@@ -17,6 +17,8 @@ import { animations } from "@/constants/animations";
 import { useTheme } from "@/hooks/useTheme";
 import { canAffordNode, canClaimProtocol } from "@/logic/gameEngine";
 import { useSound } from "@/hooks/useSound";
+import { useTranslation } from "react-i18next";
+import { getLocalizedPlayerName } from "@/utils/helpers";
 
 export function GameScreen() {
   const router = useRouter();
@@ -32,6 +34,7 @@ export function GameScreen() {
   const turnKeyRef = useRef<string | null>(null);
   const { theme } = useTheme();
   const { play } = useSound();
+  const { t } = useTranslation();
   const gameStyles = useMemo(() => createGameStyles(theme), [theme]);
 
   const tabBadges = useMemo(() => {
@@ -94,8 +97,9 @@ export function GameScreen() {
       return;
     }
     const starter = gameState.players[gameState.currentPlayerIndex];
+    const starterName = getLocalizedPlayerName(starter.name, t);
     startNoticeShownRef.current = true;
-    setBotNotice(`Starting player: ${starter.name}`);
+    setBotNotice(t("game.startingPlayerNotice", { name: starterName }));
     if (botNoticeTimerRef.current) {
       clearTimeout(botNoticeTimerRef.current);
     }
@@ -103,7 +107,7 @@ export function GameScreen() {
       clearBotNotice,
       animations.botNotice,
     );
-  }, [clearBotNotice, gameState]);
+  }, [clearBotNotice, gameState, t]);
 
   useEffect(() => {
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
@@ -124,8 +128,33 @@ export function GameScreen() {
     }
     botTurnTimerRef.current = setTimeout(() => {
       const result = runBotTurn(gameState, currentPlayer.botDifficulty);
-      if (result.notice) {
-        setBotNotice(result.notice);
+      if (result.notice.length > 0) {
+        const message = result.notice
+          .map((notice) => {
+            const params = notice.params?.name
+              ? {
+                  ...notice.params,
+                  name: getLocalizedPlayerName(
+                    String(notice.params.name),
+                    t,
+                  ),
+                }
+              : notice.params;
+            const primary = t(notice.key, params);
+            if (primary !== notice.key) {
+              return primary;
+            }
+            if (notice.key.startsWith("botNotice.")) {
+              const fallbackKey = `bot.${notice.key.split(".")[1]}`;
+              const fallback = t(fallbackKey, params);
+              if (fallback !== fallbackKey) {
+                return fallback;
+              }
+            }
+            return primary;
+          })
+          .join(" · ");
+        setBotNotice(message);
         if (botNoticeTimerRef.current) {
           clearTimeout(botNoticeTimerRef.current);
         }
@@ -141,7 +170,7 @@ export function GameScreen() {
       }
       updateGameState(result.nextState);
     }, animations.botTurnDelay);
-  }, [clearBotNotice, endGame, gameState, runBotTurn, updateGameState]);
+  }, [clearBotNotice, endGame, gameState, runBotTurn, t, updateGameState]);
 
   useEffect(() => {
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
@@ -183,11 +212,12 @@ export function GameScreen() {
                   style={[gameStyles.paddedSection, gameStyles.overlayPanel]}
                 >
                   <GameHeader
-                    title="Quantum Nexus"
+                    title={t("home.title")}
                     turnCount={gameState.turnCount}
-                    playerName={
-                      gameState.players[gameState.currentPlayerIndex].name
-                    }
+                    playerName={getLocalizedPlayerName(
+                      gameState.players[gameState.currentPlayerIndex].name,
+                      t,
+                    )}
                     efficiency={
                       gameState.players[gameState.currentPlayerIndex].efficiency
                     }
@@ -234,8 +264,12 @@ export function GameScreen() {
           </>
         ) : (
           <View style={gameStyles.centerContent}>
-            <Text>No active game.</Text>
-            <Button label="Back" onPress={handleBack} variant="secondary" />
+            <Text>{t("game.noActiveGame")}</Text>
+            <Button
+              label={t("common.back")}
+              onPress={handleBack}
+              variant="secondary"
+            />
           </View>
         )}
       </View>

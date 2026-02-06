@@ -1,0 +1,333 @@
+{
+  "settings": {
+    "title": "Pengaturan",
+    "darkMode": "Mode Gelap",
+    "soundEffects": "Efek Suara",
+    "colorBlindMode": "Bantuan Buta Warna",
+    "theme": "Tema",
+    "enableDarkMode": "Aktifkan Mode Gelap",
+    "disableDarkMode": "Nonaktifkan Mode Gelap",
+    "enabled": "Aktif",
+    "disabled": "Nonaktif",
+    "language": "Bahasa",
+    "version": "Versi",
+    "gameMode": "Mode Game",
+    "platform": "Platform",
+    "close": "Tutup"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "Game Strategi Pembangunan Jaringan",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only.",
+    "sectionTitle": "Legal",
+    "splashPrefix": "Dengan melanjutkan, Anda menyetujui",
+    "splashAnd": "dan",
+    "terms": {
+      "title": "Ketentuan Layanan",
+      "updated": "Terakhir diperbarui 6 Februari 2026",
+      "intro": "Ketentuan ini mengatur penggunaan Quantum Nexus. Dengan menggunakan game, Anda menyetujui Ketentuan ini.",
+      "sections": {
+        "licenseTitle": "Lisensi",
+        "licenseBody": "Anda diberikan lisensi pribadi, non-eksklusif, tidak dapat dipindahtangankan untuk menggunakan game untuk hiburan pribadi dan non-komersial.",
+        "acceptableTitle": "Penggunaan yang Diperbolehkan",
+        "acceptableBody": "Dilarang meretas, merekayasa balik, atau mengganggu game. Dilarang memakai otomatisasi, eksploit, atau alat tidak sah.",
+        "contentTitle": "Konten Pengguna",
+        "contentBody": "Quantum Nexus belum menerima konten buatan pengguna saat ini.",
+        "liabilityTitle": "Penyangkalan",
+        "liabilityBody": "Game disediakan \"apa adanya\" tanpa jaminan. Sejauh diizinkan hukum, kami tidak bertanggung jawab atas kerugian akibat penggunaan game.",
+        "changesTitle": "Perubahan",
+        "changesBody": "Kami dapat memperbarui Ketentuan ini dari waktu ke waktu. Melanjutkan penggunaan setelah pembaruan berarti menyetujui."
+      }
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "updated": "Terakhir diperbarui 6 Februari 2026",
+      "intro": "Quantum Nexus adalah game offline. Kami tidak mengumpulkan atau membagikan data pribadi.",
+      "sections": {
+        "dataTitle": "Pengumpulan Data",
+        "dataBody": "Tidak ada akun, analitik, iklan, atau laporan kerusakan. Kami tidak mengumpulkan pengenal atau data penggunaan.",
+        "permissionsTitle": "Izin",
+        "permissionsBody": "Aplikasi tidak meminta izin perangkat selain persyaratan platform standar.",
+        "storageTitle": "Penyimpanan Lokal",
+        "storageBody": "Kemajuan game disimpan secara lokal di perangkat Anda. Menghapus aplikasi akan menghapus data lokal.",
+        "childrenTitle": "Privasi Anak",
+        "childrenBody": "Kami tidak dengan sengaja mengumpulkan data pribadi anak karena kami tidak mengumpulkan data apa pun.",
+        "changesTitle": "Perubahan",
+        "changesBody": "Jika kebijakan ini berubah, kami akan memperbarui tanggal yang ditampilkan di sini."
+      }
+    }
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "Bangun Jaringan Anda",
+    "tagline": "Kumpulkan Energi. Hubungkan Simpul.",
+    "start": "Inisialisasi Sistem"
+  },
+  "menu": {
+    "quickPlay": "Main Cepat",
+    "quickPlaySubtitle": "Mulai game solo",
+    "multiplayer": "Multipemain",
+    "multiplayerSubtitle": "Bermain dengan orang lain",
+    "tutorial": "Panduan",
+    "tutorialSubtitle": "Pelajari cara bermain",
+    "stats": "Statistik",
+    "settings": "Pengaturan",
+    "strategicNetworkBuilding": "Pembangunan Jaringan Strategis",
+    "wip": "Dalam Pengembangan"
+  },
+  "tabs": {
+    "market": "Pasar",
+    "protocols": "Protokol",
+    "players": "Pemain"
+  },
+  "common": {
+    "back": "Kembali",
+    "ok": "OK",
+    "close": "Tutup",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "continue": "Lanjut",
+    "skip": "Lewati"
+  },
+  "game": {
+    "turnLabel": "Giliran {{count}}",
+    "startingPlayerNotice": "Pemain awal: {{name}}",
+    "player": "Pemain",
+    "node": "Simpul",
+    "efficiency": "Efisiensi",
+    "energy": "Energi",
+    "nodes": "Simpul",
+    "protocols": "Protokol",
+    "outputGeneration": "Pembentukan Output",
+    "buildNode": "Bangun Simpul",
+    "reserveNode": "Reservasi Simpul",
+    "insufficientEnergy": "Energi tidak cukup",
+    "energyCost": "Biaya Energi",
+    "yourEnergy": "Energi Anda",
+    "discountsApplied": "Diskon Diterapkan",
+    "providesOutput": "Memberikan output",
+    "specialEffect": "Efek Khusus",
+    "alreadyReserved": "Simpul ini sudah Anda reservasi",
+    "requirements": "Syarat",
+    "effect": "Efek",
+    "claimed": "Diklaim",
+    "victory": "Kemenangan",
+    "finalRankings": "Peringkat Akhir",
+    "victoryAchievedBy": "Kemenangan Dicapai Melalui",
+    "wins": "Menang",
+    "networkSize": "Ukuran Jaringan",
+    "protocolMastery": "Penguasaan Protokol",
+    "efficiencyThreshold": "Ambang Efisiensi",
+    "noActiveGame": "Tidak ada game aktif."
+  },
+  "player": {
+    "you": "Anda",
+    "label": "Pemain {{number}}"
+  },
+  "categories": {
+    "research": "Riset",
+    "production": "Produksi",
+    "network": "Jaringan",
+    "control": "Kontrol"
+  },
+  "categoryDescriptions": {
+    "research": "Simpul Riset memberi kemampuan khusus dan peningkatan efisiensi.",
+    "production": "Simpul Produksi memberi efisiensi tinggi dengan biaya lebih besar.",
+    "network": "Simpul Jaringan adalah tambahan kompleks bernilai tinggi.",
+    "control": "Simpul Kontrol memberi efek utilitas dan fleksibilitas."
+  },
+  "effects": {
+    "multiplier": "Mengalikan output {{target}} menjadi {{value}}x",
+    "discount": "Mengurangi biaya {{target}} sebesar {{value}} saat Bangun Simpul",
+    "draw": "Memungkinkan melihat {{value}} Simpul tambahan dari deck",
+    "swap": "Memungkinkan menukar hingga {{value}} jenis Energi"
+  },
+  "playerArea": {
+    "yourTurn": "GILIRAN ANDA",
+    "energyHeld": "Energi yang Dimiliki",
+    "claimedProtocols": "Protokol yang Diklaim",
+    "ownedNodes": "Simpul Dimiliki ({{count}})",
+    "reservedNodes": "Reservasi ({{count}}/{{max}})"
+  },
+  "energy": {
+    "solar": "Surya",
+    "hydro": "Hidro",
+    "plasma": "Plasma",
+    "neural": "Saraf",
+    "flux": "Fluks",
+    "solarSubtitle": "Energi kuning/oranye",
+    "hydroSubtitle": "Energi cyan/biru",
+    "plasmaSubtitle": "Energi pink/magenta",
+    "neuralSubtitle": "Energi hijau",
+    "fluxSubtitle": "Energi liar (hanya diperoleh lewat Reservasi)"
+  },
+  "alerts": {
+    "discardRequiredTitle": "Perlu buang",
+    "discardRequiredMessage": "Buang {{count}} Energi sebelum melakukan aksi lain.",
+    "invalidActionTitle": "Aksi tidak valid",
+    "invalidActionMessage": "Pengambilan Energi tidak valid",
+    "insufficientEnergyTitle": "Energi tidak cukup",
+    "insufficientEnergyMessage": "Energi tidak cukup untuk Bangun Simpul ini.",
+    "paymentErrorTitle": "Kesalahan pembayaran",
+    "paymentErrorMessage": "Tidak dapat membuat pembayaran yang valid.",
+    "noFluxTitle": "Flux tidak tersedia",
+    "noFluxMessage": "Flux diperlukan untuk Reservasi Simpul.",
+    "reserveLimitTitle": "Batas Reservasi",
+    "reserveLimitMessage": "Maksimum 3 Simpul yang dapat di-Reservasi.",
+    "alreadyReservedTitle": "Sudah di-Reservasi",
+    "alreadyReservedMessage": "Simpul ini sudah di-Reservasi.",
+    "unavailableTitle": "Tidak tersedia",
+    "unavailableMessage": "Simpul ini sudah di-Reservasi oleh pemain lain.",
+    "exchangeErrorTitle": "Kesalahan Tukar",
+    "exchangeSelectTake": "Pilih Energi yang ingin diambil.",
+    "exchangeInvalid": "Tukar tidak dapat dilakukan dengan pool atau energi saat ini."
+  },
+  "quickPlay": {
+    "title": "Pengaturan Main Cepat",
+    "bots": "Jumlah Bot",
+    "difficulty": "Kesulitan",
+    "botLabel_one": "{{count}} Bot",
+    "botLabel_other": "{{count}} Bot",
+    "start": "Mulai Game"
+  },
+  "difficulty": {
+    "easy": "Mudah",
+    "medium": "Sedang",
+    "hard": "Sulit"
+  },
+  "energyPool": {
+    "title": "Pool Energi",
+    "collectLabel": "Kumpulkan {{count}} Energi",
+    "exchangeLabel": "Tukar Energi"
+  },
+  "exchange": {
+    "title": "Tukar Energi",
+    "subtitle": "Pilih exchange 1:1 atau 2:3. Flux tidak dapat ditukar.",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "Berikan {{count}}",
+    "take": "Ambil {{count}}",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi"
+  },
+  "swap": {
+    "title": "Energi Tukar",
+    "give": "Berikan",
+    "take": "Ambil",
+    "subtitle": "Pilih hingga {{count}} Energi untuk ditukar.",
+    "confirm": "Konfirmasi Tukar"
+  },
+  "draw": {
+    "title": "Draw Simpul",
+    "subtitle": "Pilih satu Simpul untuk dimasukkan ke Market."
+  },
+  "discard": {
+    "title": "Buang Energi",
+    "subtitle": "Pilih {{count}} Energi untuk dibuang. Sisa: {{remaining}}.",
+    "confirm": "Buang {{count}} Energi"
+  },
+  "endgame": {
+    "networkComplete": "Jaringan Selesai",
+    "playAgain": "Main Lagi",
+    "mainMenu": "Menu Utama"
+  },
+  "tutorial": {
+    "welcomeTitle": "Selamat datang di Quantum Nexus",
+    "welcomeBody1": "Bangun jaringan komputasi kuantum dengan Kumpulkan Energi dan Bangun Simpul.",
+    "welcomeBody2": "Menanglah dengan Efficiency, ukuran Jaringan, atau penguasaan Protokol.",
+    "winConditions": "Syarat Menang",
+    "winConditionEfficiency": "• Capai 20★ Efficiency setelah giliran 20",
+    "winConditionNodes": "• Bangun Simpul sesuai kebutuhan (2P: 13 / 3P: 15 / 4P: 17)",
+    "winConditionProtocols": "• Klaim 3 Protokol atau lebih",
+    "energyTypesTitle": "Jenis Energi",
+    "energyTypesBody": "Ada 4 jenis Energi plus Flux:",
+    "yourTurnTitle": "Giliran Anda",
+    "yourTurnBody": "Pada giliran Anda, pilih SATU aksi:",
+    "collectTitle": "1. Kumpulkan Energi",
+    "collectLine1": "• Ambil 3 jenis Energi berbeda, ATAU",
+    "collectLine2": "• Ambil 2 Energi yang sama (jika tersedia 4+)",
+    "collectLine3": "• Maksimum total 10 Energi",
+    "buildTitle": "2. Bangun Simpul",
+    "buildLine1": "• Bayar biaya Energi",
+    "buildLine2": "• Tambahkan ke Jaringan Anda",
+    "buildLine3": "• Dapatkan poin Efficiency",
+    "reserveTitle": "3. Reservasi Simpul",
+    "reserveLine1": "• Simpan untuk nanti (maks 3)",
+    "reserveLine2": "• Dapatkan 1 Flux (jika tersedia)",
+    "reserveLine3": "• Bangun dari Reservasi kapan saja",
+    "exchangeTitle": "4. Tukar Energi",
+    "exchangeLine1": "• Tukar 1:1 (beri 1, ambil 1)",
+    "exchangeLine2": "• Tukar 2:3 (ambil 2 sama, beri 3 apa saja)",
+    "exchangeLine3": "• Flux tidak dapat ditukar",
+    "exchangeLine4": "• Pool harus memiliki Energi yang diambil",
+    "nodesTitle": "Simpul",
+    "nodesBody": "Simpul adalah inti Jaringan. Setiap Simpul memberi:",
+    "nodeResearch": "Research Simpul",
+    "nodeResearchDesc": "Kemampuan khusus dan peningkatan Efficiency",
+    "nodeProduction": "Production Simpul",
+    "nodeProductionDesc": "Efficiency tinggi, biaya lebih besar",
+    "nodeNetwork": "Jaringan Simpul",
+    "nodeNetworkDesc": "Tambahan kompleks bernilai tinggi",
+    "nodeControl": "Control Simpul",
+    "nodeControlDesc": "Efek utilitas dan fleksibilitas",
+    "outputTitle": "Pembangkitan Output",
+    "outputBody": "Setiap Simpul menghasilkan 1 output sesuai tipe, dihitung untuk syarat Protokol dan mengurangi biaya Energi terkait sebesar 1 saat Bangun Simpul (hanya Energi dasar).",
+    "protocolsTitle": "Protokol",
+    "protocolsBody": "Protokol adalah peningkatan kuat yang dapat diklaim:",
+    "protocolRequirements": "Syarat",
+    "protocolRequirementsLine1": "Harus memiliki OUTPUT generation yang cukup (bukan Energi yang dipegang)",
+    "protocolRequirementsLine2": "OUTPUT tidak habis dan dapat memenuhi beberapa Protokol",
+    "protocolClaiming": "Mengklaim",
+    "protocolClaimingLine1": "Harus mengetuk untuk klaim (tidak otomatis)",
+    "protocolBenefits": "Manfaat",
+    "protocolBenefitsLine1": "Memberi poin Efficiency + efek khusus berkelanjutan",
+    "protocolExamples": "Contoh: output ganda, Reservasi gratis, Energi swap, pengurangan biaya",
+    "strategyTitle": "Tips Strategi",
+    "strategyMultipleTitle": "Banyak Jalur Kemenangan",
+    "strategyMultipleBody": "Fokus pada Efficiency, ukuran Jaringan, atau Protokol mastery - atau gabungkan strategi.",
+    "strategyFluxTitle": "Flux Sangat Kuat",
+    "strategyFluxBody": "Sebagai Energi liar namun terbatas. Reservasi untuk mendapatkan Flux.",
+    "strategyEffectsTitle": "Efek Simpul Bertumpuk",
+    "strategyEffectsBody": "Efek bersifat sementara dan aktif setelah Bangun Simpul.",
+    "strategyTimingTitle": "Waktu itu Penting",
+    "strategyTimingBody": "Ambang Efficiency hanya berlaku setelah giliran 20 - rencanakan dengan baik.",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya",
+    "gotIt": "Mengerti"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}} telah melakukan reservasi Simpul.",
+    "builtNode": "{{name}} telah membangun Simpul.",
+    "builtReservedNode": "{{name}} telah membangun Simpul yang direservasi.",
+    "claimedProtocol": "{{name}} telah mengklaim Protokol.",
+    "exchangedEnergy": "{{name}} telah menukar Energi.",
+    "collectedEnergy": "{{name}} telah mengumpulkan Energi.",
+    "swappedEnergy": "{{name}} telah menukar Energi.",
+    "noLegalAction": "{{name}} tidak memiliki aksi yang dapat dilakukan."
+  },
+  "bot": {
+    "reserveNode": "{{name}} telah melakukan reservasi Simpul.",
+    "buildNode": "{{name}} telah membangun Simpul.",
+    "buildReservedNode": "{{name}} telah membangun Simpul yang direservasi.",
+    "claimProtocol": "{{name}} telah mengklaim Protokol.",
+    "exchangeEnergy": "{{name}} telah menukar Energi.",
+    "collectEnergy": "{{name}} telah mengumpulkan Energi.",
+    "swapEnergy": "{{name}} telah menukar Energi.",
+    "noLegalAction": "{{name}} tidak memiliki aksi yang dapat dilakukan."
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} Kali",
+      "discount": "-{{value}} Biaya",
+      "draw": "+{{value}} Tarik",
+      "swap": "Tukar"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "Pengganda",
+    "discount": "Diskon",
+    "draw": "Tarik",
+    "swap": "Tukar"
+  },
+  "exchangeLine4": "• Pool Energi harus memiliki energi yang diambil"
+}

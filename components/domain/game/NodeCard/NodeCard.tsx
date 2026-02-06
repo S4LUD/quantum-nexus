@@ -16,6 +16,7 @@ import { EnergyIcon } from "../EnergyPool/EnergyIcon";
 import { EnergyType, Node, NodeCategory } from "../game.types";
 import { createNodeCardStyles } from "./nodeCard.styles";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "react-i18next";
 
 interface NodeCardProps {
   node: Node;
@@ -26,30 +27,26 @@ interface NodeCardProps {
   showTitle?: boolean;
 }
 
-const categoryConfig: Record<
+const categoryConfigBase: Record<
   NodeCategory,
-  { label: string; gradient: GradientTuple; icon: typeof Eye; accent: string }
+  { gradient: GradientTuple; icon: typeof Eye; accent: string }
 > = {
   research: {
-    label: "Research",
     gradient: gradients.research,
     icon: Eye,
     accent: colors.cyan400,
   },
   production: {
-    label: "Production",
     gradient: gradients.production,
     icon: TrendingUp,
     accent: colors.pink400,
   },
   network: {
-    label: "Network",
     gradient: gradients.network,
     icon: Zap,
     accent: colors.orange400,
   },
   control: {
-    label: "Control",
     gradient: gradients.control,
     icon: ArrowRightLeft,
     accent: colors.green400,
@@ -65,12 +62,36 @@ export function NodeCard({
   showTitle = false,
 }: NodeCardProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const nodeCardStyles = useMemo(() => createNodeCardStyles(theme), [theme]);
-  const config = categoryConfig[node.category];
+  const config = useMemo(
+    () => ({
+      ...categoryConfigBase[node.category],
+      label: t(`categories.${node.category}`),
+    }),
+    [node.category, t],
+  );
   const CategoryIcon = config.icon;
   const sizeStyle =
     size === "sm" ? nodeCardStyles.cardSmall : nodeCardStyles.cardMedium;
-  const effectText = getEffectText(node);
+  const effectText = useMemo(() => {
+    if (!node.effectType) {
+      return null;
+    }
+    if (node.effectType === "multiplier") {
+      return t("nodeCard.effect.multiplier", { value: node.effectValue });
+    }
+    if (node.effectType === "discount") {
+      return t("nodeCard.effect.discount", { value: node.effectValue });
+    }
+    if (node.effectType === "draw") {
+      return t("nodeCard.effect.draw", { value: node.effectValue });
+    }
+    if (node.effectType === "swap") {
+      return t("nodeCard.effect.swap");
+    }
+    return null;
+  }, [node.effectType, node.effectValue, t]);
   const costEntries = useMemo(
     () =>
       (Object.entries(node.cost) as [EnergyType, number][]).filter(
@@ -155,24 +176,4 @@ export function NodeCard({
       </View>
     </Pressable>
   );
-}
-
-function getEffectText(node: Node) {
-  if (!node.effectType) {
-    return null;
-  }
-
-  if (node.effectType === "multiplier") {
-    return `x${node.effectValue} Mult`;
-  }
-  if (node.effectType === "discount") {
-    return `-${node.effectValue} Cost`;
-  }
-  if (node.effectType === "draw") {
-    return `+${node.effectValue} Draw`;
-  }
-  if (node.effectType === "swap") {
-    return "Swap";
-  }
-  return null;
 }

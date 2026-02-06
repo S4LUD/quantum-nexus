@@ -1,0 +1,295 @@
+{
+  "settings": {
+    "title": "การตั้งค่า",
+    "darkMode": "โหมดมืด",
+    "soundEffects": "เอฟเฟกต์เสียง",
+    "colorBlindMode": "โหมดช่วยการมองสี",
+    "theme": "ธีม",
+    "enableDarkMode": "เปิดโหมดมืด",
+    "disableDarkMode": "ปิดโหมดมืด",
+    "enabled": "เปิดใช้งาน",
+    "disabled": "ปิดใช้งาน",
+    "language": "ภาษา",
+    "version": "เวอร์ชัน",
+    "gameMode": "โหมดเกม",
+    "platform": "แพลตฟอร์ม",
+    "close": "ปิด"
+  },
+  "legal": {
+    "title": "Quantum Nexus © 2026",
+    "subtitle": "เกมสร้างเครือข่ายเชิงกลยุทธ์",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+  },
+  "home": {
+    "title": "Quantum Nexus",
+    "subtitle": "สร้างเครือข่ายของคุณ",
+    "tagline": "สะสมพลังงานและเชื่อมต่อโหนด",
+    "start": "เริ่มต้นระบบ"
+  },
+  "menu": {
+    "quickPlay": "เล่นด่วน",
+    "quickPlaySubtitle": "เริ่มเกมเดี่ยว",
+    "multiplayer": "ผู้เล่นหลายคน",
+    "multiplayerSubtitle": "เล่นกับผู้อื่น",
+    "tutorial": "บทช่วยสอน",
+    "tutorialSubtitle": "เรียนรู้วิธีเล่น",
+    "stats": "สถิติ",
+    "settings": "การตั้งค่า",
+    "strategicNetworkBuilding": "การสร้างเครือข่ายเชิงกลยุทธ์",
+    "wip": "กำลังพัฒนา"
+  },
+  "tabs": {
+    "market": "ตลาด",
+    "protocols": "โปรโตคอล",
+    "players": "ผู้เล่น"
+  },
+  "common": {
+    "back": "ย้อนกลับ",
+    "ok": "ตกลง",
+    "close": "ปิด",
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยัน",
+    "continue": "ดำเนินต่อ",
+    "skip": "ข้าม"
+  },
+  "game": {
+    "turnLabel": "เทิร์น {{count}}",
+    "startingPlayerNotice": "ผู้เล่นเริ่มต้น: {{name}}",
+    "player": "ผู้เล่น",
+    "node": "โหนด",
+    "efficiency": "ประสิทธิภาพ",
+    "energy": "พลังงาน",
+    "nodes": "โหนด",
+    "protocols": "โปรโตคอล",
+    "outputGeneration": "การสร้างเอาต์พุต",
+    "buildNode": "สร้างโหนด",
+    "reserveNode": "จองโหนด",
+    "insufficientEnergy": "พลังงานไม่เพียงพอ",
+    "energyCost": "ค่าใช้จ่ายพลังงาน",
+    "yourEnergy": "พลังงานของคุณ",
+    "discountsApplied": "ใช้ส่วนลดแล้ว",
+    "providesOutput": "ให้เอาต์พุต",
+    "specialEffect": "เอฟเฟกต์พิเศษ",
+    "alreadyReserved": "โหนดนี้อยู่ในรายการจองแล้ว",
+    "requirements": "ข้อกำหนด",
+    "effect": "เอฟเฟกต์",
+    "claimed": "ได้รับแล้ว",
+    "victory": "ชัยชนะ",
+    "finalRankings": "อันดับสุดท้าย",
+    "victoryAchievedBy": "ชนะด้วยเงื่อนไข",
+    "wins": "ชนะ",
+    "networkSize": "ขนาดเครือข่าย",
+    "protocolMastery": "เชี่ยวชาญโปรโตคอล",
+    "efficiencyThreshold": "เกณฑ์ประสิทธิภาพ",
+    "noActiveGame": "ไม่มีเกมที่กำลังเล่นอยู่"
+  },
+  "player": {
+    "you": "คุณ",
+    "label": "ผู้เล่น {{number}}"
+  },
+  "categories": {
+    "research": "วิจัย",
+    "production": "ผลิต",
+    "network": "เครือข่าย",
+    "control": "ควบคุม"
+  },
+  "categoryDescriptions": {
+    "research": "โหนดวิจัยให้ความสามารถพิเศษและเพิ่มประสิทธิภาพ",
+    "production": "โหนดผลิตให้ประสิทธิภาพสูงแต่มีค่าใช้จ่ายมาก",
+    "network": "โหนดเครือข่ายเป็นการเพิ่มที่ซับซ้อนและมีมูลค่าสูง",
+    "control": "โหนดควบคุมให้เอฟเฟกต์เชิงประโยชน์และความยืดหยุ่น"
+  },
+  "effects": {
+    "multiplier": "เพิ่มการสร้างเอาต์พุตของ {{target}} เป็น {{value}} เท่า",
+    "discount": "ลดค่าใช้จ่าย {{target}} ลง {{value}} เมื่อสร้างโหนด",
+    "draw": "สามารถดูโหนดเพิ่มเติมได้ {{value}} ใบ",
+    "swap": "สามารถสลับพลังงานได้สูงสุด {{value}} ประเภท"
+  },
+  "playerArea": {
+    "yourTurn": "เทิร์นของคุณ",
+    "energyHeld": "พลังงานที่ถืออยู่",
+    "claimedProtocols": "โปรโตคอลที่ได้รับแล้ว",
+    "ownedNodes": "โหนดที่ครอบครอง ({{count}})",
+    "reservedNodes": "จอง ({{count}}/{{max}})"
+  },
+  "energy": {
+    "solar": "โซลาร์",
+    "hydro": "ไฮโดร",
+    "plasma": "พลาสมา",
+    "neural": "นิวรัล",
+    "flux": "ฟลักซ์",
+    "solarSubtitle": "พลังงานสีเหลือง/ส้ม",
+    "hydroSubtitle": "พลังงานสีฟ้า/น้ำเงิน",
+    "plasmaSubtitle": "พลังงานสีชมพู/ม่วงแดง",
+    "neuralSubtitle": "พลังงานสีเขียว",
+    "fluxSubtitle": "พลังงานแบบไวลด์ (ได้จากการจองเท่านั้น)"
+  },
+  "alerts": {
+    "discardRequiredTitle": "จำเป็นต้องทิ้ง",
+    "discardRequiredMessage": "กรุณาทิ้งพลังงาน{{count}} ก่อนทำแอ็กชันอื่น",
+    "invalidActionTitle": "แอ็กชันไม่ถูกต้อง",
+    "invalidActionMessage": "การเก็บพลังงานไม่ถูกต้อง",
+    "insufficientEnergyTitle": "พลังงานไม่เพียงพอ",
+    "insufficientEnergyMessage": "พลังงานไม่พอสำหรับสร้างโหนดนี้",
+    "paymentErrorTitle": "ข้อผิดพลาดการชำระ",
+    "paymentErrorMessage": "ไม่สามารถสร้างการชำระที่ถูกต้องได้",
+    "noFluxTitle": "ไม่มี Flux",
+    "noFluxMessage": "การจองโหนดต้องใช้ Flux",
+    "reserveLimitTitle": "จำกัดการ จอง",
+    "reserveLimitMessage": "สามารถจองได้สูงสุด 3โหนด",
+    "alreadyReservedTitle": "จองแล้ว",
+    "alreadyReservedMessage": "โหนดนี้ถูกจองแล้ว",
+    "unavailableTitle": "ไม่พร้อมใช้งาน",
+    "unavailableMessage": "โหนดนี้ถูกจองโดยผู้เล่นอื่น",
+    "exchangeErrorTitle": "ข้อผิดพลาดการแลกเปลี่ยน",
+    "exchangeSelectTake": "กรุณาเลือกพลังงานที่ต้องการรับ",
+    "exchangeInvalid": "ไม่สามารถแลกเปลี่ยนได้ด้วย พูล หรือพลังงานปัจจุบัน"
+  },
+  "quickPlay": {
+    "title": "ตั้งค่าเล่นด่วน",
+    "bots": "จำนวน Bot",
+    "difficulty": "ความยาก",
+    "botLabel_one": "{{count}} บอต",
+    "botLabel_other": "{{count}} บอต",
+    "start": "เริ่มเกม"
+  },
+  "difficulty": {
+    "easy": "ง่าย",
+    "medium": "ปานกลาง",
+    "hard": "ยาก"
+  },
+  "energyPool": {
+    "title": "พูลพลังงาน",
+    "collectLabel": "เก็บพลังงาน{{count}}",
+    "exchangeLabel": "แลกพลังงาน"
+  },
+  "exchange": {
+    "title": "แลกพลังงาน",
+    "subtitle": "เลือกรูปแบบแลกเปลี่ยน 1:1 หรือ 2:3 โดย Flux ไม่สามารถแลกได้",
+    "modeOne": "1 : 1",
+    "modeTwo": "2 : 3",
+    "give": "ให้ {{count}}",
+    "take": "รับ {{count}}",
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยัน"
+  },
+  "swap": {
+    "title": "พลังงานสลับ",
+    "give": "ให้",
+    "take": "รับ",
+    "subtitle": "เลือกพลังงานเพื่อสลับได้สูงสุด {{count}}",
+    "confirm": "ยืนยันการ สลับ"
+  },
+  "draw": {
+    "title": "Drawโหนด",
+    "subtitle": "เลือกโหนดหนึ่งใบเพื่อใส่ในตลาด"
+  },
+  "discard": {
+    "title": "ทิ้งพลังงาน",
+    "subtitle": "เลือกทิ้งพลังงาน{{count}} เหลืออีก {{remaining}}",
+    "confirm": "ทิ้งพลังงาน{{count}}"
+  },
+  "endgame": {
+    "networkComplete": "เครือข่าย เสร็จสมบูรณ์",
+    "playAgain": "เล่นอีกครั้ง",
+    "mainMenu": "เมนูหลัก"
+  },
+  "tutorial": {
+    "welcomeTitle": "ยินดีต้อนรับสู่ Quantum Nexus",
+    "welcomeBody1": "สร้างเครือข่ายคอมพิวเตอร์ควอนตัมด้วยการ เก็บพลังงานและสร้างโหนด",
+    "welcomeBody2": "ชนะด้วย Efficiency, ขนาด เครือข่าย หรือการครอง โปรโตคอล",
+    "winConditions": "เงื่อนไขการชนะ",
+    "winConditionEfficiency": "• ถึง 20★ Efficiency หลังเทิร์น 20",
+    "winConditionNodes": "•สร้างโหนดตามจำนวนที่กำหนด (2P: 13 / 3P: 15 / 4P: 17)",
+    "winConditionProtocols": "•ได้รับโปรโตคอล ตั้งแต่ 3 ใบขึ้นไป",
+    "energyTypesTitle": "ประเภทพลังงาน",
+    "energyTypesBody": "มี 4 ประเภทของพลังงานและ Flux:",
+    "yourTurnTitle": "เทิร์นของคุณ",
+    "yourTurnBody": "ในเทิร์นของคุณ ให้เลือกหนึ่งแอ็กชัน:",
+    "collectTitle": "1. เก็บพลังงาน",
+    "collectLine1": "• รับพลังงานต่างกัน 3 ประเภท หรือ",
+    "collectLine2": "• รับพลังงานชนิดเดียว 2 ชิ้น (หากมี 4+ ใน พูล)",
+    "collectLine3": "• ถือพลังงานได้สูงสุด 10",
+    "buildTitle": "2.สร้างโหนด",
+    "buildLine1": "• จ่ายค่าใช้จ่ายพลังงาน",
+    "buildLine2": "• เพิ่มเข้า เครือข่าย ของคุณ",
+    "buildLine3": "•ได้รับEfficiency",
+    "reserveTitle": "3.จองโหนด",
+    "reserveLine1": "• เก็บไว้ใช้ภายหลัง (สูงสุด 3)",
+    "reserveLine2": "•ได้รับFlux 1 (หากมี)",
+    "reserveLine3": "• สามารถสร้างจากจองได้ทุกเมื่อ",
+    "exchangeTitle": "4. แลกพลังงาน",
+    "exchangeLine1": "• แลก 1:1 (ให้ 1 รับ 1)",
+    "exchangeLine2": "• แลก 2:3 (รับ 2 ชนิดเดียว คืน 3 แบบใดก็ได้)",
+    "exchangeLine3": "• Flux แลกไม่ได้",
+    "exchangeLine4": "• พูล ต้องมีพลังงานที่จะรับ",
+    "nodesTitle": "โหนด",
+    "nodesBody": "โหนดคือหัวใจของ เครือข่าย โดยแต่ละโหนดให้:",
+    "nodeResearch": "Researchโหนด",
+    "nodeResearchDesc": "ความสามารถพิเศษและเพิ่ม Efficiency",
+    "nodeProduction": "Productionโหนด",
+    "nodeProductionDesc": "Efficiency สูง ค่าใช้จ่ายสูง",
+    "nodeNetwork": "เครือข่ายโหนด",
+    "nodeNetworkDesc": "การเสริมที่ซับซ้อนและมีมูลค่าสูง",
+    "nodeControl": "Controlโหนด",
+    "nodeControlDesc": "เอฟเฟกต์เชิงประโยชน์และความยืดหยุ่น",
+    "outputTitle": "การสร้างผลผลิต",
+    "outputBody": "แต่ละโหนดสร้างเอาต์พุต 1 หน่วยตามประเภท ซึ่งใช้เป็นเงื่อนไข โปรโตคอล และลดค่าใช้จ่ายพลังงานที่เกี่ยวข้อง 1 เมื่อสร้างโหนด(เฉพาะพลังงานพื้นฐาน)",
+    "protocolsTitle": "โปรโตคอล",
+    "protocolsBody": "โปรโตคอล คืออัปเกรดที่ทรงพลังที่สามารถรับได้:",
+    "protocolRequirements": "ข้อกำหนด",
+    "protocolRequirementsLine1": "ต้องมี OUTPUT generation เพียงพอ (ไม่ใช่พลังงานที่ถืออยู่)",
+    "protocolRequirementsLine2": "OUTPUT ไม่ถูกใช้และใช้ได้กับหลาย โปรโตคอล",
+    "protocolClaiming": "การรับ",
+    "protocolClaimingLine1": "ต้องแตะเพื่อรับด้วยตัวเอง (ไม่อัตโนมัติ)",
+    "protocolBenefits": "ประโยชน์",
+    "protocolBenefitsLine1": "ให้คะแนน Efficiency และเอฟเฟกต์ต่อเนื่อง",
+    "protocolExamples": "ตัวอย่าง: เพิ่มเอาต์พุตเป็นสองเท่า,จองฟรี,พลังงานswap, ลดค่าใช้จ่าย",
+    "strategyTitle": "เคล็ดลับกลยุทธ์",
+    "strategyMultipleTitle": "หลายเส้นทางสู่ชัยชนะ",
+    "strategyMultipleBody": "โฟกัสที่ Efficiency, ขนาด เครือข่าย หรือ โปรโตคอล mastery หรือผสมผสานกัน",
+    "strategyFluxTitle": "Flux ทรงพลัง",
+    "strategyFluxBody": "ใช้เป็นพลังงานแบบไวลด์แต่มีจำกัด ควรจองเพื่อรับ Flux",
+    "strategyEffectsTitle": "เอฟเฟกต์ของโหนดซ้อนกัน",
+    "strategyEffectsBody": "เอฟเฟกต์เป็นแบบชั่วคราวและทำงานหลังสร้างโหนด",
+    "strategyTimingTitle": "จังหวะสำคัญ",
+    "strategyTimingBody": "เกณฑ์ Efficiency มีผลหลังเทิร์นที่ 20 เท่านั้น โปรดวางแผนล่วงหน้า",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "gotIt": "เข้าใจแล้ว"
+  },
+  "botNotice": {
+    "reservedNode": "{{name}} ได้จองโหนดแล้ว",
+    "builtNode": "{{name}} ได้สร้างโหนดแล้ว",
+    "builtReservedNode": "{{name}} ได้สร้างโหนดที่จองไว้แล้ว",
+    "claimedProtocol": "{{name}}ได้รับโปรโตคอล แล้ว",
+    "exchangedEnergy": "{{name}} ได้แลกพลังงานแล้ว",
+    "collectedEnergy": "{{name}} ได้เก็บพลังงานแล้ว",
+    "swappedEnergy": "{{name}} ได้สลับพลังงานแล้ว",
+    "noLegalAction": "{{name}} ไม่มีการกระทำที่ทำได้ในตอนนี้"
+  },
+  "bot": {
+    "reserveNode": "{{name}} ได้จองโหนดแล้ว",
+    "buildNode": "{{name}} ได้สร้างโหนดแล้ว",
+    "buildReservedNode": "{{name}} ได้สร้างโหนดที่จองไว้แล้ว",
+    "claimProtocol": "{{name}}ได้รับโปรโตคอล แล้ว",
+    "exchangeEnergy": "{{name}} ได้แลกพลังงานแล้ว",
+    "collectEnergy": "{{name}} ได้เก็บพลังงานแล้ว",
+    "swapEnergy": "{{name}} ได้สลับพลังงานแล้ว",
+    "noLegalAction": "{{name}} ไม่มีการกระทำที่ทำได้ในตอนนี้"
+  },
+  "nodeCard": {
+    "effect": {
+      "multiplier": "x{{value}} เท่า",
+      "discount": "-{{value}} ค่าใช้จ่าย",
+      "draw": "+{{value}} ดรอว์",
+      "swap": "สลับ"
+    }
+  },
+  "effectsTitle": {
+    "multiplier": "ตัวคูณ",
+    "discount": "ส่วนลด",
+    "draw": "ดรอว์",
+    "swap": "สลับ"
+  }
+}

@@ -61,7 +61,42 @@ export const createSplashStyles = (theme: Theme) =>
   },
   actions: {
     marginTop: spacing.lg,
-    width: "45%",
+    width: SPLASH_ACTIONS_WIDTH,
+    maxWidth: SPLASH_ACTIONS_MAX_WIDTH,
+  },
+  startButton: {
+    width: "100%",
+  },
+  startButtonText: {
+    textAlign: "center",
+    flexShrink: 1,
+  },
+  legalRow: {
+    position: "absolute",
+    bottom: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: spacing.xxs,
+  },
+  legalText: {
+    color: theme.colors.textSubtle,
+    fontSize: typography.size.xs,
+    lineHeight: typography.lineHeight.xs,
+  },
+  legalLink: {
+    paddingVertical: spacing.xxs,
+    paddingHorizontal: spacing.xs,
+    borderRadius: layout.borderRadius.sm,
+    backgroundColor: theme.colors.surfaceAlt,
+  },
+  legalLinkText: {
+    color: theme.colors.text,
+    fontSize: typography.size.xs,
+    lineHeight: typography.lineHeight.xs,
+    fontFamily: typography.fontFamily.medium,
   },
   shadowWrapper: {
     shadowColor: theme.colors.shadow,
@@ -77,3 +112,6 @@ export const createSplashStyles = (theme: Theme) =>
     borderRadius: 999,
   },
 });
+
+const SPLASH_ACTIONS_WIDTH = "80%";
+const SPLASH_ACTIONS_MAX_WIDTH = 360;
