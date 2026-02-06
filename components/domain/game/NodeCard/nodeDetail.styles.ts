@@ -22,7 +22,6 @@ export const createNodeDetailStyles = (theme: Theme) =>
     },
     sheetWrapper: {
       width: "100%",
-      maxWidth: layout.maxWidth,
       height: layout.modal.maxHeightPx,
     },
     sheet: {

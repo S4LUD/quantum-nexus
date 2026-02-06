@@ -13,7 +13,6 @@ export function createScreenStyles(theme: Theme) {
       flex: 1,
       alignSelf: "center",
       width: "100%",
-      maxWidth: layout.maxWidth,
     },
     content: {
       flex: 1,

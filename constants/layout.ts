@@ -3,7 +3,6 @@ import { Dimensions } from "react-native";
 const screenHeight = Dimensions.get("window").height;
 
 export const layout = {
-  maxWidth: 428,
   borderRadius: {
     sm: 8,
     md: 12,

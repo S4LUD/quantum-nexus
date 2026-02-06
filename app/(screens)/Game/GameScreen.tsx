@@ -12,7 +12,10 @@ import { PlayerArea } from "@/components/domain/game/PlayerArea/PlayerArea";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { useBotTurn } from "@/hooks/useBotTurn";
-import { BotNotice } from "@/components/domain/game/BotNotice/BotNotice";
+import {
+  BotNotice,
+  BotNoticeItem,
+} from "@/components/domain/game/BotNotice/BotNotice";
 import { animations } from "@/constants/animations";
 import { useTheme } from "@/hooks/useTheme";
 import { canAffordNode, canClaimProtocol } from "@/logic/gameEngine";
@@ -20,15 +23,20 @@ import { useSound } from "@/hooks/useSound";
 import { useTranslation } from "react-i18next";
 import { getLocalizedPlayerName } from "@/utils/helpers";
 
+const BOT_NOTICE_DURATION_MS = Math.round(animations.botNotice * 1);
+
 export function GameScreen() {
   const router = useRouter();
   const { gameState, resetGame, updateGameState, endGame, initializeGame } =
     useGame();
   const [selectedTab, setSelectedTab] = useState<GameTab>("market");
-  const [botNotice, setBotNotice] = useState("");
+  const [botNotices, setBotNotices] = useState<BotNoticeItem[]>([]);
   const { runBotTurn } = useBotTurn();
   const lastBotKeyRef = useRef<string | null>(null);
-  const botNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const botNoticeTimersRef = useRef<
+    Record<number, ReturnType<typeof setTimeout>>
+  >({});
+  const nextBotNoticeIdRef = useRef(1);
   const botTurnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startNoticeShownRef = useRef(false);
   const turnKeyRef = useRef<string | null>(null);
@@ -84,9 +92,41 @@ export function GameScreen() {
     initializeGame(count, bots, difficulty);
   }, [gameState, initializeGame]);
 
-  const clearBotNotice = useCallback(() => {
-    setBotNotice("");
+  const removeBotNotice = useCallback((noticeId: number) => {
+    setBotNotices((prev) => prev.filter((notice) => notice.id !== noticeId));
+    const timer = botNoticeTimersRef.current[noticeId];
+    if (timer) {
+      clearTimeout(timer);
+      delete botNoticeTimersRef.current[noticeId];
+    }
   }, []);
+
+  const pushBotNotice = useCallback(
+    (message: string) => {
+      const noticeId = nextBotNoticeIdRef.current;
+      nextBotNoticeIdRef.current += 1;
+      setBotNotices((prev) => {
+        const next = [...prev, { id: noticeId, message }];
+        if (next.length > 3) {
+          const [removed] = next;
+          if (removed) {
+            const oldTimer = botNoticeTimersRef.current[removed.id];
+            if (oldTimer) {
+              clearTimeout(oldTimer);
+              delete botNoticeTimersRef.current[removed.id];
+            }
+          }
+          return next.slice(1);
+        }
+        return next;
+      });
+      botNoticeTimersRef.current[noticeId] = setTimeout(
+        () => removeBotNotice(noticeId),
+        BOT_NOTICE_DURATION_MS,
+      );
+    },
+    [removeBotNotice],
+  );
 
   useEffect(() => {
     if (!gameState) {
@@ -99,15 +139,8 @@ export function GameScreen() {
     const starter = gameState.players[gameState.currentPlayerIndex];
     const starterName = getLocalizedPlayerName(starter.name, t);
     startNoticeShownRef.current = true;
-    setBotNotice(t("game.startingPlayerNotice", { name: starterName }));
-    if (botNoticeTimerRef.current) {
-      clearTimeout(botNoticeTimerRef.current);
-    }
-    botNoticeTimerRef.current = setTimeout(
-      clearBotNotice,
-      animations.botNotice,
-    );
-  }, [clearBotNotice, gameState, t]);
+    pushBotNotice(t("game.startingPlayerNotice", { name: starterName }));
+  }, [gameState, pushBotNotice, t]);
 
   useEffect(() => {
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
@@ -134,10 +167,7 @@ export function GameScreen() {
             const params = notice.params?.name
               ? {
                   ...notice.params,
-                  name: getLocalizedPlayerName(
-                    String(notice.params.name),
-                    t,
-                  ),
+                  name: getLocalizedPlayerName(String(notice.params.name), t),
                 }
               : notice.params;
             const primary = t(notice.key, params);
@@ -154,14 +184,7 @@ export function GameScreen() {
             return primary;
           })
           .join(" · ");
-        setBotNotice(message);
-        if (botNoticeTimerRef.current) {
-          clearTimeout(botNoticeTimerRef.current);
-        }
-        botNoticeTimerRef.current = setTimeout(
-          clearBotNotice,
-          animations.botNotice,
-        );
+        pushBotNotice(message);
       }
       if (result.winner) {
         const finalState = { ...result.nextState, winner: result.winner };
@@ -170,7 +193,7 @@ export function GameScreen() {
       }
       updateGameState(result.nextState);
     }, animations.botTurnDelay);
-  }, [clearBotNotice, endGame, gameState, runBotTurn, t, updateGameState]);
+  }, [endGame, gameState, pushBotNotice, runBotTurn, t, updateGameState]);
 
   useEffect(() => {
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
@@ -186,9 +209,9 @@ export function GameScreen() {
 
   useEffect(() => {
     return () => {
-      if (botNoticeTimerRef.current) {
-        clearTimeout(botNoticeTimerRef.current);
-      }
+      const noticeTimers = Object.values(botNoticeTimersRef.current);
+      noticeTimers.forEach(clearTimeout);
+      botNoticeTimersRef.current = {};
       if (botTurnTimerRef.current) {
         clearTimeout(botTurnTimerRef.current);
       }
@@ -205,7 +228,7 @@ export function GameScreen() {
       <View style={gameStyles.container}>
         {gameState ? (
           <>
-            <BotNotice message={botNotice} />
+            <BotNotice messages={botNotices} />
             {!gameState.winner ? (
               <View style={gameStyles.overlay} pointerEvents="box-none">
                 <View

@@ -15,7 +15,6 @@ export const createEnergyDiscardModalStyles = (theme: Theme) =>
     },
     modal: {
       width: "100%",
-      maxWidth: layout.maxWidth,
       backgroundColor: theme.colors.surface,
       borderRadius: layout.borderRadius.lg,
       padding: spacing.lg,

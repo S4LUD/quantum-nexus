@@ -14,10 +14,9 @@ export const createSwapModalStyles = (theme: Theme) =>
     alignItems: "center",
     padding: spacing.lg,
   },
-  card: {
-    width: "100%",
-    maxWidth: layout.maxWidth,
-    borderRadius: layout.borderRadius.lg,
+    card: {
+      width: "100%",
+      borderRadius: layout.borderRadius.lg,
     borderWidth: layout.borderWidth.thin,
     borderColor: theme.colors.borderSubtle,
     backgroundColor: theme.colors.surface,

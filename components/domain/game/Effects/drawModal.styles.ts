@@ -15,7 +15,6 @@ export const createDrawModalStyles = (theme: Theme) =>
     },
     card: {
       width: "100%",
-      maxWidth: layout.maxWidth,
       borderRadius: layout.borderRadius.lg,
       borderWidth: layout.borderWidth.thin,
       borderColor: theme.colors.borderSubtle,
