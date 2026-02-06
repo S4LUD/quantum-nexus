@@ -22,13 +22,34 @@ import { canAffordNode, canClaimProtocol } from "@/logic/gameEngine";
 import { useSound } from "@/hooks/useSound";
 import { useTranslation } from "react-i18next";
 import { getLocalizedPlayerName } from "@/utils/helpers";
+import { RealtimeAction } from "@/types/realtime";
 
 const BOT_NOTICE_DURATION_MS = Math.round(animations.botNotice * 1);
+const MULTIPLAYER_ACTION_NOTICE_KEYS: Record<
+  RealtimeAction["type"],
+  string | null
+> = {
+  COLLECT_ENERGY: "botNotice.collectedEnergy",
+  RESERVE_NODE: "botNotice.reservedNode",
+  BUILD_NODE: "botNotice.builtNode",
+  CLAIM_PROTOCOL: "botNotice.claimedProtocol",
+  EXCHANGE_ENERGY: "botNotice.exchangedEnergy",
+  END_TURN: null,
+};
 
 export function GameScreen() {
   const router = useRouter();
-  const { gameState, resetGame, updateGameState, endGame, initializeGame } =
-    useGame();
+  const {
+    gameState,
+    resetGame,
+    updateGameState,
+    endGame,
+    initializeGame,
+    multiplayerSession,
+    submitMultiplayerAction,
+    leaveMultiplayerMatch,
+    lastActionPatch,
+  } = useGame();
   const [selectedTab, setSelectedTab] = useState<GameTab>("market");
   const [botNotices, setBotNotices] = useState<BotNoticeItem[]>([]);
   const { runBotTurn } = useBotTurn();
@@ -40,6 +61,7 @@ export function GameScreen() {
   const botTurnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startNoticeShownRef = useRef(false);
   const turnKeyRef = useRef<string | null>(null);
+  const lastPatchRef = useRef<string | null>(null);
   const { theme } = useTheme();
   const { play } = useSound();
   const { t } = useTranslation();
@@ -72,15 +94,21 @@ export function GameScreen() {
   }, [gameState]);
 
   const handleBack = useCallback(() => {
+    if (multiplayerSession.active) {
+      void leaveMultiplayerMatch();
+    }
     resetGame();
     router.back();
-  }, [resetGame, router]);
+  }, [leaveMultiplayerMatch, multiplayerSession.active, resetGame, router]);
 
   const handleTabChange = useCallback((tab: GameTab) => {
     setSelectedTab(tab);
   }, []);
 
   const handleReplay = useCallback(() => {
+    if (multiplayerSession.active) {
+      return;
+    }
     const count = gameState ? gameState.players.length : 2;
     const bots = gameState
       ? gameState.players.filter((player) => player.isBot).length
@@ -90,7 +118,7 @@ export function GameScreen() {
         "easy"
       : "easy";
     initializeGame(count, bots, difficulty);
-  }, [gameState, initializeGame]);
+  }, [gameState, initializeGame, multiplayerSession.active]);
 
   const removeBotNotice = useCallback((noticeId: number) => {
     setBotNotices((prev) => prev.filter((notice) => notice.id !== noticeId));
@@ -128,6 +156,17 @@ export function GameScreen() {
     [removeBotNotice],
   );
 
+  const handleSubmitMultiplayerAction = useCallback(
+    async (action: RealtimeAction) => {
+      const ok = await submitMultiplayerAction(action);
+      if (!ok) {
+        pushBotNotice("Action rejected by server.");
+      }
+      return ok;
+    },
+    [submitMultiplayerAction, pushBotNotice],
+  );
+
   useEffect(() => {
     if (!gameState) {
       startNoticeShownRef.current = false;
@@ -143,6 +182,34 @@ export function GameScreen() {
   }, [gameState, pushBotNotice, t]);
 
   useEffect(() => {
+    if (!lastActionPatch || !gameState) {
+      return;
+    }
+    if (lastPatchRef.current === lastActionPatch.lastActionId) {
+      return;
+    }
+    lastPatchRef.current = lastActionPatch.lastActionId;
+    const noticeKey =
+      MULTIPLAYER_ACTION_NOTICE_KEYS[lastActionPatch.action.type];
+    if (!noticeKey) {
+      return;
+    }
+    const actor = gameState.players.find(
+      (player) => player.id === lastActionPatch.actorPlayerId,
+    );
+    const actorName = actor
+      ? getLocalizedPlayerName(actor.name, t)
+      : t("game.player");
+    const message = t(noticeKey, { name: actorName });
+    if (message !== noticeKey) {
+      pushBotNotice(message);
+    }
+  }, [gameState, lastActionPatch, pushBotNotice, t]);
+
+  useEffect(() => {
+    if (multiplayerSession.active) {
+      return;
+    }
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
       return;
     }
@@ -193,7 +260,15 @@ export function GameScreen() {
       }
       updateGameState(result.nextState);
     }, animations.botTurnDelay);
-  }, [endGame, gameState, pushBotNotice, runBotTurn, t, updateGameState]);
+  }, [
+    endGame,
+    gameState,
+    multiplayerSession.active,
+    pushBotNotice,
+    runBotTurn,
+    t,
+    updateGameState,
+  ]);
 
   useEffect(() => {
     if (!gameState || gameState.winner || gameState.phase !== "playing") {
@@ -270,6 +345,9 @@ export function GameScreen() {
                   selectedTab={selectedTab}
                   onUpdateGameState={updateGameState}
                   onEndGame={endGame}
+                  isMultiplayer={multiplayerSession.active}
+                  localPlayerId={multiplayerSession.playerId}
+                  onSubmitMultiplayerAction={handleSubmitMultiplayerAction}
                 />
                 <View style={gameStyles.footerOverlay} pointerEvents="box-none">
                   <View

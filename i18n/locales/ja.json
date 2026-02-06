@@ -38,6 +38,51 @@
     "strategicNetworkBuilding": "戦略的ネットワーク構築",
     "wip": "作業中"
   },
+  "multiplayer": {
+    "title": "マルチプレイ",
+    "subtitle": "リアルタイムのネットワークセッション",
+    "playerNameLabel": "プレイヤー名",
+    "playerNamePlaceholder": "あなたの名前",
+    "quickMatch": "クイックマッチ",
+    "createLobby": "ロビー作成",
+    "joinLobby": "ロビー参加",
+    "joinLobbyLabel": "ロビーID",
+    "joinLobbyPlaceholder": "ロビーIDを入力",
+    "connecting": "接続中...",
+    "errors": {
+      "enterName": "プレイヤー名を入力してください。",
+      "enterLobbyId": "ロビーIDを入力してください。",
+      "create": "ロビーを作成できませんでした。",
+      "quickMatch": "クイックマッチを開始できませんでした。",
+      "join": "ロビーに参加できませんでした。"
+    }
+  },
+  "lobby": {
+    "title": "ロビー",
+    "subtitle": "プレイヤーを待機中",
+    "lobbyIdLabel": "ロビーID",
+    "host": "あなたがロビーのホストです。",
+    "waitingHost": "ホストが開始するのを待っています。",
+    "playersLabel": "プレイヤー",
+    "waitingReady": "全員の準備が整ったらホストが開始します。",
+    "ready": "準備完了",
+    "notReady": "未準備",
+    "readyUp": "準備完了",
+    "unready": "準備解除",
+    "updatingReady": "更新中...",
+    "kick": "除外",
+    "kicking": "除外中...",
+    "startMatch": "マッチ開始",
+    "starting": "開始中...",
+    "leaveLobby": "ロビー退出",
+    "leaving": "退出中...",
+    "errors": {
+      "start": "マッチを開始できませんでした。",
+      "leave": "ロビーを退出できませんでした。",
+      "ready": "準備状態を更新できません。",
+      "kick": "プレイヤーを除外できません。"
+    }
+  },
   "tabs": {
     "market": "マーケット",
     "protocols": "プロトコル",

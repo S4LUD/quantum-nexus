@@ -30,8 +30,7 @@ export function HomeScreen() {
   const homeStyles = useMemo(() => createHomeStyles(theme), [theme]);
   const [phase, setPhase] = useState<"splash" | "menu">("splash");
   const [botCount, setBotCount] = useState(1);
-  const [botDifficulty, setBotDifficulty] =
-    useState<BotDifficulty>("easy");
+  const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>("easy");
   const {
     isOpen: isTutorialOpen,
     open: openTutorial,
@@ -53,7 +52,6 @@ export function HomeScreen() {
     close: closeLegal,
   } = useModal(false);
   const [legalType, setLegalType] = useState<LegalModalType>("terms");
-
   const handleStart = useCallback(() => {
     const playerCount = botCount + 1;
     initializeGame(playerCount, botCount, botDifficulty);
@@ -72,6 +70,10 @@ export function HomeScreen() {
   const handleOpenTutorial = useCallback(() => {
     openTutorial();
   }, [openTutorial]);
+
+  const handleOpenMultiplayer = useCallback(() => {
+    router.push("/(screens)/Multiplayer");
+  }, [router]);
 
   const handleCloseTutorial = useCallback(() => {
     closeTutorial();
@@ -135,6 +137,7 @@ export function HomeScreen() {
         ) : (
           <MainMenu
             onQuickPlay={handleQuickPlay}
+            onMultiplayer={handleOpenMultiplayer}
             onTutorial={handleOpenTutorial}
             onSettings={handleSettings}
           />

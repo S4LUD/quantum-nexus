@@ -11,10 +11,24 @@ const variantMap = {
   caption: (styles: ReturnType<typeof createTextStyles>) => styles.caption,
 };
 
-export function Text({ children, variant = 'body', style }: TextProps) {
+export function Text({
+  children,
+  variant = "body",
+  style,
+  numberOfLines,
+  ellipsizeMode,
+}: TextProps) {
   const { theme } = useTheme();
   const textStyles = useMemo(() => createTextStyles(theme), [theme]);
   const variantStyle = variantMap[variant](textStyles);
 
-  return <RNText style={[variantStyle, style]}>{children}</RNText>;
+  return (
+    <RNText
+      style={[variantStyle, style]}
+      numberOfLines={numberOfLines}
+      ellipsizeMode={ellipsizeMode}
+    >
+      {children}
+    </RNText>
+  );
 }

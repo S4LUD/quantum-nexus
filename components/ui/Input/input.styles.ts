@@ -1,7 +1,7 @@
 import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Theme } from "@/constants/theme";
 
 export const createInputStyles = (theme: Theme) =>
@@ -11,13 +11,12 @@ export const createInputStyles = (theme: Theme) =>
       borderWidth: layout.borderWidth.thin,
       borderColor: theme.colors.border,
       backgroundColor: theme.colors.surfaceAlt,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
+      paddingHorizontal: Platform.OS === "android" ? spacing.xs : spacing.md,
+      paddingVertical: Platform.OS === "android" ? spacing.xxxs : spacing.sm,
     },
     input: {
       color: theme.colors.text,
-      fontSize: typography.size.md,
-      lineHeight: typography.lineHeight.md,
+      fontSize: Platform.OS === "android" ? typography.size.sm : typography.size.md,
       fontFamily: typography.fontFamily.regular,
     },
   });

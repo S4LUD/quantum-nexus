@@ -38,6 +38,51 @@
     "strategicNetworkBuilding": "战略网络构建",
     "wip": "开发中"
   },
+  "multiplayer": {
+    "title": "多人游戏",
+    "subtitle": "实时网络会话",
+    "playerNameLabel": "玩家名称",
+    "playerNamePlaceholder": "你的名字",
+    "quickMatch": "快速匹配",
+    "createLobby": "创建大厅",
+    "joinLobby": "加入大厅",
+    "joinLobbyLabel": "大厅ID",
+    "joinLobbyPlaceholder": "输入大厅ID",
+    "connecting": "连接中...",
+    "errors": {
+      "enterName": "请输入玩家名称。",
+      "enterLobbyId": "请输入大厅ID。",
+      "create": "无法创建大厅。",
+      "quickMatch": "无法开始快速匹配。",
+      "join": "无法加入大厅。"
+    }
+  },
+  "lobby": {
+    "title": "大厅",
+    "subtitle": "等待玩家",
+    "lobbyIdLabel": "大厅ID",
+    "host": "你是大厅主持人。",
+    "waitingHost": "等待主持人开始。",
+    "playersLabel": "玩家",
+    "waitingReady": "所有玩家准备好后由主持人开始。",
+    "ready": "已准备",
+    "notReady": "未准备",
+    "readyUp": "准备",
+    "unready": "取消准备",
+    "updatingReady": "更新中...",
+    "kick": "移除",
+    "kicking": "移除中...",
+    "startMatch": "开始对局",
+    "starting": "开始中...",
+    "leaveLobby": "离开大厅",
+    "leaving": "正在离开...",
+    "errors": {
+      "start": "无法开始对局。",
+      "leave": "无法离开大厅。",
+      "ready": "无法更新准备状态。",
+      "kick": "无法移除玩家。"
+    }
+  },
   "tabs": {
     "market": "市场",
     "protocols": "协议",

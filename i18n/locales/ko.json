@@ -38,6 +38,51 @@
     "strategicNetworkBuilding": "전략적 네트워크 구축",
     "wip": "개발 중"
   },
+  "multiplayer": {
+    "title": "멀티플레이",
+    "subtitle": "실시간 네트워크 세션",
+    "playerNameLabel": "플레이어 이름",
+    "playerNamePlaceholder": "이름",
+    "quickMatch": "빠른 매치",
+    "createLobby": "로비 만들기",
+    "joinLobby": "로비 참가",
+    "joinLobbyLabel": "로비 ID",
+    "joinLobbyPlaceholder": "로비 ID 입력",
+    "connecting": "연결 중...",
+    "errors": {
+      "enterName": "플레이어 이름을 입력하세요.",
+      "enterLobbyId": "로비 ID를 입력하세요.",
+      "create": "로비를 만들 수 없습니다.",
+      "quickMatch": "빠른 매치를 시작할 수 없습니다.",
+      "join": "로비에 참가할 수 없습니다."
+    }
+  },
+  "lobby": {
+    "title": "로비",
+    "subtitle": "플레이어 대기 중",
+    "lobbyIdLabel": "로비 ID",
+    "host": "당신이 로비 호스트입니다.",
+    "waitingHost": "호스트가 시작하기를 기다리는 중입니다.",
+    "playersLabel": "플레이어",
+    "waitingReady": "모든 플레이어가 준비되면 호스트가 시작합니다.",
+    "ready": "준비됨",
+    "notReady": "미준비",
+    "readyUp": "준비 완료",
+    "unready": "준비 해제",
+    "updatingReady": "업데이트 중...",
+    "kick": "추방",
+    "kicking": "추방 중...",
+    "startMatch": "매치 시작",
+    "starting": "시작 중...",
+    "leaveLobby": "로비 나가기",
+    "leaving": "나가는 중...",
+    "errors": {
+      "start": "매치를 시작할 수 없습니다.",
+      "leave": "로비를 나갈 수 없습니다.",
+      "ready": "준비 상태를 업데이트할 수 없습니다.",
+      "kick": "플레이어를 추방할 수 없습니다."
+    }
+  },
   "tabs": {
     "market": "마켓",
     "protocols": "프로토콜",

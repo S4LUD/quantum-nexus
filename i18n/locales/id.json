@@ -75,6 +75,51 @@
     "strategicNetworkBuilding": "Pembangunan Jaringan Strategis",
     "wip": "Dalam Pengembangan"
   },
+  "multiplayer": {
+    "title": "Multipemain",
+    "subtitle": "Sesi jaringan real-time",
+    "playerNameLabel": "Nama Pemain",
+    "playerNamePlaceholder": "Nama Anda",
+    "quickMatch": "Cocok Cepat",
+    "createLobby": "Buat Lobi",
+    "joinLobby": "Gabung Lobi",
+    "joinLobbyLabel": "ID Lobi",
+    "joinLobbyPlaceholder": "Masukkan ID Lobi",
+    "connecting": "Menghubungkan...",
+    "errors": {
+      "enterName": "Silakan masukkan nama pemain.",
+      "enterLobbyId": "Silakan masukkan ID lobi.",
+      "create": "Tidak dapat membuat lobi.",
+      "quickMatch": "Tidak dapat memulai cocok cepat.",
+      "join": "Tidak dapat bergabung ke lobi."
+    }
+  },
+  "lobby": {
+    "title": "Lobi",
+    "subtitle": "Menunggu pemain",
+    "lobbyIdLabel": "ID Lobi",
+    "host": "Anda adalah host lobi.",
+    "waitingHost": "Menunggu host lobi memulai.",
+    "playersLabel": "Pemain",
+    "waitingReady": "Host akan memulai pertandingan setelah semua pemain siap.",
+    "ready": "Siap",
+    "notReady": "Belum siap",
+    "readyUp": "Siap",
+    "unready": "Batalkan siap",
+    "updatingReady": "Memperbarui...",
+    "kick": "Keluarkan",
+    "kicking": "Mengeluarkan...",
+    "startMatch": "Mulai Pertandingan",
+    "starting": "Memulai...",
+    "leaveLobby": "Keluar dari Lobi",
+    "leaving": "Keluar...",
+    "errors": {
+      "start": "Tidak dapat memulai pertandingan.",
+      "leave": "Tidak dapat keluar dari lobi.",
+      "ready": "Tidak dapat memperbarui status siap.",
+      "kick": "Tidak dapat mengeluarkan pemain."
+    }
+  },
   "tabs": {
     "market": "Pasar",
     "protocols": "Protokol",

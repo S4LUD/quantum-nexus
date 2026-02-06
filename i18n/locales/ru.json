@@ -38,6 +38,51 @@
     "strategicNetworkBuilding": "Стратегическое построение сети",
     "wip": "В разработке"
   },
+  "multiplayer": {
+    "title": "Мультиплеер",
+    "subtitle": "Сетевой сеанс в реальном времени",
+    "playerNameLabel": "Имя игрока",
+    "playerNamePlaceholder": "Ваше имя",
+    "quickMatch": "Быстрый матч",
+    "createLobby": "Создать лобби",
+    "joinLobby": "Войти в лобби",
+    "joinLobbyLabel": "ID лобби",
+    "joinLobbyPlaceholder": "Введите ID лобби",
+    "connecting": "Подключение...",
+    "errors": {
+      "enterName": "Введите имя игрока.",
+      "enterLobbyId": "Введите ID лобби.",
+      "create": "Не удалось создать лобби.",
+      "quickMatch": "Не удалось начать быстрый матч.",
+      "join": "Не удалось войти в лобби."
+    }
+  },
+  "lobby": {
+    "title": "Лобби",
+    "subtitle": "Ожидание игроков",
+    "lobbyIdLabel": "ID лобби",
+    "host": "Вы — хозяин лобби.",
+    "waitingHost": "Ожидание, пока хозяин начнет.",
+    "playersLabel": "Игроки",
+    "waitingReady": "Хозяин начнет матч, когда все игроки будут готовы.",
+    "ready": "Готов",
+    "notReady": "Не готов",
+    "readyUp": "Готов",
+    "unready": "Отменить готовность",
+    "updatingReady": "Обновление...",
+    "kick": "Удалить",
+    "kicking": "Удаление...",
+    "startMatch": "Начать матч",
+    "starting": "Запуск...",
+    "leaveLobby": "Покинуть лобби",
+    "leaving": "Выход...",
+    "errors": {
+      "start": "Не удалось начать матч.",
+      "leave": "Не удалось покинуть лобби.",
+      "ready": "Не удалось обновить статус готовности.",
+      "kick": "Не удалось удалить игрока."
+    }
+  },
   "tabs": {
     "market": "Рынок",
     "protocols": "Протоколы",

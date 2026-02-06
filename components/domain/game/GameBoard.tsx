@@ -35,12 +35,16 @@ import { SwapModal } from "./Effects/SwapModal";
 import { useTheme } from "@/hooks/useTheme";
 import { useSound } from "@/hooks/useSound";
 import { useTranslation } from "react-i18next";
+import { RealtimeAction } from "@/types/realtime";
 
 interface GameBoardProps {
   gameState: GameState;
   selectedTab: "market" | "protocols" | "players";
   onUpdateGameState: (nextState: GameState) => void;
   onEndGame: (finalState: GameState) => void;
+  isMultiplayer?: boolean;
+  localPlayerId?: string | null;
+  onSubmitMultiplayerAction?: (action: RealtimeAction) => Promise<boolean>;
 }
 
 export function GameBoard({
@@ -48,6 +52,9 @@ export function GameBoard({
   selectedTab,
   onUpdateGameState,
   onEndGame,
+  isMultiplayer = false,
+  localPlayerId = null,
+  onSubmitMultiplayerAction,
 }: GameBoardProps) {
   const { theme } = useTheme();
   const { play } = useSound();
@@ -89,7 +96,9 @@ export function GameBoard({
   });
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-  const isPlayerTurn = !currentPlayer.isBot;
+  const isPlayerTurn = isMultiplayer
+    ? Boolean(localPlayerId && currentPlayer.id === localPlayerId)
+    : !currentPlayer.isBot;
 
   const openAlert = useCallback(
     (title: string, message: string) => {
@@ -194,6 +203,16 @@ export function GameBoard({
       );
       return;
     }
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      const action: RealtimeAction = {
+        type: "COLLECT_ENERGY",
+        energy: selectedEnergy,
+      };
+      void onSubmitMultiplayerAction(action);
+      setSelectedEnergy([]);
+      play("primary_click");
+      return;
+    }
 
     const nextState = applyEnergyCollection(
       gameState,
@@ -288,6 +307,18 @@ export function GameBoard({
       );
       return;
     }
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      const action: RealtimeAction = {
+        type: "EXCHANGE_ENERGY",
+        takeType: exchangeTakeType,
+        takeCount,
+        give: exchangeGiveSelection,
+      };
+      void onSubmitMultiplayerAction(action);
+      setIsExchangeOpen(false);
+      play("primary_click");
+      return;
+    }
     const nextState = applyExchangeEnergy(
       gameState,
       currentPlayer,
@@ -305,6 +336,8 @@ export function GameBoard({
     exchangeMode,
     exchangeTakeType,
     gameState,
+    isMultiplayer,
+    onSubmitMultiplayerAction,
     openAlert,
     play,
     t,
@@ -355,6 +388,16 @@ export function GameBoard({
         t("alerts.paymentErrorTitle"),
         t("alerts.paymentErrorMessage"),
       );
+      return;
+    }
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      void onSubmitMultiplayerAction({
+        type: "BUILD_NODE",
+        nodeId: node.id,
+      });
+      setIsNodeModalOpen(false);
+      setSelectedNode(null);
+      play("success_sparkle");
       return;
     }
 
@@ -449,6 +492,17 @@ export function GameBoard({
       );
       return;
     }
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      void onSubmitMultiplayerAction({
+        type: "RESERVE_NODE",
+        nodeId: node.id,
+        fromMarket: true,
+      });
+      setIsNodeModalOpen(false);
+      setSelectedNode(null);
+      play("secondary_click");
+      return;
+    }
 
     const nextState = applyNodeReservation(
       gameState,
@@ -468,6 +522,14 @@ export function GameBoard({
         t("alerts.discardRequiredTitle"),
         t("alerts.discardRequiredMessage", { count: discardCount }),
       );
+      return;
+    }
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      void onSubmitMultiplayerAction({
+        type: "CLAIM_PROTOCOL",
+        protocolId: protocol.id,
+      });
+      play("success_sparkle");
       return;
     }
     const nextState = applyProtocolClaim(gameState, currentPlayer, protocol);

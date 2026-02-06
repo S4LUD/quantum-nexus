@@ -75,6 +75,51 @@
     "strategicNetworkBuilding": "Strategic Network Building",
     "wip": "WIP"
   },
+  "multiplayer": {
+    "title": "Multiplayer",
+    "subtitle": "Realtime network session",
+    "playerNameLabel": "Player Name",
+    "playerNamePlaceholder": "Your Name",
+    "quickMatch": "Quick Match",
+    "createLobby": "Create Lobby",
+    "joinLobby": "Join Lobby",
+    "joinLobbyLabel": "Join Lobby ID",
+    "joinLobbyPlaceholder": "Enter Lobby ID",
+    "connecting": "Connecting...",
+    "errors": {
+      "enterName": "Please enter your player name.",
+      "enterLobbyId": "Please enter a lobby ID.",
+      "create": "Unable to create lobby.",
+      "quickMatch": "Unable to start quick match.",
+      "join": "Unable to join lobby."
+    }
+  },
+  "lobby": {
+    "title": "Lobby",
+    "subtitle": "Waiting for players",
+    "lobbyIdLabel": "Lobby ID",
+    "host": "You are the lobby host.",
+    "waitingHost": "Waiting for the lobby host to start.",
+    "playersLabel": "Players",
+    "waitingReady": "The host will start the match once all players are ready.",
+    "ready": "Ready",
+    "notReady": "Not Ready",
+    "readyUp": "Ready Up",
+    "unready": "Unready",
+    "updatingReady": "Updating...",
+    "kick": "Kick",
+    "kicking": "Kicking...",
+    "startMatch": "Start Match",
+    "starting": "Starting...",
+    "leaveLobby": "Leave Lobby",
+    "leaving": "Leaving...",
+    "errors": {
+      "start": "Unable to start match.",
+      "leave": "Unable to leave lobby.",
+      "ready": "Unable to update ready status.",
+      "kick": "Unable to remove player."
+    }
+  },
   "tabs": {
     "market": "Market",
     "protocols": "Protocols",

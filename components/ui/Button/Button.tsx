@@ -35,7 +35,13 @@ export function Button({
         end={{ x: 1, y: 0 }}
         style={buttonStyles.gradient}
       >
-        <Text style={[buttonStyles.label, textStyle]}>{label}</Text>
+        <Text
+          style={[buttonStyles.label, textStyle]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {label}
+        </Text>
       </LinearGradient>
     </Pressable>
   );

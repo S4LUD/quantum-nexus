@@ -11,6 +11,7 @@ import { useTheme } from "@/hooks/useTheme";
 
 interface MainMenuProps {
   onQuickPlay: () => void;
+  onMultiplayer: () => void;
   onTutorial: () => void;
   onSettings: () => void;
 }
@@ -28,6 +29,17 @@ interface ParticleConfig {
   delay: number;
 }
 
+interface MainActionItem {
+  key: string;
+  title: string;
+  subtitle: string;
+  icon: typeof Play;
+  gradient: readonly [string, string, ...string[]];
+  onPress: () => void;
+  disabled?: boolean;
+  isGlass?: boolean;
+}
+
 const GRID_LINES = Array.from({ length: 10 }, (_, index) => index);
 const PARTICLE_COLORS = [
   "rgba(168,85,247,0.6)",
@@ -35,10 +47,9 @@ const PARTICLE_COLORS = [
   "rgba(236,72,153,0.6)",
   "rgba(234,179,8,0.6)",
 ];
-const SHOW_MULTIPLAYER = false;
-
 export function MainMenu({
   onQuickPlay,
+  onMultiplayer,
   onTutorial,
   onSettings,
 }: MainMenuProps) {
@@ -119,6 +130,10 @@ export function MainMenu({
     onTutorial();
   }, [onTutorial]);
 
+  const handleMultiplayer = useCallback(() => {
+    onMultiplayer();
+  }, [onMultiplayer]);
+
   const handleSettings = useCallback(() => {
     onSettings();
   }, [onSettings]);
@@ -126,7 +141,7 @@ export function MainMenu({
   const handleDisabled = useCallback(() => {}, []);
 
   const mainActions = useMemo(() => {
-    const actions = [
+    const actions: MainActionItem[] = [
       {
         key: "quick",
         title: t("menu.quickPlay"),
@@ -141,8 +156,7 @@ export function MainMenu({
         subtitle: t("menu.multiplayerSubtitle"),
         icon: Users,
         gradient: theme.gradients.secondaryButton,
-        onPress: handleDisabled,
-        disabled: true,
+        onPress: handleMultiplayer,
       },
       {
         key: "tutorial",
@@ -155,10 +169,8 @@ export function MainMenu({
       },
     ];
 
-    return SHOW_MULTIPLAYER
-      ? actions
-      : actions.filter((action) => action.key !== "multi");
-  }, [handleDisabled, handleQuickPlay, handleTutorial, t, theme.gradients]);
+    return actions;
+  }, [handleMultiplayer, handleQuickPlay, handleTutorial, t, theme.gradients]);
 
   const bottomActions = useMemo(
     () => [
@@ -179,7 +191,7 @@ export function MainMenu({
     [handleSettings, handleDisabled, t],
   );
 
-  const renderMainAction = (action: (typeof mainActions)[number]) => (
+  const renderMainAction = (action: MainActionItem) => (
     <Pressable
       key={action.key}
       onPress={action.onPress}
@@ -220,11 +232,6 @@ export function MainMenu({
             {action.subtitle}
           </Text>
         </View>
-          {action.key === "multi" ? (
-            <View style={mainMenuStyles.inProgressBadge}>
-              <Text style={mainMenuStyles.inProgressText}>{t("menu.wip")}</Text>
-            </View>
-          ) : null}
       </LinearGradient>
     </Pressable>
   );

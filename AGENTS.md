@@ -131,6 +131,10 @@ app/
       HomeScreen.tsx
     Game/
       GameScreen.tsx
+    Multiplayer/
+      MultiplayerScreen.tsx
+    Lobby/
+      LobbyScreen.tsx
     Settings/
       SettingsScreen.tsx
     _types.ts
@@ -251,6 +255,13 @@ No logic leakage allowed.
 
 ---
 
+## Versioning & Localization (MANDATORY)
+
+- App version MUST be updated for every major, minor, or patch change
+- Any new or modified user-facing text MUST be added and verified in all localization files
+
+---
+
 ## Bot / AI Rules
 
 - Bots must be:
@@ -275,6 +286,11 @@ Agents MUST NOT:
 
 ---
 
+## Approved Exceptions (User-Approved)
+
+- Lobby idle auto-kick (multiplayer lobby only).
+- Lobby UI adjustments as explicitly specified by the user.
+
 ## Definition of Done
 
 A task is complete ONLY if:
@@ -283,6 +299,8 @@ A task is complete ONLY if:
 - UI matches Figma exactly
 - App runs in Expo Go
 - No forbidden terminology exists
+- App version is updated for the change
+- Localization files include and verify any new or modified text
 - Structure matches this document
 
 ---
