@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { BotDifficulty, GameState, Player } from '../types/game';
+import { BotDifficulty, GameState } from '../types/game';
 
 export interface GameContextValue {
   gameState: GameState | null;
@@ -9,7 +9,7 @@ export interface GameContextValue {
     botDifficulty?: BotDifficulty,
   ) => void;
   updateGameState: (nextState: GameState) => void;
-  endGame: (winner: Player) => void;
+  endGame: (finalState: GameState) => void;
   resetGame: () => void;
 }
 

@@ -1,7 +1,7 @@
 import { ReactNode, useMemo, useReducer } from 'react';
 import { GameContext } from './GameContext';
 import { gameReducer } from './gameReducer';
-import { BotDifficulty, GameState, Player } from '../types/game';
+import { BotDifficulty, GameState } from '../types/game';
 import { createInitialGameState } from '../logic/gameEngine';
 
 interface GameProviderProps {
@@ -26,8 +26,8 @@ export function GameProvider({ children }: GameProviderProps) {
     dispatch({ type: 'UPDATE', payload: nextState });
   };
 
-  const endGame = (winner: Player) => {
-    dispatch({ type: 'END', payload: winner });
+  const endGame = (finalState: GameState) => {
+    dispatch({ type: 'END', payload: finalState });
   };
 
   const resetGame = () => {

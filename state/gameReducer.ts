@@ -1,23 +1,23 @@
-import { GameState, Player } from '../types/game';
+import { GameState } from "../types/game";
 
 export type GameActionType =
-  | { type: 'INIT'; payload: GameState }
-  | { type: 'UPDATE'; payload: GameState }
-  | { type: 'END'; payload: Player }
-  | { type: 'RESET' };
+  | { type: "INIT"; payload: GameState }
+  | { type: "UPDATE"; payload: GameState }
+  | { type: "END"; payload: GameState }
+  | { type: "RESET" };
 
-export function gameReducer(state: GameState | null, action: GameActionType): GameState | null {
+export function gameReducer(
+  state: GameState | null,
+  action: GameActionType,
+): GameState | null {
   switch (action.type) {
-    case 'INIT':
+    case "INIT":
       return action.payload;
-    case 'UPDATE':
+    case "UPDATE":
       return action.payload;
-    case 'END':
-      if (!state) {
-        return state;
-      }
-      return { ...state, winner: action.payload, phase: 'ended' };
-    case 'RESET':
+    case "END":
+      return { ...action.payload, phase: "ended" };
+    case "RESET":
       return null;
     default:
       return state;

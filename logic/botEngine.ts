@@ -45,6 +45,10 @@ const BASE_ENERGY_TYPES: Exclude<EnergyType, "flux">[] = [
 const BOT_EFFICIENCY_BUFFER = 2;
 const BOT_DENY_THRESHOLD = 1;
 const BOT_PROTOCOL_PRESSURE = 2;
+const BOT_COST_WEIGHT = 0.6;
+const BOT_EFFECT_WEIGHT = 1.2;
+const BOT_OUTPUT_WEIGHT = 1.5;
+const BOT_PROTOCOL_WEIGHT = 2.5;
 const BOT_DEBUG_ENABLED = false;
 
 type BotPlan = "efficiency" | "network" | "protocol";
@@ -112,19 +116,19 @@ function chooseBotAction(
   const bestMarketTarget = pickBestValueNode(marketNodes, player);
   const planDecision = pickPlan(gameState, player, difficulty);
   const plan = planDecision.plan;
+  const opponent = getPrimaryOpponent(gameState, player);
+  const denyTypes = opponent
+    ? getProtocolDenyTypes(gameState, opponent, BOT_DENY_THRESHOLD)
+    : [];
   const debugLines = [
     `${player.name} [${difficulty}] plan=${plan} (${planDecision.reason})`,
   ];
 
   if (marketNodes.length > 0) {
-    debugLines.push(
-      `Market top: ${formatTopNodes(marketNodes, player, 3)}`,
-    );
+    debugLines.push(`Market top: ${formatTopNodes(marketNodes, player, 3)}`);
   }
   if (buildable.length > 0) {
-    debugLines.push(
-      `Buildable top: ${formatTopNodes(buildable, player, 3)}`,
-    );
+    debugLines.push(`Buildable top: ${formatTopNodes(buildable, player, 3)}`);
   }
 
   if (difficulty === "easy") {
@@ -180,24 +184,21 @@ function chooseBotAction(
   }
 
   if (difficulty === "medium") {
-    if (buildable.length > 0) {
-      const target = pickPlannedNode(buildable, player, plan, gameState);
+    if (buildable.length > 0 || buildableReserved.length > 0) {
+      const target = pickBestBuildCandidate(
+        buildable,
+        buildableReserved,
+        player,
+        gameState,
+        plan,
+        denyTypes,
+      );
       return buildNodeWithEffects(
         gameState,
         player,
         target,
         `${player.name} built a node.`,
         [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
-      );
-    }
-    if (buildableReserved.length > 0) {
-      const target = pickPlannedNode(buildableReserved, player, plan, gameState);
-      return buildNodeWithEffects(
-        gameState,
-        player,
-        target,
-        `${player.name} built a reserved node.`,
-        [...debugLines, `Chosen reserved: ${formatNode(target)}`].join(" | "),
       );
     }
     if (protocols.length > 0) {
@@ -210,6 +211,25 @@ function chooseBotAction(
         ),
       );
     }
+    const exchangePlan = planExchange(gameState, player, bestMarketTarget);
+    if (exchangePlan) {
+      const nextState = applyExchangeEnergy(
+        gameState,
+        player,
+        exchangePlan.takeType,
+        exchangePlan.takeCount,
+        exchangePlan.give,
+      );
+      return makeDecision(
+        nextState,
+        `${player.name} exchanged energy.`,
+        [
+          ...debugLines,
+          `Exchange: take=${exchangePlan.takeType}x${exchangePlan.takeCount}`,
+        ].join(" | "),
+      );
+    }
+
     const collectResult = collectEnergyTurn(
       gameState,
       player,
@@ -231,16 +251,13 @@ function chooseBotAction(
     return mergeDebug(collectResult, debugLines);
   }
 
-  const opponent = getPrimaryOpponent(gameState, player);
   const denyTarget = opponent
     ? getDenyNodeTarget(gameState, opponent, player, BOT_DENY_THRESHOLD)
     : null;
+  const opponentRace = opponent
+    ? isOpponentNearWin(gameState, opponent)
+    : false;
   if (opponent) {
-    const denyTypes = getProtocolDenyTypes(
-      gameState,
-      opponent,
-      BOT_DENY_THRESHOLD,
-    );
     debugLines.push(
       `Deny check: opp=${opponent.name} types=${denyTypes.join(",") || "none"} target=${denyTarget ? denyTarget.id : "none"}`,
     );
@@ -259,11 +276,32 @@ function chooseBotAction(
     return makeDecision(
       applyProtocolClaim(gameState, player, target),
       `${player.name} claimed a protocol.`,
-      [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(
-        " | ",
-      ),
+      [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(" | "),
     );
   }
+  if (opponentRace && denyTarget) {
+    if (canAffordNode(denyTarget, player)) {
+      return buildNodeWithEffects(
+        gameState,
+        player,
+        denyTarget,
+        `${player.name} built a node.`,
+        [...debugLines, `Race deny build: ${formatNode(denyTarget)}`].join(
+          " | ",
+        ),
+      );
+    }
+    if (canReserveNode(gameState, player, denyTarget)) {
+      return makeDecision(
+        applyNodeReservation(gameState, player, denyTarget, true),
+        `${player.name} reserved a node.`,
+        [...debugLines, `Race deny reserve: ${formatNode(denyTarget)}`].join(
+          " | ",
+        ),
+      );
+    }
+  }
+
   if (denyTarget) {
     if (canAffordNode(denyTarget, player)) {
       return buildNodeWithEffects(
@@ -292,24 +330,21 @@ function chooseBotAction(
       [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
     );
   }
-  if (buildable.length > 0) {
-    const target = pickPlannedNode(buildable, player, plan, gameState);
+  if (buildable.length > 0 || buildableReserved.length > 0) {
+    const target = pickBestBuildCandidate(
+      buildable,
+      buildableReserved,
+      player,
+      gameState,
+      plan,
+      denyTypes,
+    );
     return buildNodeWithEffects(
       gameState,
       player,
       target,
       `${player.name} built a node.`,
       [...debugLines, `Chosen node: ${formatNode(target)}`].join(" | "),
-    );
-  }
-  if (buildableReserved.length > 0) {
-    const target = pickPlannedNode(buildableReserved, player, plan, gameState);
-    return buildNodeWithEffects(
-      gameState,
-      player,
-      target,
-      `${player.name} built a reserved node.`,
-      [...debugLines, `Chosen reserved: ${formatNode(target)}`].join(" | "),
     );
   }
   if (closeToNetworkWin && buildable.length > 0) {
@@ -327,11 +362,33 @@ function chooseBotAction(
     return makeDecision(
       applyProtocolClaim(gameState, player, target),
       `${player.name} claimed a protocol.`,
-      [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(
-        " | ",
-      ),
+      [...debugLines, `Chosen protocol: ${formatProtocol(target)}`].join(" | "),
     );
   }
+  const exchangePlan = findExchangeForUpgrade(
+    gameState,
+    player,
+    bestMarketTarget,
+    denyTypes,
+  );
+  if (exchangePlan) {
+    const nextState = applyExchangeEnergy(
+      gameState,
+      player,
+      exchangePlan.takeType,
+      exchangePlan.takeCount,
+      exchangePlan.give,
+    );
+    return makeDecision(
+      nextState,
+      `${player.name} exchanged energy.`,
+      [
+        ...debugLines,
+        `Exchange: take=${exchangePlan.takeType}x${exchangePlan.takeCount}`,
+      ].join(" | "),
+    );
+  }
+
   const collectResult = collectEnergyTurn(
     gameState,
     player,
@@ -342,7 +399,7 @@ function chooseBotAction(
     return mergeDebug(collectResult, debugLines);
   }
   const reserveTarget =
-    bestMarketTarget || getReserveTarget(gameState, player);
+    denyTarget || bestMarketTarget || getReserveTarget(gameState, player);
   if (reserveTarget) {
     return makeDecision(
       applyNodeReservation(gameState, player, reserveTarget, true),
@@ -353,7 +410,27 @@ function chooseBotAction(
   return mergeDebug(collectResult, debugLines);
 }
 
-function getClaimableProtocols(gameState: GameState, player: Player): Protocol[] {
+function isOpponentNearWin(gameState: GameState, opponent: Player): boolean {
+  const nodesThreshold = getWinNodesThreshold(gameState.players.length);
+  if (opponent.nodes.length >= nodesThreshold - 1) {
+    return true;
+  }
+  if (opponent.protocols.length >= WIN_PROTOCOLS_THRESHOLD - 1) {
+    return true;
+  }
+  if (
+    gameState.turnCount >= WIN_TURN_THRESHOLD &&
+    opponent.efficiency >= WIN_EFFICIENCY_THRESHOLD - 1
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function getClaimableProtocols(
+  gameState: GameState,
+  player: Player,
+): Protocol[] {
   return gameState.protocols.filter(
     (protocol) => !protocol.claimed && canClaimProtocol(protocol, player),
   );
@@ -378,10 +455,7 @@ function pickPlan(
     0,
   );
   const winNodesThreshold = getWinNodesThreshold(gameState.players.length);
-  const networkRemaining = Math.max(
-    winNodesThreshold - player.nodes.length,
-    0,
-  );
+  const networkRemaining = Math.max(winNodesThreshold - player.nodes.length, 0);
   const protocolRemaining = Math.max(
     WIN_PROTOCOLS_THRESHOLD - player.protocols.length,
     0,
@@ -413,8 +487,7 @@ function pickPlan(
 
   const efficiencyProgress =
     player.efficiency / Math.max(WIN_EFFICIENCY_THRESHOLD, 1);
-  const networkProgress =
-    player.nodes.length / Math.max(winNodesThreshold, 1);
+  const networkProgress = player.nodes.length / Math.max(winNodesThreshold, 1);
   const protocolProgress =
     player.protocols.length / Math.max(WIN_PROTOCOLS_THRESHOLD, 1);
 
@@ -455,8 +528,8 @@ function pickPlannedNode(
   if (plan === "protocol") {
     const needed = getProtocolPressureTypes(gameState, player);
     if (needed.length > 0) {
-      const candidates = nodes.filter((node) =>
-        node.outputType && needed.includes(node.outputType),
+      const candidates = nodes.filter(
+        (node) => node.outputType && needed.includes(node.outputType),
       );
       if (candidates.length > 0) {
         return pickBestValueNode(candidates, player) ?? nodes[0];
@@ -465,6 +538,26 @@ function pickPlannedNode(
     return pickBestValueNode(nodes, player) ?? nodes[0];
   }
   return pickBestValueNode(nodes, player) ?? nodes[0];
+}
+
+function pickBestBuildCandidate(
+  market: Node[],
+  reserved: Node[],
+  player: Player,
+  gameState: GameState,
+  plan: BotPlan,
+  denyTypes: Exclude<EnergyType, "flux">[],
+): Node {
+  const all = [...market, ...reserved];
+  if (all.length === 1) {
+    return all[0];
+  }
+  const scored = all.map((node) => ({
+    node,
+    score: getNodeScore(node, player, gameState, plan, denyTypes),
+  }));
+  scored.sort((a, b) => b.score - a.score);
+  return scored[0].node;
 }
 
 function getReserveTarget(gameState: GameState, player: Player): Node | null {
@@ -539,25 +632,82 @@ function pickBestValueNode(nodes: Node[], player: Player): Node | null {
   if (nodes.length === 0) {
     return null;
   }
-  return [...nodes].sort((a, b) => getNodeScore(b, player) - getNodeScore(a, player))[0];
+  return [...nodes].sort(
+    (a, b) => getNodeScore(b, player) - getNodeScore(a, player),
+  )[0];
 }
 
-function getNodeScore(node: Node, player: Player): number {
+function getNodeScore(
+  node: Node,
+  player: Player,
+  gameState?: GameState,
+  plan: BotPlan = "efficiency",
+  denyTypes: Exclude<EnergyType, "flux">[] = [],
+): number {
   const cost = getNodeCostTotal(node, player);
-  const outputValue = node.outputType ? 1 : 0;
-  const effectValue = node.effectValue || 0;
-  const effectBoost = node.effectType ? effectValue : 0;
-  const efficiencyValue = node.efficiency * 2;
-  const costPenalty = cost * 0.4;
-  return efficiencyValue + outputValue + effectBoost - costPenalty;
+  const outputValue = node.outputType ? BOT_OUTPUT_WEIGHT : 0;
+  const effectBoost = node.effectType
+    ? (node.effectValue || 0) * BOT_EFFECT_WEIGHT
+    : 0;
+  const efficiencyValue = node.efficiency * 2.2;
+  const planBonus =
+    plan === "efficiency" ? node.efficiency * 1.5 : plan === "network" ? 1 : 0;
+  const protocolBonus =
+    gameState && node.outputType
+      ? getProtocolContributionBonus(gameState, player, node.outputType)
+      : 0;
+  const denyBonus =
+    node.outputType && denyTypes.includes(node.outputType)
+      ? BOT_PROTOCOL_WEIGHT
+      : 0;
+  const costPenalty = cost * BOT_COST_WEIGHT;
+  const affordableBonus = canAffordNode(node, player) ? 1.5 : 0;
+  return (
+    efficiencyValue +
+    outputValue +
+    effectBoost +
+    planBonus +
+    protocolBonus +
+    denyBonus +
+    affordableBonus -
+    costPenalty
+  );
+}
+
+function getProtocolContributionBonus(
+  gameState: GameState,
+  player: Player,
+  outputType: Exclude<EnergyType, "flux">,
+): number {
+  const outputs = calculatePlayerOutputs(player);
+  let bonus = 0;
+  gameState.protocols.forEach((protocol) => {
+    if (protocol.claimed) {
+      return;
+    }
+    const required = protocol.requirements[outputType] || 0;
+    if (required <= 0) {
+      return;
+    }
+    const missing = Math.max(required - (outputs[outputType] || 0), 0);
+    if (missing > 0 && missing <= BOT_PROTOCOL_PRESSURE) {
+      bonus += BOT_PROTOCOL_WEIGHT;
+    }
+  });
+  return bonus;
 }
 
 function pickBestProtocol(protocols: Protocol[]): Protocol {
   return [...protocols].sort((a, b) => b.efficiency - a.efficiency)[0];
 }
 
-function getPrimaryOpponent(gameState: GameState, player: Player): Player | null {
-  const opponents = gameState.players.filter((current) => current.id !== player.id);
+function getPrimaryOpponent(
+  gameState: GameState,
+  player: Player,
+): Player | null {
+  const opponents = gameState.players.filter(
+    (current) => current.id !== player.id,
+  );
   if (opponents.length === 0) {
     return null;
   }
@@ -598,25 +748,25 @@ function getProtocolDenyTypes(
     }
     const required = protocol.requirements;
     let missingTotal = 0;
-    (Object.entries(required) as [Exclude<EnergyType, "flux">, number][]).forEach(
-      ([type, amount]) => {
-        const missing = Math.max(amount - (outputs[type] || 0), 0);
-        if (missing > 0) {
-          missingTotal += missing;
-          targets.add(type);
-        }
-      },
-    );
+    (
+      Object.entries(required) as [Exclude<EnergyType, "flux">, number][]
+    ).forEach(([type, amount]) => {
+      const missing = Math.max(amount - (outputs[type] || 0), 0);
+      if (missing > 0) {
+        missingTotal += missing;
+        targets.add(type);
+      }
+    });
     if (missingTotal > threshold) {
       return;
     }
-    (Object.entries(required) as [Exclude<EnergyType, "flux">, number][]).forEach(
-      ([type, amount]) => {
-        if ((outputs[type] || 0) < amount) {
-          targets.add(type);
-        }
-      },
-    );
+    (
+      Object.entries(required) as [Exclude<EnergyType, "flux">, number][]
+    ).forEach(([type, amount]) => {
+      if ((outputs[type] || 0) < amount) {
+        targets.add(type);
+      }
+    });
   });
   return [...targets];
 }
@@ -669,7 +819,11 @@ function resolveSwapIfNeeded(
   if (player.pendingEffects.swap <= 0) {
     return makeDecision(gameState, notice, debug);
   }
-  const swapPlan = planSwap(player, gameState.energyPool, player.pendingEffects.swap);
+  const swapPlan = planSwap(
+    player,
+    gameState.energyPool,
+    player.pendingEffects.swap,
+  );
   if (!swapPlan) {
     const nextState = {
       ...gameState,
@@ -776,6 +930,18 @@ function collectEnergyTurn(
       : getDesiredEnergies(gameState, player, targetNode);
   const desiredSummary = desired.length > 0 ? desired.join(",") : "none";
   const selection = chooseCollectEnergy(gameState.energyPool, desired);
+  if (difficulty === "hard") {
+    const improved = findTwoTurnCollect(
+      gameState,
+      player,
+      targetNode,
+      selection,
+    );
+    if (improved.length > 0) {
+      selection.length = 0;
+      selection.push(...improved);
+    }
+  }
   if (selection.length === 0) {
     const reserveTarget = getReserveTarget(gameState, player);
     if (reserveTarget) {
@@ -809,9 +975,16 @@ function collectEnergyTurn(
   const nextState = applyEnergyCollection(gameState, player, selection);
   const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
   if (mustDiscardEnergy(updatedPlayer)) {
-    const discardCount = Math.max(getTotalEnergy(updatedPlayer) - ENERGY_LIMIT, 0);
+    const discardCount = Math.max(
+      getTotalEnergy(updatedPlayer) - ENERGY_LIMIT,
+      0,
+    );
     const discards = chooseDiscards(updatedPlayer, discardCount);
-    const discardedState = applyEnergyDiscard(nextState, updatedPlayer, discards);
+    const discardedState = applyEnergyDiscard(
+      nextState,
+      updatedPlayer,
+      discards,
+    );
     return makeDecision(
       discardedState,
       `${player.name} collected energy.`,
@@ -823,6 +996,62 @@ function collectEnergyTurn(
     `${player.name} collected energy.`,
     `Energy reason=collect desired=${desiredSummary} selected=${formatEnergyList(selection)}`,
   );
+}
+
+function findTwoTurnCollect(
+  gameState: GameState,
+  player: Player,
+  targetNode: Node | null,
+  currentSelection: EnergyType[],
+): EnergyType[] {
+  const pool = gameState.energyPool;
+  const baseTypes = BASE_ENERGY_TYPES.filter((type) => pool[type] > 0);
+  if (baseTypes.length < 2) {
+    return currentSelection;
+  }
+  const candidates: EnergyType[][] = [];
+  const unique = baseTypes.slice(0, 3);
+  if (unique.length >= 3) {
+    candidates.push(unique.slice(0, 3));
+  }
+  const sameType = baseTypes.find((type) => pool[type] >= 4);
+  if (sameType) {
+    candidates.push([sameType, sameType]);
+  }
+  if (candidates.length === 0) {
+    return currentSelection;
+  }
+  const marketNodes = getMarketNodes(gameState);
+  const target = targetNode || pickBestValueNode(marketNodes, player);
+  if (!target) {
+    return currentSelection;
+  }
+
+  let bestScore = -Infinity;
+  let best: EnergyType[] = currentSelection;
+  candidates.forEach((pick) => {
+    const simulatedPlayer: Player = {
+      ...player,
+      energy: {
+        ...player.energy,
+      },
+    };
+    pick.forEach((type) => {
+      simulatedPlayer.energy[type] += 1;
+    });
+    const cost = calculateNodeCost(target, simulatedPlayer);
+    const remaining = BASE_ENERGY_TYPES.reduce(
+      (sum, type) =>
+        sum + Math.max(cost[type] - simulatedPlayer.energy[type], 0),
+      0,
+    );
+    const score = -remaining - getNodeCostTotal(target, simulatedPlayer) * 0.1;
+    if (score > bestScore) {
+      bestScore = score;
+      best = pick;
+    }
+  });
+  return best;
 }
 
 function chooseCollectEnergy(
@@ -867,7 +1096,11 @@ function getDesiredEnergies(
   }
   const target = targetNode || pickBestValueNode(nodes, player) || nodes[0];
   const cost = calculateNodeCost(target, player);
-  return BASE_ENERGY_TYPES.filter((type) => cost[type] > player.energy[type]);
+  const desired = BASE_ENERGY_TYPES.filter(
+    (type) => cost[type] > player.energy[type],
+  );
+  const pressure = getProtocolPressureTypes(gameState, player);
+  return [...new Set([...pressure, ...desired])];
 }
 
 function chooseDiscards(player: Player, count: number): EnergyType[] {
@@ -945,6 +1178,34 @@ function planExchange(
       }
     }
     return { takeType: twoTake, takeCount: 2, give: giveThree };
+  }
+  return null;
+}
+
+function findExchangeForUpgrade(
+  gameState: GameState,
+  player: Player,
+  targetNode: Node | null,
+  denyTypes: Exclude<EnergyType, "flux">[],
+): {
+  takeType: Exclude<EnergyType, "flux">;
+  takeCount: number;
+  give: Exclude<EnergyType, "flux">[];
+} | null {
+  const candidates = getMarketNodes(gameState)
+    .filter((node) => !canAffordNode(node, player))
+    .sort(
+      (a, b) =>
+        getNodeScore(b, player, gameState, "protocol", denyTypes) -
+        getNodeScore(a, player, gameState, "protocol", denyTypes),
+    );
+  const target = targetNode || candidates[0];
+  if (!target) {
+    return null;
+  }
+  const plan = planExchange(gameState, player, target);
+  if (plan) {
+    return plan;
   }
   return null;
 }

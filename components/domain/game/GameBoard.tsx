@@ -22,7 +22,7 @@ import { ScrollView, View } from "react-native";
 import { EnergyPool } from "./EnergyPool/EnergyPool";
 import { EnergyDiscardModal } from "./EnergyPool/EnergyDiscardModal";
 import { ExchangeModal } from "./EnergyPool/ExchangeModal";
-import { GameState, Player, EnergyType, Protocol, Node } from "./game.types";
+import { GameState, EnergyType, Protocol, Node } from "./game.types";
 import { createGameBoardStyles } from "./gameBoard.styles";
 import { NodeCard } from "./NodeCard/NodeCard";
 import { NodeDetailModal } from "./NodeCard/NodeDetailModal";
@@ -39,7 +39,7 @@ interface GameBoardProps {
   gameState: GameState;
   selectedTab: "market" | "protocols" | "players";
   onUpdateGameState: (nextState: GameState) => void;
-  onEndGame: (winner: Player) => void;
+  onEndGame: (finalState: GameState) => void;
 }
 
 export function GameBoard({
@@ -89,10 +89,13 @@ export function GameBoard({
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
   const isPlayerTurn = !currentPlayer.isBot;
 
-  const openAlert = useCallback((title: string, message: string) => {
-    play("error_pop");
-    setAlertState({ isOpen: true, title, message });
-  }, [play]);
+  const openAlert = useCallback(
+    (title: string, message: string) => {
+      play("error_pop");
+      setAlertState({ isOpen: true, title, message });
+    },
+    [play],
+  );
 
   const handleCloseAlert = useCallback(() => {
     setAlertState((prev) => ({ ...prev, isOpen: false }));
@@ -102,7 +105,8 @@ export function GameBoard({
     (nextState: GameState) => {
       const winner = checkWinConditions(nextState);
       if (winner) {
-        onEndGame(winner);
+        const finalState = { ...nextState, winner };
+        onEndGame(finalState);
         return;
       }
 
@@ -613,7 +617,14 @@ export function GameBoard({
       play("modal_whoosh");
       prev.swap = swapOpen;
     }
-  }, [isExchangeOpen, isNodeModalOpen, pendingDraw, pendingSwap, play, postEffectState]);
+  }, [
+    isExchangeOpen,
+    isNodeModalOpen,
+    pendingDraw,
+    pendingSwap,
+    play,
+    postEffectState,
+  ]);
 
   const marketRows = useMemo(() => {
     const categories = ["Research", "Production", "Network", "Control"];

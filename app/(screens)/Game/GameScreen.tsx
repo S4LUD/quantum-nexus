@@ -135,7 +135,8 @@ export function GameScreen() {
         );
       }
       if (result.winner) {
-        endGame(result.winner);
+        const finalState = { ...result.nextState, winner: result.winner };
+        endGame(finalState);
         return;
       }
       updateGameState(result.nextState);

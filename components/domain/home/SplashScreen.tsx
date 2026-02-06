@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Animated, Easing, View } from "react-native";
-import { Hexagon, Zap } from "lucide-react-native";
-import { colors } from "@/constants/colors";
-import { layout } from "@/constants/layout";
+import { Animated, Easing, Image, View } from "react-native";
 import { createSplashStyles } from "./splash.styles";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
-import { Icon } from "@/components/ui/Icon/Icon";
 import { useTheme } from "@/hooks/useTheme";
 
 interface SplashScreenProps {
@@ -70,7 +66,6 @@ export function SplashScreen({ onStart }: SplashScreenProps) {
         }),
       ]),
     ).start();
-
 
     particles.forEach((particle) => {
       Animated.loop(
@@ -183,15 +178,11 @@ export function SplashScreen({ onStart }: SplashScreenProps) {
           { transform: [{ translateY: logoFloat }] },
         ]}
       >
-        <Icon
-          icon={Hexagon}
-          size={layout.icon.xxl}
-          color={colors.purple400}
-          fill={colors.purple400}
+        <Image
+          source={require("@/assets/images/icon.png")}
+          style={splashStyles.logoImage}
+          resizeMode="contain"
         />
-        <View style={splashStyles.logoBolt}>
-          <Icon icon={Zap} size={layout.icon.xl} color={colors.yellow400} />
-        </View>
       </Animated.View>
 
       <Text style={splashStyles.title}>Quantum Nexus</Text>
