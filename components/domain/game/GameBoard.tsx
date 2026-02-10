@@ -9,8 +9,7 @@ import {
   applyEnergyDiscard,
   applyProtocolClaim,
   checkWinConditions,
-  getDrawOptions,
-  applyDrawEffect,
+  applyReclaimEffect,
   applySwapEffect,
   applyExchangeEnergy,
   canExchangeEnergy,
@@ -30,7 +29,7 @@ import { PlayerArea } from "./PlayerArea/PlayerArea";
 import { ProtocolCard } from "./ProtocolCard/ProtocolCard";
 import { Text } from "@/components/ui/Text/Text";
 import { AlertModal } from "@/components/ui/Modal/AlertModal";
-import { DrawModal } from "./Effects/DrawModal";
+import { ReclaimModal } from "./Effects/ReclaimModal";
 import { SwapModal } from "./Effects/SwapModal";
 import { useTheme } from "@/hooks/useTheme";
 import { useSound } from "@/hooks/useSound";
@@ -44,8 +43,18 @@ interface GameBoardProps {
   onEndGame: (finalState: GameState) => void;
   isMultiplayer?: boolean;
   localPlayerId?: string | null;
+  isConnected?: boolean;
+  reconnectingLabel?: string | null;
+  pauseLabel?: string | null;
   onSubmitMultiplayerAction?: (action: RealtimeAction) => Promise<boolean>;
 }
+
+const BASE_ENERGY_TYPES: Exclude<EnergyType, "flux">[] = [
+  "solar",
+  "hydro",
+  "plasma",
+  "neural",
+];
 
 export function GameBoard({
   gameState,
@@ -54,6 +63,9 @@ export function GameBoard({
   onEndGame,
   isMultiplayer = false,
   localPlayerId = null,
+  isConnected = true,
+  reconnectingLabel = null,
+  pauseLabel = null,
   onSubmitMultiplayerAction,
 }: GameBoardProps) {
   const { theme } = useTheme();
@@ -66,10 +78,7 @@ export function GameBoard({
   const [isDiscarding, setIsDiscarding] = useState(false);
   const [discardCount, setDiscardCount] = useState(0);
   const [discardSelection, setDiscardSelection] = useState<EnergyType[]>([]);
-  const [pendingDraw, setPendingDraw] = useState<Node[] | null>(null);
-  const [pendingDrawCategory, setPendingDrawCategory] = useState<
-    Node["category"] | null
-  >(null);
+  const [pendingReclaim, setPendingReclaim] = useState(0);
   const [pendingSwap, setPendingSwap] = useState(0);
   const [postEffectState, setPostEffectState] = useState<GameState | null>(
     null,
@@ -91,14 +100,61 @@ export function GameBoard({
   const modalStateRef = useRef({
     node: false,
     exchange: false,
-    draw: false,
+    reclaim: false,
     swap: false,
   });
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+  const hasDisconnectedPlayers =
+    isMultiplayer &&
+    gameState.players.some((player) => !player.connected);
+  const isInteractionLocked = isMultiplayer && (!isConnected || hasDisconnectedPlayers);
   const isPlayerTurn = isMultiplayer
-    ? Boolean(localPlayerId && currentPlayer.id === localPlayerId)
+    ? Boolean(
+        localPlayerId &&
+          currentPlayer.id === localPlayerId &&
+          !hasDisconnectedPlayers &&
+          isConnected,
+      )
     : !currentPlayer.isBot;
+  const primaryPlayerId = isMultiplayer
+    ? localPlayerId || currentPlayer.id
+    : currentPlayer.id;
+
+  useEffect(() => {
+    if (!isMultiplayer) {
+      return;
+    }
+    if (!isPlayerTurn) {
+      setPendingReclaim(0);
+      setPendingSwap(0);
+      setPostEffectState(null);
+      return;
+    }
+    const reclaimCount = currentPlayer.pendingEffects.reclaim || 0;
+    const swapCount = currentPlayer.pendingEffects.swap || 0;
+    if (reclaimCount > 0) {
+      setPendingReclaim(reclaimCount);
+      setPendingSwap(0);
+      setPostEffectState(gameState);
+      return;
+    }
+    if (swapCount > 0) {
+      setPendingReclaim(0);
+      setPendingSwap(swapCount);
+      setPostEffectState(gameState);
+      return;
+    }
+    setPendingReclaim(0);
+    setPendingSwap(0);
+    setPostEffectState(null);
+  }, [
+    currentPlayer.pendingEffects.reclaim,
+    currentPlayer.pendingEffects.swap,
+    gameState,
+    isMultiplayer,
+    isPlayerTurn,
+  ]);
 
   const openAlert = useCallback(
     (title: string, message: string) => {
@@ -412,13 +468,11 @@ export function GameBoard({
     play("success_sparkle");
 
     const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
-    if (updatedPlayer.pendingEffects.draw > 0) {
-      const options = getDrawOptions(
-        nextState,
-        node.category,
-        updatedPlayer.pendingEffects.draw,
+    if (updatedPlayer.pendingEffects.reclaim > 0) {
+      const hasReclaimEnergy = BASE_ENERGY_TYPES.some(
+        (type) => nextState.energyPool[type] > 0,
       );
-      if (options.length === 0) {
+      if (!hasReclaimEnergy) {
         const clearedState = {
           ...nextState,
           players: nextState.players.map((player, index) => {
@@ -427,7 +481,7 @@ export function GameBoard({
             }
             return {
               ...player,
-              pendingEffects: { ...player.pendingEffects, draw: 0 },
+              pendingEffects: { ...player.pendingEffects, reclaim: 0 },
             };
           }),
         };
@@ -440,8 +494,7 @@ export function GameBoard({
         return;
       }
       setPostEffectState(nextState);
-      setPendingDraw(options);
-      setPendingDrawCategory(node.category);
+      setPendingReclaim(updatedPlayer.pendingEffects.reclaim);
       return;
     }
 
@@ -577,19 +630,27 @@ export function GameBoard({
     advanceTurn(nextState);
   }
 
-  const handleDrawSelect = useCallback(
-    (node: Node) => {
-      if (!postEffectState || !pendingDrawCategory) {
+  const handleReclaimConfirm = useCallback(
+    (selection: Exclude<EnergyType, "flux">[]) => {
+      if (isMultiplayer && onSubmitMultiplayerAction) {
+        void onSubmitMultiplayerAction({
+          type: "APPLY_RECLAIM",
+          energy: selection,
+        });
+        setPendingReclaim(0);
+        setPostEffectState(null);
+        play("primary_click");
         return;
       }
-      const nextState = applyDrawEffect(
+      if (!postEffectState) {
+        return;
+      }
+      const nextState = applyReclaimEffect(
         postEffectState,
         postEffectState.players[postEffectState.currentPlayerIndex],
-        pendingDrawCategory,
-        node,
+        selection,
       );
-      setPendingDraw(null);
-      setPendingDrawCategory(null);
+      setPendingReclaim(0);
       setPostEffectState(nextState);
       const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
       if (updatedPlayer.pendingEffects.swap > 0) {
@@ -598,12 +659,21 @@ export function GameBoard({
       }
       advanceTurn(nextState);
       setPostEffectState(null);
-      play("secondary_click");
+      play("primary_click");
     },
-    [advanceTurn, pendingDrawCategory, play, postEffectState],
+    [advanceTurn, isMultiplayer, onSubmitMultiplayerAction, play, postEffectState],
   );
 
-  const handleDrawSkip = useCallback(() => {
+  const handleReclaimSkip = useCallback(() => {
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      void onSubmitMultiplayerAction({
+        type: "SKIP_RECLAIM",
+      });
+      setPendingReclaim(0);
+      setPostEffectState(null);
+      play("secondary_click");
+      return;
+    }
     if (!postEffectState) {
       return;
     }
@@ -617,12 +687,11 @@ export function GameBoard({
         }
         return {
           ...player,
-          pendingEffects: { ...player.pendingEffects, draw: 0 },
+          pendingEffects: { ...player.pendingEffects, reclaim: 0 },
         };
       }),
     };
-    setPendingDraw(null);
-    setPendingDrawCategory(null);
+    setPendingReclaim(0);
     setPostEffectState(nextState);
     if (updatedPlayer.pendingEffects.swap > 0) {
       setPendingSwap(updatedPlayer.pendingEffects.swap);
@@ -631,10 +700,21 @@ export function GameBoard({
     advanceTurn(nextState);
     setPostEffectState(null);
     play("secondary_click");
-  }, [advanceTurn, play, postEffectState]);
+  }, [advanceTurn, isMultiplayer, onSubmitMultiplayerAction, play, postEffectState]);
 
   const handleSwapConfirm = useCallback(
-    (give: EnergyType[], take: EnergyType[]) => {
+    (give: Exclude<EnergyType, "flux">[], take: Exclude<EnergyType, "flux">[]) => {
+      if (isMultiplayer && onSubmitMultiplayerAction) {
+        void onSubmitMultiplayerAction({
+          type: "APPLY_SWAP",
+          give,
+          take,
+        });
+        setPendingSwap(0);
+        setPostEffectState(null);
+        play("primary_click");
+        return;
+      }
       if (!postEffectState) {
         return;
       }
@@ -649,10 +729,19 @@ export function GameBoard({
       play("primary_click");
       advanceTurn(nextState);
     },
-    [advanceTurn, play, postEffectState],
+    [advanceTurn, isMultiplayer, onSubmitMultiplayerAction, play, postEffectState],
   );
 
   const handleSwapSkip = useCallback(() => {
+    if (isMultiplayer && onSubmitMultiplayerAction) {
+      void onSubmitMultiplayerAction({
+        type: "SKIP_SWAP",
+      });
+      setPendingSwap(0);
+      setPostEffectState(null);
+      play("secondary_click");
+      return;
+    }
     if (!postEffectState) {
       return;
     }
@@ -672,10 +761,10 @@ export function GameBoard({
     setPostEffectState(null);
     play("secondary_click");
     advanceTurn(nextState);
-  }, [advanceTurn, play, postEffectState]);
+  }, [advanceTurn, isMultiplayer, onSubmitMultiplayerAction, play, postEffectState]);
 
   useEffect(() => {
-    const drawOpen = Boolean(pendingDraw && pendingDraw.length > 0);
+    const reclaimOpen = Boolean(pendingReclaim > 0 && postEffectState);
     const swapOpen = Boolean(pendingSwap > 0 && postEffectState);
     const prev = modalStateRef.current;
     if (prev.node !== isNodeModalOpen) {
@@ -686,9 +775,9 @@ export function GameBoard({
       play("modal_whoosh");
       prev.exchange = isExchangeOpen;
     }
-    if (prev.draw !== drawOpen) {
+    if (prev.reclaim !== reclaimOpen) {
       play("modal_whoosh");
-      prev.draw = drawOpen;
+      prev.reclaim = reclaimOpen;
     }
     if (prev.swap !== swapOpen) {
       play("modal_whoosh");
@@ -697,7 +786,7 @@ export function GameBoard({
   }, [
     isExchangeOpen,
     isNodeModalOpen,
-    pendingDraw,
+    pendingReclaim,
     pendingSwap,
     play,
     postEffectState,
@@ -771,20 +860,36 @@ export function GameBoard({
     );
   });
 
-  const playerAreas = gameState.players.map((player, index) => {
-    const isCurrent = index === gameState.currentPlayerIndex;
-    return (
-      <PlayerArea
-        key={player.id}
-        player={player}
-        isCurrentPlayer={isCurrent}
-        onReservedNodePress={
-          isCurrent && isPlayerTurn ? handleReservedNodePress : undefined
-        }
-        disabled={!isPlayerTurn}
-      />
+  const orderedPlayers = useMemo(() => {
+    const players = [...gameState.players];
+    const primaryIndex = players.findIndex(
+      (player) => player.id === primaryPlayerId,
     );
-  });
+    if (primaryIndex <= 0) {
+      return players;
+    }
+    return [...players.slice(primaryIndex), ...players.slice(0, primaryIndex)];
+  }, [gameState.players, primaryPlayerId]);
+
+  const renderPlayerArea = useCallback(
+    (player: GameState["players"][number]) => {
+      const isCurrent = player.id === currentPlayer.id;
+      return (
+        <PlayerArea
+          key={player.id}
+          player={player}
+          isCurrentPlayer={isCurrent}
+          onReservedNodePress={
+            isCurrent && isPlayerTurn ? handleReservedNodePress : undefined
+          }
+          disabled={!isPlayerTurn}
+        />
+      );
+    },
+    [currentPlayer.id, handleReservedNodePress, isPlayerTurn],
+  );
+
+  const playerAreas = orderedPlayers.map(renderPlayerArea);
 
   return (
     <View style={gameBoardStyles.container}>
@@ -861,12 +966,13 @@ export function GameBoard({
         message={alertState.message}
         onClose={handleCloseAlert}
       />
-      {pendingDraw ? (
-        <DrawModal
-          isOpen={pendingDraw.length > 0}
-          options={pendingDraw}
-          onSelect={handleDrawSelect}
-          onSkip={handleDrawSkip}
+      {pendingReclaim > 0 && postEffectState ? (
+        <ReclaimModal
+          isOpen
+          maxCollect={pendingReclaim}
+          poolEnergy={postEffectState.energyPool}
+          onConfirm={handleReclaimConfirm}
+          onSkip={handleReclaimSkip}
         />
       ) : null}
       {pendingSwap > 0 && postEffectState ? (
@@ -880,6 +986,17 @@ export function GameBoard({
           onConfirm={handleSwapConfirm}
           onSkip={handleSwapSkip}
         />
+      ) : null}
+      {isInteractionLocked ? (
+        <View style={gameBoardStyles.disabledOverlay}>
+          <View style={gameBoardStyles.disabledOverlayContent}>
+            <Text style={gameBoardStyles.disabledOverlayText}>
+              {!isConnected
+                ? reconnectingLabel || t("game.reconnecting")
+                : pauseLabel || t("game.reconnecting")}
+            </Text>
+          </View>
+        </View>
       ) : null}
     </View>
   );

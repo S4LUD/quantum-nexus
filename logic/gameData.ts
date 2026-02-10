@@ -24,7 +24,7 @@ export const researchNodes: Node[] = [
     efficiency: 1,
     outputType: "solar",
     cost: { plasma: 4 },
-    effectType: "draw",
+    effectType: "reclaim",
     effectValue: 1,
   },
   {
@@ -169,7 +169,7 @@ export const productionNodes: Node[] = [
     efficiency: 2,
     outputType: "hydro",
     cost: { solar: 4, neural: 4 },
-    effectType: "draw",
+    effectType: "reclaim",
     effectValue: 1,
   },
   {
@@ -225,8 +225,8 @@ export const productionNodes: Node[] = [
     efficiency: 3,
     outputType: "neural",
     cost: { solar: 6, plasma: 3 },
-    effectType: "draw",
-    effectValue: 2,
+    effectType: "reclaim",
+    effectValue: 1,
   },
   {
     id: "p13",
@@ -282,8 +282,8 @@ export const networkNodes: Node[] = [
     efficiency: 5,
     outputType: "solar",
     cost: { hydro: 9, plasma: 6 },
-    effectType: "draw",
-    effectValue: 2,
+    effectType: "reclaim",
+    effectValue: 1,
   },
   {
     id: "n4",
@@ -348,8 +348,8 @@ export const networkNodes: Node[] = [
     efficiency: 4,
     outputType: "neural",
     cost: { plasma: 8, hydro: 5 },
-    effectType: "draw",
-    effectValue: 3,
+    effectType: "reclaim",
+    effectValue: 2,
   },
   {
     id: "n12",
@@ -407,7 +407,7 @@ export const controlNodes: Node[] = [
     efficiency: 1,
     outputType: "solar",
     cost: { plasma: 3, neural: 2 },
-    effectType: "draw",
+    effectType: "reclaim",
     effectValue: 1,
   },
   {
@@ -452,7 +452,7 @@ export const controlNodes: Node[] = [
     efficiency: 1,
     outputType: "plasma",
     cost: { hydro: 2, neural: 2 },
-    effectType: "draw",
+    effectType: "reclaim",
     effectValue: 1,
   },
   {
@@ -497,8 +497,8 @@ export const controlNodes: Node[] = [
     efficiency: 3,
     outputType: "neural",
     cost: { hydro: 4, plasma: 5 },
-    effectType: "draw",
-    effectValue: 2,
+    effectType: "reclaim",
+    effectValue: 1,
   },
   {
     id: "c13",

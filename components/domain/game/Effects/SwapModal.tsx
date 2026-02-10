@@ -12,7 +12,10 @@ interface SwapModalProps {
   maxSwaps: number;
   playerEnergy: Record<EnergyType, number>;
   poolEnergy: Record<EnergyType, number>;
-  onConfirm: (give: EnergyType[], take: EnergyType[]) => void;
+  onConfirm: (
+    give: Exclude<EnergyType, "flux">[],
+    take: Exclude<EnergyType, "flux">[],
+  ) => void;
   onSkip: () => void;
 }
 
@@ -27,10 +30,10 @@ export function SwapModal({
   const { theme } = useTheme();
   const { t } = useTranslation();
   const swapModalStyles = useMemo(() => createSwapModalStyles(theme), [theme]);
-  const [giveSelection, setGiveSelection] = useState<EnergyType[]>([]);
-  const [takeSelection, setTakeSelection] = useState<EnergyType[]>([]);
+  const [giveSelection, setGiveSelection] = useState<Exclude<EnergyType, "flux">[]>([]);
+  const [takeSelection, setTakeSelection] = useState<Exclude<EnergyType, "flux">[]>([]);
 
-  const energyTypes: EnergyType[] = [
+  const energyTypes: Exclude<EnergyType, "flux">[] = [
     "solar",
     "hydro",
     "plasma",
@@ -38,7 +41,7 @@ export function SwapModal({
   ];
 
   const giveCounts = useMemo(() => {
-    const counts: Partial<Record<EnergyType, number>> = {};
+    const counts: Partial<Record<Exclude<EnergyType, "flux">, number>> = {};
     giveSelection.forEach((type) => {
       counts[type] = (counts[type] || 0) + 1;
     });
@@ -46,7 +49,7 @@ export function SwapModal({
   }, [giveSelection]);
 
   const takeCounts = useMemo(() => {
-    const counts: Partial<Record<EnergyType, number>> = {};
+    const counts: Partial<Record<Exclude<EnergyType, "flux">, number>> = {};
     takeSelection.forEach((type) => {
       counts[type] = (counts[type] || 0) + 1;
     });
@@ -75,7 +78,7 @@ export function SwapModal({
   }, [giveSelection, onConfirm, resetSelections, takeSelection, totalGive, totalTake]);
 
   const handleToggleGive = useCallback(
-    (type: EnergyType) => {
+    (type: Exclude<EnergyType, "flux">) => {
       setGiveSelection((prev) => {
         const count = prev.filter((item) => item === type).length;
         if (count > 0 && prev.length >= maxSwaps) {
@@ -105,7 +108,7 @@ export function SwapModal({
   );
 
   const handleToggleTake = useCallback(
-    (type: EnergyType) => {
+    (type: Exclude<EnergyType, "flux">) => {
       setTakeSelection((prev) => {
         const count = prev.filter((item) => item === type).length;
         if (count > 0 && prev.length >= maxSwaps) {
@@ -135,7 +138,7 @@ export function SwapModal({
   );
 
   const renderGiveButton = useCallback(
-    (type: EnergyType) => {
+    (type: Exclude<EnergyType, "flux">) => {
       const count = giveCounts[type] || 0;
       const isDisabled = (playerEnergy[type] || 0) === 0;
       const handlePress = () => {
@@ -165,7 +168,7 @@ export function SwapModal({
   );
 
   const renderTakeButton = useCallback(
-    (type: EnergyType) => {
+    (type: Exclude<EnergyType, "flux">) => {
       const count = takeCounts[type] || 0;
       const isDisabled = (poolEnergy[type] || 0) === 0;
       const handlePress = () => {

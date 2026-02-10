@@ -78,6 +78,7 @@ export function mapRealtimeStateToGameState(
     selectedNode: null,
     turnCount: state.turnCount,
     winCondition: null,
+    updatedAt: state.updatedAt,
   };
 }
 
@@ -105,6 +106,8 @@ function mapPlayer(
     id: player.playerId,
     name: resolvedName,
     avatar: avatarTokens[index] || `P${index + 1}`,
+    connected: player.connected,
+    disconnectedAt: player.disconnectedAt,
     energy: player.energy,
     nodes: player.nodeIds.map((nodeId) => mapNode(nodeId)).filter(isNode),
     reservedNodes: player.reservedNodeIds
@@ -115,12 +118,19 @@ function mapPlayer(
     isReady: player.isReady,
     isBot: false,
     botDifficulty: "easy",
-    pendingEffects: {
-      discount: {},
-      multiplier: {},
-      draw: 0,
-      swap: 0,
-    },
+    pendingEffects: player.pendingEffects
+      ? {
+          discount: { ...player.pendingEffects.discount },
+          multiplier: { ...player.pendingEffects.multiplier },
+          reclaim: player.pendingEffects.reclaim,
+          swap: player.pendingEffects.swap,
+        }
+      : {
+          discount: {},
+          multiplier: {},
+          reclaim: 0,
+          swap: 0,
+        },
   };
 }
 

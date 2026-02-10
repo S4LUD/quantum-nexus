@@ -17,8 +17,45 @@
   },
   "legal": {
     "title": "Quantum Nexus © 2026",
-    "subtitle": "전략적 네트워크 구축 게임",
-    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+    "subtitle": "Strategic Network Building Game",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only.",
+    "sectionTitle": "Legal",
+    "splashPrefix": "By continuing, you agree to",
+    "splashAnd": "and",
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated February 7, 2026",
+      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
+      "sections": {
+        "licenseTitle": "License",
+        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
+        "acceptableTitle": "Acceptable Use",
+        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
+        "contentTitle": "User Content",
+        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
+        "liabilityTitle": "Disclaimer",
+        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
+        "changesTitle": "Changes",
+        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated February 7, 2026",
+      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
+      "sections": {
+        "dataTitle": "Data Collection",
+        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
+        "permissionsTitle": "Permissions",
+        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
+        "storageTitle": "Local Storage",
+        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
+        "childrenTitle": "Children's Privacy",
+        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
+        "changesTitle": "Changes",
+        "changesBody": "If this policy changes, we will update the date shown here."
+      }
+    }
   },
   "home": {
     "title": "Quantum Nexus",
@@ -99,6 +136,16 @@
   },
   "game": {
     "turnLabel": "턴 {{count}}",
+    "yourTurnNotice": "Your turn.",
+    "playerTurnNotice": "{{name}}'s turn.",
+    "playerDisconnected": "{{name}} disconnected.",
+    "playerReconnected": "{{name}} reconnected.",
+    "waitingForReconnect": "Waiting for {{name}} to reconnect.",
+    "gamePausedReconnect": "Game Paused: waiting for {{name}} to reconnect ({{seconds}}s).",
+    "reconnecting": "Reconnecting to server...",
+    "reconnectingCountdown": "Reconnecting... ({{seconds}}s)",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "actionFailed": "Action failed. Please try again.",
     "startingPlayerNotice": "선 플레이어: {{name}}",
     "player": "플레이어",
     "node": "노드",
@@ -148,7 +195,8 @@
     "multiplier": "{{target}} 출력 생성을 {{value}}배로 만듭니다",
     "discount": "노드 건설 시 {{target}} 비용을 {{value}}만큼 줄입니다",
     "draw": "덱에서 추가로 {{value}}개의 노드를 확인할 수 있습니다",
-    "swap": "최대 {{value}}종의 에너지를 스왑할 수 있습니다"
+    "swap": "최대 {{value}}종의 에너지를 스왑할 수 있습니다",
+    "reclaim": "노드 건설 후 풀에서 최대 {{value}} 에너지를 회수할 수 있습니다"
   },
   "playerArea": {
     "yourTurn": "당신의 턴",
@@ -228,6 +276,12 @@
   "draw": {
     "title": "노드 뽑기",
     "subtitle": "마켓에 추가할 노드를 하나 선택하세요."
+  },
+  "reclaim": {
+    "title": "에너지 회수",
+    "subtitle": "풀에서 최대 {{count}} 에너지를 회수하세요.",
+    "collect": "회수",
+    "confirm": "회수 확인"
   },
   "discard": {
     "title": "에너지 버리기",
@@ -328,13 +382,15 @@
       "multiplier": "x{{value}} 배",
       "discount": "-{{value}} 비용",
       "draw": "+{{value}} 드로우",
-      "swap": "스왑"
+      "swap": "스왑",
+      "reclaim": "+{{value}} 회수"
     }
   },
   "effectsTitle": {
     "multiplier": "배수",
     "discount": "할인",
     "draw": "드로우",
-    "swap": "스왑"
+    "swap": "스왑",
+    "reclaim": "회수"
   }
 }

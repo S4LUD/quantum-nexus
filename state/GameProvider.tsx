@@ -11,7 +11,12 @@ import { GameContext } from "./GameContext";
 import { gameReducer } from "./gameReducer";
 import { BotDifficulty, GameState } from "../types/game";
 import { createInitialGameState } from "../logic/gameEngine";
-import { MatchStatePatch, MultiplayerSession, RealtimeAction } from "@/types/realtime";
+import {
+  EventError,
+  MatchStatePatch,
+  MultiplayerSession,
+  RealtimeAction,
+} from "@/types/realtime";
 import { realtimeClient } from "@/services/realtimeClient";
 import { mapRealtimeStateToGameState } from "@/services/realtimeMapper";
 
@@ -27,6 +32,8 @@ export function GameProvider({ children }: GameProviderProps) {
   const [multiplayerSession, setMultiplayerSession] =
     useState<MultiplayerSession>(realtimeClient.getSession());
   const [lastActionPatch, setLastActionPatch] = useState<MatchStatePatch | null>(null);
+  const [lastRejectedError, setLastRejectedError] = useState<EventError | null>(null);
+  const [lastRejectedAt, setLastRejectedAt] = useState(0);
   const sessionRef = useRef(multiplayerSession);
 
   useEffect(() => {
@@ -52,6 +59,7 @@ export function GameProvider({ children }: GameProviderProps) {
         setMultiplayerSession((prev) => ({
           ...prev,
           hostPlayerId: state.hostPlayerId,
+          isQuickMatch: state.isQuickMatch,
         }));
         dispatch({
           type: "UPDATE",
@@ -65,8 +73,21 @@ export function GameProvider({ children }: GameProviderProps) {
         setMultiplayerSession((prev) => ({
           ...prev,
           hostPlayerId: state.hostPlayerId,
+          isQuickMatch: state.isQuickMatch,
         }));
         dispatch({ type: "END", payload: mapRealtimeStateToGameState(state) });
+      },
+      onRejected: (error) => {
+        setLastRejectedError(error);
+        setLastRejectedAt(Date.now());
+        const currentSession = sessionRef.current;
+        if (
+          error.code === "BAD_REQUEST" &&
+          currentSession.active &&
+          currentSession.matchId
+        ) {
+          void realtimeClient.resyncMatch(currentSession.matchId).catch(() => {});
+        }
       },
       onConnected: () => {
         setMultiplayerSession(realtimeClient.getSession());
@@ -94,6 +115,7 @@ export function GameProvider({ children }: GameProviderProps) {
           playerId: null,
           playerName: null,
           hostPlayerId: null,
+          isQuickMatch: false,
           isConnected: false,
         });
       }
@@ -159,9 +181,9 @@ export function GameProvider({ children }: GameProviderProps) {
     } catch {
       // ignore network errors; always clear local session
     } finally {
-      setMultiplayerSession(realtimeClient.getSession());
-      dispatch({ type: "RESET" });
-    }
+        setMultiplayerSession(realtimeClient.getSession());
+        dispatch({ type: "RESET" });
+      }
   }, []);
 
   const submitMultiplayerAction = useCallback(
@@ -202,6 +224,8 @@ export function GameProvider({ children }: GameProviderProps) {
       gameState,
       multiplayerSession,
       lastActionPatch,
+      lastRejectedError,
+      lastRejectedAt,
       initializeGame,
       updateGameState,
       endGame,
@@ -222,6 +246,8 @@ export function GameProvider({ children }: GameProviderProps) {
       joinMultiplayerMatch,
       leaveMultiplayerMatch,
       lastActionPatch,
+      lastRejectedAt,
+      lastRejectedError,
       multiplayerSession,
       resetGame,
       submitMultiplayerAction,

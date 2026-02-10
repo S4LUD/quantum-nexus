@@ -24,7 +24,7 @@
     "splashAnd": "and",
     "terms": {
       "title": "Terms of Service",
-      "updated": "Last updated February 6, 2026",
+      "updated": "Last updated February 7, 2026",
       "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
       "sections": {
         "licenseTitle": "License",
@@ -41,15 +41,15 @@
     },
     "privacy": {
       "title": "Privacy Policy",
-      "updated": "Last updated February 6, 2026",
-      "intro": "Quantum Nexus is an offline-only game. We do not collect or share personal data.",
+      "updated": "Last updated February 7, 2026",
+      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
       "sections": {
         "dataTitle": "Data Collection",
-        "dataBody": "No accounts, analytics, ads, or crash reporting are used. We do not collect identifiers or usage data.",
+        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
         "permissionsTitle": "Permissions",
-        "permissionsBody": "The app does not request device permissions beyond standard platform requirements.",
+        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
         "storageTitle": "Local Storage",
-        "storageBody": "Game progress is stored locally on your device. Uninstalling the app removes local data.",
+        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
         "childrenTitle": "Children's Privacy",
         "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
         "changesTitle": "Changes",
@@ -136,6 +136,16 @@
   },
   "game": {
     "turnLabel": "Turn {{count}}",
+    "yourTurnNotice": "Your turn.",
+    "playerTurnNotice": "{{name}}'s turn.",
+    "playerDisconnected": "{{name}} disconnected.",
+    "playerReconnected": "{{name}} reconnected.",
+    "waitingForReconnect": "Waiting for {{name}} to reconnect.",
+    "gamePausedReconnect": "Game Paused: waiting for {{name}} to reconnect ({{seconds}}s).",
+    "reconnecting": "Reconnecting to server...",
+    "reconnectingCountdown": "Reconnecting... ({{seconds}}s)",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "actionFailed": "Action failed. Please try again.",
     "startingPlayerNotice": "Starting player: {{name}}",
     "player": "Player",
     "node": "Node",
@@ -185,7 +195,8 @@
     "multiplier": "Multiplies {{target}} output generation by {{value}}x",
     "discount": "Reduces {{target}} costs by {{value}} when building nodes",
     "draw": "Allows viewing {{value}} additional node(s) from deck",
-    "swap": "Enables swapping up to {{value}} energy types"
+    "swap": "Enables swapping up to {{value}} energy types",
+    "reclaim": "Collect up to {{value}} energy from the pool after building"
   },
   "playerArea": {
     "yourTurn": "YOUR TURN",
@@ -265,6 +276,12 @@
   "draw": {
     "title": "Draw Nodes",
     "subtitle": "Select one node to inject into the market."
+  },
+  "reclaim": {
+    "title": "Reclaim Energy",
+    "subtitle": "Collect up to {{count}} energy from the pool.",
+    "collect": "Collect",
+    "confirm": "Confirm Reclaim"
   },
   "discard": {
     "title": "Discard Energy",
@@ -365,13 +382,15 @@
       "multiplier": "x{{value}} Mult",
       "discount": "-{{value}} Cost",
       "draw": "+{{value}} Draw",
-      "swap": "Swap"
+      "swap": "Swap",
+      "reclaim": "+{{value}} Reclaim"
     }
   },
   "effectsTitle": {
     "multiplier": "Multiplier",
     "discount": "Discount",
     "draw": "Draw",
-    "swap": "Swap"
+    "swap": "Swap",
+    "reclaim": "Reclaim"
   }
 }

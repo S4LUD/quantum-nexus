@@ -84,8 +84,8 @@ export function NodeCard({
     if (node.effectType === "discount") {
       return t("nodeCard.effect.discount", { value: node.effectValue });
     }
-    if (node.effectType === "draw") {
-      return t("nodeCard.effect.draw", { value: node.effectValue });
+    if (node.effectType === "reclaim") {
+      return t("nodeCard.effect.reclaim", { value: node.effectValue });
     }
     if (node.effectType === "swap") {
       return t("nodeCard.effect.swap");

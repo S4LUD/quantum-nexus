@@ -1,7 +1,8 @@
 import { Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useTheme } from "@/hooks/useTheme";
+import { animations } from "@/constants/animations";
 import { createButtonStyles } from "./button.styles";
 import { Text } from "../Text/Text";
 import { ButtonProps } from "./types";
@@ -13,9 +14,13 @@ export function Button({
   containerStyle,
   textStyle,
   disabled = false,
+  debounceMs,
+  disableDebounce = false,
 }: ButtonProps) {
   const { theme } = useTheme();
   const buttonStyles = useMemo(() => createButtonStyles(theme), [theme]);
+  const lastPressAtRef = useRef(0);
+  const debounceWindowMs = debounceMs ?? animations.pressDebounce;
   const gradientColors =
     variant === "secondary"
       ? theme.gradients.secondaryButton
@@ -26,9 +31,24 @@ export function Button({
     disabled ? buttonStyles.disabled : null,
     containerStyle,
   ];
+  const handlePress = useCallback(() => {
+    if (disabled) {
+      return;
+    }
+    if (disableDebounce) {
+      onPress();
+      return;
+    }
+    const now = Date.now();
+    if (now - lastPressAtRef.current < debounceWindowMs) {
+      return;
+    }
+    lastPressAtRef.current = now;
+    onPress();
+  }, [debounceWindowMs, disableDebounce, disabled, onPress]);
 
   return (
-    <Pressable onPress={onPress} disabled={disabled} style={pressableStyle}>
+    <Pressable onPress={handlePress} disabled={disabled} style={pressableStyle}>
       <LinearGradient
         colors={gradientColors}
         start={{ x: 0, y: 1 }}

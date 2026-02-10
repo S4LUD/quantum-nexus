@@ -10,7 +10,7 @@ export interface Node {
   efficiency: number;
   outputType: Exclude<EnergyType, 'flux'>;
   cost: Partial<Record<Exclude<EnergyType, 'flux'>, number>>;
-  effectType?: 'multiplier' | 'discount' | 'draw' | 'swap';
+  effectType?: 'multiplier' | 'discount' | 'reclaim' | 'swap';
   effectValue?: number;
   effectTarget?: EnergyType;
 }
@@ -28,6 +28,8 @@ export interface Player {
   id: string;
   name: string;
   avatar: string;
+  connected: boolean;
+  disconnectedAt: string | null;
   energy: Record<EnergyType, number>;
   nodes: Node[];
   reservedNodes: Node[];
@@ -39,7 +41,7 @@ export interface Player {
   pendingEffects: {
     discount: Partial<Record<Exclude<EnergyType, "flux">, number>>;
     multiplier: Partial<Record<Exclude<EnergyType, "flux">, number>>;
-    draw: number;
+    reclaim: number;
     swap: number;
   };
 }
@@ -63,4 +65,5 @@ export interface GameState {
   selectedNode: Node | null;
   turnCount: number;
   winCondition: 'efficiency' | 'network' | 'protocol' | null;
+  updatedAt: string;
 }

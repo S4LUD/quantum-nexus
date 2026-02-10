@@ -103,7 +103,7 @@ export function NodeDetailModal({
         target: t(`energy.${node.effectTarget}`),
         value: node.effectValue,
       }),
-      draw: t("effects.draw", { value: node.effectValue }),
+      reclaim: t("effects.reclaim", { value: node.effectValue }),
       swap: t("effects.swap", { value: node.effectValue }),
     }),
     [node.effectTarget, node.effectValue, t],

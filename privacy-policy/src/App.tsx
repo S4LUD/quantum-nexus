@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-const UPDATED_DATE = "February 6, 2026";
+const UPDATED_DATE = "February 7, 2026";
 
 export default function App() {
   const year = useMemo(() => new Date().getFullYear(), []);
@@ -16,7 +16,8 @@ export default function App() {
             Privacy Policy &amp; Terms of Service
           </h1>
           <p className="mt-3 max-w-2xl text-sm text-slate-600">
-            Offline-only strategy game. No accounts, no ads, no analytics.
+            Strategic network game with realtime multiplayer and minimal data
+            processing.
           </p>
           <p className="mt-2 text-xs text-slate-500">
             Official legal text is in English. Translations are for convenience
@@ -36,8 +37,8 @@ export default function App() {
                 </p>
               </div>
               <p>
-                Quantum Nexus is an offline-only game. We do not collect, store,
-                or share personal data.
+                Quantum Nexus includes online multiplayer. We process limited
+                data to run realtime sessions.
               </p>
             </div>
 
@@ -47,8 +48,9 @@ export default function App() {
                   Data Collection
                 </h3>
                 <p className="mt-1">
-                  No accounts, analytics, ads, or crash reporting are used. We
-                  do not collect identifiers or usage data.
+                  We do not sell personal data or use third-party analytics or
+                  ads. For multiplayer, we process player name, match ID, and
+                  match state to run the session.
                 </p>
               </div>
               <div>
@@ -56,8 +58,8 @@ export default function App() {
                   Permissions
                 </h3>
                 <p className="mt-1">
-                  The app does not request device permissions beyond standard
-                  platform requirements.
+                  The app may request audio-related permissions to support sound
+                  playback and system audio behavior.
                 </p>
               </div>
               <div>
@@ -65,8 +67,9 @@ export default function App() {
                   Local Storage
                 </h3>
                 <p className="mt-1">
-                  Game progress is stored locally on your device. Uninstalling
-                  the app removes local data.
+                  Game progress is stored locally on your device. Multiplayer
+                  session data is kept only for the duration of a session on
+                  the server.
                 </p>
               </div>
               <div>

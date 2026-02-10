@@ -13,7 +13,7 @@ import {
   applyNodePurchase,
   applyNodeReservation,
   applyProtocolClaim,
-  applyDrawEffect,
+  applyReclaimEffect,
   applySwapEffect,
   canAffordNode,
   canExchangeEnergy,
@@ -21,7 +21,6 @@ import {
   canClaimProtocol,
   generateNodePayment,
   checkWinConditions,
-  getDrawOptions,
   mustDiscardEnergy,
 } from "@/logic/gameEngine";
 import {
@@ -796,21 +795,29 @@ function buildNodeWithEffects(
   }
   const nextState = applyNodePurchase(gameState, player, node, payment);
   const updatedPlayer = nextState.players[nextState.currentPlayerIndex];
-  if (updatedPlayer.pendingEffects.draw > 0) {
-    const options = getDrawOptions(
-      nextState,
-      node.category,
-      updatedPlayer.pendingEffects.draw,
+  if (updatedPlayer.pendingEffects.reclaim > 0) {
+    const reclaimSelection = planReclaim(
+      updatedPlayer,
+      nextState.energyPool,
+      updatedPlayer.pendingEffects.reclaim,
     );
-    if (options.length > 0) {
-      const drawState = applyDrawEffect(
+    if (reclaimSelection.length > 0) {
+      const reclaimState = applyReclaimEffect(
         nextState,
         updatedPlayer,
-        node.category,
-        options[0],
+        reclaimSelection,
       );
-      return resolveSwapIfNeeded(drawState, notice, debug);
+      return resolveSwapIfNeeded(reclaimState, notice, debug);
     }
+    const skippedState = {
+      ...nextState,
+      players: nextState.players.map((p, index) =>
+        index === nextState.currentPlayerIndex
+          ? { ...p, pendingEffects: { ...p.pendingEffects, reclaim: 0 } }
+          : p,
+      ),
+    };
+    return resolveSwapIfNeeded(skippedState, notice, debug);
   }
   return resolveSwapIfNeeded(nextState, notice, debug);
 }
@@ -892,6 +899,33 @@ function planSwap(
   return { give, take };
 }
 
+function planReclaim(
+  player: Player,
+  pool: Record<EnergyType, number>,
+  maxReclaim: number,
+): Exclude<EnergyType, "flux">[] {
+  const selection: Exclude<EnergyType, "flux">[] = [];
+  const playerCounts = { ...player.energy };
+  const poolCounts = { ...pool };
+
+  for (let i = 0; i < maxReclaim; i += 1) {
+    const type = pickLowestCountType(
+      playerCounts,
+      poolCounts,
+      null,
+      BASE_ENERGY_TYPES,
+    );
+    if (!type || poolCounts[type] <= 0) {
+      break;
+    }
+    selection.push(type);
+    playerCounts[type] += 1;
+    poolCounts[type] -= 1;
+  }
+
+  return selection;
+}
+
 function pickHighestCountType<T extends string>(
   counts: Record<T, number>,
   types: T[],
@@ -907,13 +941,13 @@ function pickHighestCountType<T extends string>(
   return best;
 }
 
-function pickLowestCountType(
+function pickLowestCountType<T extends EnergyType>(
   playerCounts: Record<EnergyType, number>,
   poolCounts: Record<EnergyType, number>,
-  excludeType: EnergyType | null,
-  types: EnergyType[],
-): EnergyType | null {
-  let best: EnergyType | null = null;
+  excludeType: T | null,
+  types: T[],
+): T | null {
+  let best: T | null = null;
   let bestValue = Infinity;
   types.forEach((type) => {
     if (excludeType && type === excludeType) {

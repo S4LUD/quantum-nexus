@@ -9,4 +9,6 @@ export interface ButtonProps {
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
   disabled?: boolean;
+  debounceMs?: number;
+  disableDebounce?: boolean;
 }

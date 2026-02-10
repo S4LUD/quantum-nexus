@@ -1,3 +1,4 @@
+import { colors } from "@/constants/colors";
 import { spacing } from "@/constants/spacing";
 import { Theme } from "@/constants/theme";
 import { StyleSheet } from "react-native";
@@ -41,6 +42,18 @@ export const createGameStyles = (theme: Theme) =>
           ? theme.colors.surfaceStrong
           : theme.colors.overlayStrong,
       paddingTop: spacing.xxxl,
+    },
+    pausedBanner: {
+      marginTop: spacing.sm,
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+      borderRadius: spacing.sm,
+      backgroundColor:
+        theme.mode === "light" ? colors.yellow400 : colors.orange500,
+    },
+    pausedBannerText: {
+      color: theme.mode === "light" ? colors.slate900 : colors.white,
+      textAlign: "center",
     },
     centerContent: {
       flex: 1,

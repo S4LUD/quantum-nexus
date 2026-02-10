@@ -7,6 +7,7 @@ import {
   MatchJoinResult,
   MatchLeaveResult,
   MatchReadyResult,
+  MatchReconnectResult,
   MatchStartResult,
   MultiplayerSession,
   PublicMatchState,
@@ -36,6 +37,14 @@ type ClientToServerEvents = {
     payload: { matchId: string; name: string },
     ack: (response: AckResponse<MatchJoinResult>) => void,
   ) => void;
+  "match:reconnect": (
+    payload: { matchId: string; playerId: string },
+    ack: (response: AckResponse<MatchReconnectResult>) => void,
+  ) => void;
+  "player:heartbeat": (payload: {
+    matchId: string;
+    playerId: string;
+  }) => void;
   "match:leave": (
     payload: { matchId: string },
     ack: (response: AckResponse<MatchLeaveResult>) => void,
@@ -78,6 +87,7 @@ class RealtimeClient {
     null;
 
   private listeners: RealtimeClientListeners = {};
+  private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
 
   private session: MultiplayerSession = {
     active: false,
@@ -85,6 +95,7 @@ class RealtimeClient {
     playerId: null,
     playerName: null,
     hostPlayerId: null,
+    isQuickMatch: false,
     isConnected: false,
   };
 
@@ -111,13 +122,19 @@ class RealtimeClient {
     });
     this.socket.on("connect", () => {
       this.session = { ...this.session, isConnected: true };
-      if (this.session.active && this.session.matchId) {
-        void this.resync(this.session.matchId);
+      if (this.session.active && this.session.matchId && this.session.playerId) {
+        void this.reconnectMatch(this.session.matchId, this.session.playerId).catch(
+          () => {
+            void this.resync(this.session.matchId as string);
+          },
+        );
       }
+      this.startHeartbeat();
       this.listeners.onConnected?.();
     });
     this.socket.on("disconnect", () => {
       this.session = { ...this.session, isConnected: false };
+      this.stopHeartbeat();
       this.listeners.onDisconnected?.();
     });
     this.socket.on("match:state_snapshot", (state) => {
@@ -149,9 +166,11 @@ class RealtimeClient {
       playerId: response.playerId,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
+      isQuickMatch: response.state.isQuickMatch,
       isConnected: socket.connected,
     };
     this.latestStateVersion = response.state.stateVersion;
+    this.startHeartbeat();
     return response;
   }
 
@@ -167,9 +186,11 @@ class RealtimeClient {
       playerId: response.playerId,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
+      isQuickMatch: response.state.isQuickMatch,
       isConnected: socket.connected,
     };
     this.latestStateVersion = response.state.stateVersion;
+    this.startHeartbeat();
     return response;
   }
 
@@ -186,9 +207,33 @@ class RealtimeClient {
       playerId: response.playerId,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
+      isQuickMatch: response.state.isQuickMatch,
       isConnected: socket.connected,
     };
     this.latestStateVersion = response.state.stateVersion;
+    this.startHeartbeat();
+    return response;
+  }
+
+  async reconnectMatch(matchId: string, playerId: string) {
+    const socket = this.ensureSocket();
+    const response = await this.emitAck<MatchReconnectResult>(
+      "match:reconnect",
+      {
+        matchId: matchId.trim().toUpperCase(),
+        playerId,
+      },
+    );
+    this.session = {
+      ...this.session,
+      active: true,
+      matchId: response.state.matchId,
+      hostPlayerId: response.state.hostPlayerId,
+      isQuickMatch: response.state.isQuickMatch,
+      isConnected: socket.connected,
+    };
+    this.latestStateVersion = response.state.stateVersion;
+    this.startHeartbeat();
     return response;
   }
 
@@ -205,13 +250,19 @@ class RealtimeClient {
       playerId: null,
       playerName: null,
       hostPlayerId: null,
+      isQuickMatch: false,
       isConnected: this.socket?.connected ?? false,
     };
     this.latestStateVersion = 1;
+    this.stopHeartbeat();
   }
 
   async startMatch() {
-    if (!this.session.active || !this.session.matchId || !this.session.playerId) {
+    if (
+      !this.session.active ||
+      !this.session.matchId ||
+      !this.session.playerId
+    ) {
       throw new Error("No active multiplayer session");
     }
     const result = await this.emitAck<MatchStartResult>("match:start", {
@@ -223,7 +274,11 @@ class RealtimeClient {
   }
 
   async setReady(ready: boolean) {
-    if (!this.session.active || !this.session.matchId || !this.session.playerId) {
+    if (
+      !this.session.active ||
+      !this.session.matchId ||
+      !this.session.playerId
+    ) {
       throw new Error("No active multiplayer session");
     }
     const result = await this.emitAck<MatchReadyResult>("match:ready", {
@@ -268,9 +323,11 @@ class RealtimeClient {
       playerId: null,
       playerName: null,
       hostPlayerId: null,
+      isQuickMatch: false,
       isConnected: false,
     };
     this.latestStateVersion = 1;
+    this.stopHeartbeat();
   }
 
   clearSession() {
@@ -280,9 +337,11 @@ class RealtimeClient {
       playerId: null,
       playerName: null,
       hostPlayerId: null,
+      isQuickMatch: false,
       isConnected: this.socket?.connected ?? false,
     };
     this.latestStateVersion = 1;
+    this.stopHeartbeat();
   }
 
   private async resync(matchId: string) {
@@ -292,6 +351,10 @@ class RealtimeClient {
     );
     this.latestStateVersion = response.state.stateVersion;
     this.listeners.onSnapshot?.(response.state);
+  }
+
+  async resyncMatch(matchId: string) {
+    await this.resync(matchId);
   }
 
   private ensureSocket() {
@@ -338,6 +401,17 @@ class RealtimeClient {
         socket.emit(
           event,
           payload as { matchId: string; name: string },
+          (response) => {
+            clearTimeout(timeout);
+            this.resolveAck(response as AckResponse<T>, resolve, reject);
+          },
+        );
+        return;
+      }
+      if (event === "match:reconnect") {
+        socket.emit(
+          event,
+          payload as { matchId: string; playerId: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -408,6 +482,35 @@ class RealtimeClient {
       return;
     }
     reject(new Error(response.error.message));
+  }
+
+  private startHeartbeat() {
+    if (this.heartbeatTimer || !this.socket) {
+      return;
+    }
+    this.heartbeatTimer = setInterval(() => {
+      if (
+        !this.socket ||
+        !this.session.active ||
+        !this.session.matchId ||
+        !this.session.playerId ||
+        !this.socket.connected
+      ) {
+        return;
+      }
+      this.socket.emit("player:heartbeat", {
+        matchId: this.session.matchId,
+        playerId: this.session.playerId,
+      });
+    }, 5000);
+  }
+
+  private stopHeartbeat() {
+    if (!this.heartbeatTimer) {
+      return;
+    }
+    clearInterval(this.heartbeatTimer);
+    this.heartbeatTimer = null;
   }
 }
 

@@ -1,11 +1,18 @@
 import { createContext, useContext } from "react";
 import { BotDifficulty, GameState } from "../types/game";
-import { MatchStatePatch, MultiplayerSession, RealtimeAction } from "@/types/realtime";
+import {
+  EventError,
+  MatchStatePatch,
+  MultiplayerSession,
+  RealtimeAction,
+} from "@/types/realtime";
 
 export interface GameContextValue {
   gameState: GameState | null;
   multiplayerSession: MultiplayerSession;
   lastActionPatch: MatchStatePatch | null;
+  lastRejectedError: EventError | null;
+  lastRejectedAt: number;
   initializeGame: (
     playerCount: number,
     botCount?: number,

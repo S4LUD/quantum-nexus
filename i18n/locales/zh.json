@@ -17,8 +17,45 @@
   },
   "legal": {
     "title": "Quantum Nexus © 2026",
-    "subtitle": "战略网络构建游戏",
-    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+    "subtitle": "Strategic Network Building Game",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only.",
+    "sectionTitle": "Legal",
+    "splashPrefix": "By continuing, you agree to",
+    "splashAnd": "and",
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated February 7, 2026",
+      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
+      "sections": {
+        "licenseTitle": "License",
+        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
+        "acceptableTitle": "Acceptable Use",
+        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
+        "contentTitle": "User Content",
+        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
+        "liabilityTitle": "Disclaimer",
+        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
+        "changesTitle": "Changes",
+        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated February 7, 2026",
+      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
+      "sections": {
+        "dataTitle": "Data Collection",
+        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
+        "permissionsTitle": "Permissions",
+        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
+        "storageTitle": "Local Storage",
+        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
+        "childrenTitle": "Children's Privacy",
+        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
+        "changesTitle": "Changes",
+        "changesBody": "If this policy changes, we will update the date shown here."
+      }
+    }
   },
   "home": {
     "title": "Quantum Nexus",
@@ -99,6 +136,16 @@
   },
   "game": {
     "turnLabel": "回合 {{count}}",
+    "yourTurnNotice": "Your turn.",
+    "playerTurnNotice": "{{name}}'s turn.",
+    "playerDisconnected": "{{name}} disconnected.",
+    "playerReconnected": "{{name}} reconnected.",
+    "waitingForReconnect": "Waiting for {{name}} to reconnect.",
+    "gamePausedReconnect": "Game Paused: waiting for {{name}} to reconnect ({{seconds}}s).",
+    "reconnecting": "Reconnecting to server...",
+    "reconnectingCountdown": "Reconnecting... ({{seconds}}s)",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "actionFailed": "Action failed. Please try again.",
     "startingPlayerNotice": "先手玩家：{{name}}",
     "player": "玩家",
     "node": "节点",
@@ -148,7 +195,8 @@
     "multiplier": "将 {{target}} 的输出生成提升至 {{value}} 倍",
     "discount": "建造 节点 时将 {{target}} 成本降低 {{value}}",
     "draw": "可额外查看 {{value}} 张 节点",
-    "swap": "可交换最多 {{value}} 种 能量"
+    "swap": "可交换最多 {{value}} 种 能量",
+    "reclaim": "建造节点后可从能量池回收最多 {{value}} 个能量"
   },
   "playerArea": {
     "yourTurn": "您的回合",
@@ -228,6 +276,12 @@
   "draw": {
     "title": "抽取 节点",
     "subtitle": "请选择一张 节点 放入市场。"
+  },
+  "reclaim": {
+    "title": "回收 能量",
+    "subtitle": "从能量池回收最多 {{count}} 个能量。",
+    "collect": "回收",
+    "confirm": "确认回收"
   },
   "discard": {
     "title": "弃置 能量",
@@ -328,13 +382,15 @@
       "multiplier": "x{{value}} 倍",
       "discount": "-{{value}} 成本",
       "draw": "+{{value}} 抽取",
-      "swap": "交换"
+      "swap": "交换",
+      "reclaim": "+{{value}} 回收"
     }
   },
   "effectsTitle": {
     "multiplier": "倍率",
     "discount": "折扣",
     "draw": "抽取",
-    "swap": "交换"
+    "swap": "交换",
+    "reclaim": "回收"
   }
 }

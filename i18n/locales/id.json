@@ -17,43 +17,43 @@
   },
   "legal": {
     "title": "Quantum Nexus © 2026",
-    "subtitle": "Game Strategi Pembangunan Jaringan",
+    "subtitle": "Strategic Network Building Game",
     "languageNotice": "Official legal text is in English. Translations are for convenience only.",
     "sectionTitle": "Legal",
-    "splashPrefix": "Dengan melanjutkan, Anda menyetujui",
-    "splashAnd": "dan",
+    "splashPrefix": "By continuing, you agree to",
+    "splashAnd": "and",
     "terms": {
-      "title": "Ketentuan Layanan",
-      "updated": "Terakhir diperbarui 6 Februari 2026",
-      "intro": "Ketentuan ini mengatur penggunaan Quantum Nexus. Dengan menggunakan game, Anda menyetujui Ketentuan ini.",
+      "title": "Terms of Service",
+      "updated": "Last updated February 7, 2026",
+      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
       "sections": {
-        "licenseTitle": "Lisensi",
-        "licenseBody": "Anda diberikan lisensi pribadi, non-eksklusif, tidak dapat dipindahtangankan untuk menggunakan game untuk hiburan pribadi dan non-komersial.",
-        "acceptableTitle": "Penggunaan yang Diperbolehkan",
-        "acceptableBody": "Dilarang meretas, merekayasa balik, atau mengganggu game. Dilarang memakai otomatisasi, eksploit, atau alat tidak sah.",
-        "contentTitle": "Konten Pengguna",
-        "contentBody": "Quantum Nexus belum menerima konten buatan pengguna saat ini.",
-        "liabilityTitle": "Penyangkalan",
-        "liabilityBody": "Game disediakan \"apa adanya\" tanpa jaminan. Sejauh diizinkan hukum, kami tidak bertanggung jawab atas kerugian akibat penggunaan game.",
-        "changesTitle": "Perubahan",
-        "changesBody": "Kami dapat memperbarui Ketentuan ini dari waktu ke waktu. Melanjutkan penggunaan setelah pembaruan berarti menyetujui."
+        "licenseTitle": "License",
+        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
+        "acceptableTitle": "Acceptable Use",
+        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
+        "contentTitle": "User Content",
+        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
+        "liabilityTitle": "Disclaimer",
+        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
+        "changesTitle": "Changes",
+        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
       }
     },
     "privacy": {
-      "title": "Kebijakan Privasi",
-      "updated": "Terakhir diperbarui 6 Februari 2026",
-      "intro": "Quantum Nexus adalah game offline. Kami tidak mengumpulkan atau membagikan data pribadi.",
+      "title": "Privacy Policy",
+      "updated": "Last updated February 7, 2026",
+      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
       "sections": {
-        "dataTitle": "Pengumpulan Data",
-        "dataBody": "Tidak ada akun, analitik, iklan, atau laporan kerusakan. Kami tidak mengumpulkan pengenal atau data penggunaan.",
-        "permissionsTitle": "Izin",
-        "permissionsBody": "Aplikasi tidak meminta izin perangkat selain persyaratan platform standar.",
-        "storageTitle": "Penyimpanan Lokal",
-        "storageBody": "Kemajuan game disimpan secara lokal di perangkat Anda. Menghapus aplikasi akan menghapus data lokal.",
-        "childrenTitle": "Privasi Anak",
-        "childrenBody": "Kami tidak dengan sengaja mengumpulkan data pribadi anak karena kami tidak mengumpulkan data apa pun.",
-        "changesTitle": "Perubahan",
-        "changesBody": "Jika kebijakan ini berubah, kami akan memperbarui tanggal yang ditampilkan di sini."
+        "dataTitle": "Data Collection",
+        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
+        "permissionsTitle": "Permissions",
+        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
+        "storageTitle": "Local Storage",
+        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
+        "childrenTitle": "Children's Privacy",
+        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
+        "changesTitle": "Changes",
+        "changesBody": "If this policy changes, we will update the date shown here."
       }
     }
   },
@@ -136,6 +136,16 @@
   },
   "game": {
     "turnLabel": "Giliran {{count}}",
+    "yourTurnNotice": "Your turn.",
+    "playerTurnNotice": "{{name}}'s turn.",
+    "playerDisconnected": "{{name}} disconnected.",
+    "playerReconnected": "{{name}} reconnected.",
+    "waitingForReconnect": "Waiting for {{name}} to reconnect.",
+    "gamePausedReconnect": "Game Paused: waiting for {{name}} to reconnect ({{seconds}}s).",
+    "reconnecting": "Reconnecting to server...",
+    "reconnectingCountdown": "Reconnecting... ({{seconds}}s)",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "actionFailed": "Action failed. Please try again.",
     "startingPlayerNotice": "Pemain awal: {{name}}",
     "player": "Pemain",
     "node": "Simpul",
@@ -185,7 +195,8 @@
     "multiplier": "Mengalikan output {{target}} menjadi {{value}}x",
     "discount": "Mengurangi biaya {{target}} sebesar {{value}} saat Bangun Simpul",
     "draw": "Memungkinkan melihat {{value}} Simpul tambahan dari deck",
-    "swap": "Memungkinkan menukar hingga {{value}} jenis Energi"
+    "swap": "Memungkinkan menukar hingga {{value}} jenis Energi",
+    "reclaim": "Memungkinkan Kumpulkan hingga {{value}} Energi dari Pool setelah Bangun Simpul"
   },
   "playerArea": {
     "yourTurn": "GILIRAN ANDA",
@@ -265,6 +276,12 @@
   "draw": {
     "title": "Draw Simpul",
     "subtitle": "Pilih satu Simpul untuk dimasukkan ke Market."
+  },
+  "reclaim": {
+    "title": "Reclaim Energi",
+    "subtitle": "Kumpulkan hingga {{count}} Energi dari Pool.",
+    "collect": "Kumpulkan",
+    "confirm": "Konfirmasi Reclaim"
   },
   "discard": {
     "title": "Buang Energi",
@@ -365,14 +382,16 @@
       "multiplier": "x{{value}} Kali",
       "discount": "-{{value}} Biaya",
       "draw": "+{{value}} Tarik",
-      "swap": "Tukar"
+      "swap": "Tukar",
+      "reclaim": "+{{value}} Reclaim"
     }
   },
   "effectsTitle": {
     "multiplier": "Pengganda",
     "discount": "Diskon",
     "draw": "Tarik",
-    "swap": "Tukar"
+    "swap": "Tukar",
+    "reclaim": "Reclaim"
   },
   "exchangeLine4": "• Pool Energi harus memiliki energi yang diambil"
 }

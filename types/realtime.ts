@@ -4,13 +4,20 @@ export type EnergyType = "solar" | "hydro" | "plasma" | "neural" | "flux";
 export type BaseEnergyType = Exclude<EnergyType, "flux">;
 export type NodeCategory = "research" | "production" | "network" | "control";
 
+export type PendingEffects = {
+  discount: Partial<Record<BaseEnergyType, number>>;
+  multiplier: Partial<Record<BaseEnergyType, number>>;
+  reclaim: number;
+  swap: number;
+};
+
 export type NodeDefinition = {
   id: string;
   category: NodeCategory;
   efficiency: number;
   outputType: BaseEnergyType;
   cost: Partial<Record<BaseEnergyType, number>>;
-  effectType?: "multiplier" | "discount" | "draw" | "swap";
+  effectType?: "multiplier" | "discount" | "reclaim" | "swap";
   effectValue?: number;
   effectTarget?: EnergyType;
 };
@@ -28,12 +35,14 @@ export type MatchPlayerState = {
   playerId: string;
   name: string;
   connected: boolean;
+  disconnectedAt: string | null;
   isReady: boolean;
   energy: Record<EnergyType, number>;
   nodeIds: string[];
   reservedNodeIds: string[];
   protocolIds: string[];
   efficiency: number;
+  pendingEffects: PendingEffects;
 };
 
 export type MatchBoardState = {
@@ -48,6 +57,7 @@ export type PublicMatchState = {
   matchId: string;
   phase: MatchPhase;
   hostPlayerId: string;
+  isQuickMatch: boolean;
   players: MatchPlayerState[];
   currentTurnPlayerId: string | null;
   turnCount: number;
@@ -88,13 +98,36 @@ export type EndTurnAction = {
   type: "END_TURN";
 };
 
+export type ApplyReclaimAction = {
+  type: "APPLY_RECLAIM";
+  energy: BaseEnergyType[];
+};
+
+export type SkipReclaimAction = {
+  type: "SKIP_RECLAIM";
+};
+
+export type ApplySwapAction = {
+  type: "APPLY_SWAP";
+  give: BaseEnergyType[];
+  take: BaseEnergyType[];
+};
+
+export type SkipSwapAction = {
+  type: "SKIP_SWAP";
+};
+
 export type RealtimeAction =
   | CollectEnergyAction
   | BuildNodeAction
   | ReserveNodeAction
   | ClaimProtocolAction
   | ExchangeEnergyAction
-  | EndTurnAction;
+  | EndTurnAction
+  | ApplyReclaimAction
+  | SkipReclaimAction
+  | ApplySwapAction
+  | SkipSwapAction;
 
 export type MatchStatePatch = {
   matchId: string;
@@ -138,6 +171,20 @@ export type MatchJoinResult = {
   state: PublicMatchState;
 };
 
+export type MatchReconnectPayload = {
+  matchId: string;
+  playerId: string;
+};
+
+export type MatchReconnectResult = {
+  state: PublicMatchState;
+};
+
+export type PlayerHeartbeatPayload = {
+  matchId: string;
+  playerId: string;
+};
+
 export type MatchLeaveResult = {
   state: PublicMatchState;
 };
@@ -167,5 +214,6 @@ export type MultiplayerSession = {
   playerId: string | null;
   playerName: string | null;
   hostPlayerId: string | null;
+  isQuickMatch: boolean;
   isConnected: boolean;
 };

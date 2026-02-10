@@ -4,7 +4,6 @@ import {
   EnergyType,
   Protocol,
   Node,
-  NodeCategory,
   BotDifficulty,
 } from "@/types";
 import {
@@ -41,6 +40,8 @@ export function createInitialGameState(
       id: `player-${index}`,
       name: playerNames[index],
       avatar: playerAvatars[index],
+      connected: true,
+      disconnectedAt: null,
       energy: {
         solar: 0,
         hydro: 0,
@@ -58,7 +59,7 @@ export function createInitialGameState(
       pendingEffects: {
         discount: {},
         multiplier: {},
-        draw: 0,
+        reclaim: 0,
         swap: 0,
       },
     };
@@ -123,6 +124,7 @@ export function createInitialGameState(
     selectedNode: null,
     turnCount: 0,
     winCondition: null,
+    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -342,8 +344,8 @@ export function applyNodePurchase(
       existing + Math.max(node.effectValue - 1, 0);
   }
 
-  if (node.effectType === "draw" && node.effectValue) {
-    newPlayer.pendingEffects.draw += node.effectValue;
+  if (node.effectType === "reclaim" && node.effectValue) {
+    newPlayer.pendingEffects.reclaim += node.effectValue;
   }
 
   if (node.effectType === "swap" && node.effectValue) {
@@ -445,62 +447,43 @@ export function applyNodeReservation(
   return newState;
 }
 
-export function getDrawOptions(
-  gameState: GameState,
-  category: NodeCategory,
-  count: number,
-): Node[] {
-  const categoryIndexMap: Record<NodeCategory, number> = {
-    research: 0,
-    production: 1,
-    network: 2,
-    control: 3,
-  };
-  const index = categoryIndexMap[category];
-  const deck = gameState.decks[index] || [];
-  return deck.slice(0, count);
-}
-
-export function applyDrawEffect(
+export function applyReclaimEffect(
   gameState: GameState,
   player: Player,
-  category: NodeCategory,
-  chosenNode: Node,
+  reclaim: Exclude<EnergyType, "flux">[],
 ): GameState {
   const newState = {
     ...gameState,
+    energyPool: { ...gameState.energyPool },
     players: [...gameState.players],
-    marketNodes: gameState.marketNodes.map((row) => [...row]),
-    decks: gameState.decks.map((deck) => [...deck]),
   };
   const playerIndex = newState.players.findIndex((p) => p.id === player.id);
   const newPlayer = { ...newState.players[playerIndex] };
+  const maxReclaim = newPlayer.pendingEffects.reclaim || 0;
 
-  const categoryIndexMap: Record<NodeCategory, number> = {
-    research: 0,
-    production: 1,
-    network: 2,
-    control: 3,
-  };
-  const index = categoryIndexMap[category];
-
-  const deck = newState.decks[index];
-  const chosenIndex = deck.findIndex((node) => node.id === chosenNode.id);
-  if (chosenIndex !== -1) {
-    deck.splice(chosenIndex, 1);
-  } else {
+  if (reclaim.length === 0 || reclaim.length > maxReclaim) {
     return newState;
   }
 
-  const row = newState.marketNodes[index];
-  const replaceIndex = row.length > 0 ? row.length - 1 : 0;
-  const replaced = row[replaceIndex];
-  row[replaceIndex] = chosenNode;
-  if (replaced) {
-    deck.push(replaced);
+  const reclaimCounts: Partial<Record<Exclude<EnergyType, "flux">, number>> =
+    {};
+  reclaim.forEach((type) => {
+    reclaimCounts[type] = (reclaimCounts[type] || 0) + 1;
+  });
+
+  const hasPoolEnergy = (
+    Object.entries(reclaimCounts) as [Exclude<EnergyType, "flux">, number][]
+  ).every(([type, count]) => newState.energyPool[type] >= count);
+  if (!hasPoolEnergy) {
+    return newState;
   }
 
-  newPlayer.pendingEffects.draw = 0;
+  reclaim.forEach((type) => {
+    newState.energyPool[type] -= 1;
+    newPlayer.energy[type] += 1;
+  });
+
+  newPlayer.pendingEffects.reclaim = 0;
   newState.players[playerIndex] = newPlayer;
   return newState;
 }

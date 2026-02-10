@@ -17,8 +17,45 @@
   },
   "legal": {
     "title": "Quantum Nexus © 2026",
-    "subtitle": "เกมสร้างเครือข่ายเชิงกลยุทธ์",
-    "languageNotice": "Official legal text is in English. Translations are for convenience only."
+    "subtitle": "Strategic Network Building Game",
+    "languageNotice": "Official legal text is in English. Translations are for convenience only.",
+    "sectionTitle": "Legal",
+    "splashPrefix": "By continuing, you agree to",
+    "splashAnd": "and",
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated February 7, 2026",
+      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
+      "sections": {
+        "licenseTitle": "License",
+        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
+        "acceptableTitle": "Acceptable Use",
+        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
+        "contentTitle": "User Content",
+        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
+        "liabilityTitle": "Disclaimer",
+        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
+        "changesTitle": "Changes",
+        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated February 7, 2026",
+      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
+      "sections": {
+        "dataTitle": "Data Collection",
+        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
+        "permissionsTitle": "Permissions",
+        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
+        "storageTitle": "Local Storage",
+        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
+        "childrenTitle": "Children's Privacy",
+        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
+        "changesTitle": "Changes",
+        "changesBody": "If this policy changes, we will update the date shown here."
+      }
+    }
   },
   "home": {
     "title": "Quantum Nexus",
@@ -99,6 +136,16 @@
   },
   "game": {
     "turnLabel": "เทิร์น {{count}}",
+    "yourTurnNotice": "Your turn.",
+    "playerTurnNotice": "{{name}}'s turn.",
+    "playerDisconnected": "{{name}} disconnected.",
+    "playerReconnected": "{{name}} reconnected.",
+    "waitingForReconnect": "Waiting for {{name}} to reconnect.",
+    "gamePausedReconnect": "Game Paused: waiting for {{name}} to reconnect ({{seconds}}s).",
+    "reconnecting": "Reconnecting to server...",
+    "reconnectingCountdown": "Reconnecting... ({{seconds}}s)",
+    "connectionLost": "Connection lost. Reconnecting...",
+    "actionFailed": "Action failed. Please try again.",
     "startingPlayerNotice": "ผู้เล่นเริ่มต้น: {{name}}",
     "player": "ผู้เล่น",
     "node": "โหนด",
@@ -148,7 +195,8 @@
     "multiplier": "เพิ่มการสร้างเอาต์พุตของ {{target}} เป็น {{value}} เท่า",
     "discount": "ลดค่าใช้จ่าย {{target}} ลง {{value}} เมื่อสร้างโหนด",
     "draw": "สามารถดูโหนดเพิ่มเติมได้ {{value}} ใบ",
-    "swap": "สามารถสลับพลังงานได้สูงสุด {{value}} ประเภท"
+    "swap": "สามารถสลับพลังงานได้สูงสุด {{value}} ประเภท",
+    "reclaim": "สามารถเก็บพลังงานจากพูลได้สูงสุด {{value}} หลังจากสร้างโหนด"
   },
   "playerArea": {
     "yourTurn": "เทิร์นของคุณ",
@@ -228,6 +276,12 @@
   "draw": {
     "title": "Drawโหนด",
     "subtitle": "เลือกโหนดหนึ่งใบเพื่อใส่ในตลาด"
+  },
+  "reclaim": {
+    "title": "Reclaim พลังงาน",
+    "subtitle": "เก็บพลังงานจากพูลได้สูงสุด {{count}}",
+    "collect": "เก็บ",
+    "confirm": "ยืนยัน Reclaim"
   },
   "discard": {
     "title": "ทิ้งพลังงาน",
@@ -328,13 +382,15 @@
       "multiplier": "x{{value}} เท่า",
       "discount": "-{{value}} ค่าใช้จ่าย",
       "draw": "+{{value}} ดรอว์",
-      "swap": "สลับ"
+      "swap": "สลับ",
+      "reclaim": "+{{value}} Reclaim"
     }
   },
   "effectsTitle": {
     "multiplier": "ตัวคูณ",
     "discount": "ส่วนลด",
     "draw": "ดรอว์",
-    "swap": "สลับ"
+    "swap": "สลับ",
+    "reclaim": "Reclaim"
   }
 }
