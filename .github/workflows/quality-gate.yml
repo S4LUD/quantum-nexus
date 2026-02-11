@@ -27,6 +27,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Install server dependencies
+        if: ${{ hashFiles('quantum-nexus-server/package.json') != '' }}
         run: yarn --cwd quantum-nexus-server install --frozen-lockfile
 
       - name: Lint
@@ -39,7 +40,9 @@ jobs:
         run: yarn app:build:ci
 
       - name: Server build
+        if: ${{ hashFiles('quantum-nexus-server/package.json') != '' }}
         run: yarn server:build
 
       - name: Server tests
+        if: ${{ hashFiles('quantum-nexus-server/package.json') != '' }}
         run: yarn server:test
