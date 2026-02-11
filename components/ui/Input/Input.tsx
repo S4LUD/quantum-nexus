@@ -9,14 +9,16 @@ export function Input({
   inputStyle,
   ...rest
 }: InputProps) {
-  const { theme } = useTheme();
+  const { theme, isFontScalingEnabled } = useTheme();
   const inputStyles = useMemo(() => createInputStyles(theme), [theme]);
   const placeholderTextColor =
     rest.placeholderTextColor ?? theme.colors.textSubtle;
+  const allowFontScaling = rest.allowFontScaling ?? isFontScalingEnabled;
   return (
     <View style={[inputStyles.container, containerStyle]}>
       <TextInput
         {...rest}
+        allowFontScaling={allowFontScaling}
         placeholderTextColor={placeholderTextColor}
         style={[inputStyles.input, inputStyle]}
       />

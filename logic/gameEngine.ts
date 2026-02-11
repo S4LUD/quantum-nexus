@@ -69,9 +69,9 @@ export function createInitialGameState(
     ENERGY_POOL_BY_PLAYERS[playerCount] || ENERGY_POOL_BY_PLAYERS[4];
 
   const deck0 = createShuffledDeck(researchNodes);
-  const deck1 = createShuffledDeck(productionNodes);
-  const deck2 = createShuffledDeck(networkNodes);
-  const deck3 = createShuffledDeck(controlNodes);
+  const deck1 = createShuffledDeck(controlNodes);
+  const deck2 = createShuffledDeck(productionNodes);
+  const deck3 = createShuffledDeck(networkNodes);
 
   const marketNodes: (Node | null)[][] = [
     [
@@ -394,6 +394,9 @@ export function applyEnergyCollection(
   const newPlayer = { ...newState.players[playerIndex] };
 
   energyTypes.forEach((type) => {
+    if (type === "flux") {
+      return;
+    }
     if (newState.energyPool[type] > 0) {
       newPlayer.energy[type] += 1;
       newState.energyPool[type] -= 1;
@@ -617,15 +620,16 @@ export function validateEnergyCollection(
   energyTypes: EnergyType[],
   energyPool: Record<EnergyType, number>,
 ): { valid: boolean; error?: string } {
+  if (energyTypes.includes("flux")) {
+    return { valid: false, error: "Flux cannot be collected from the pool" };
+  }
+
   if (energyTypes.length === 2) {
     if (energyTypes[0] !== energyTypes[1]) {
       return {
         valid: false,
         error: "Must collect 2 of the same type or 3 different types",
       };
-    }
-    if (energyTypes[0] === "flux") {
-      return { valid: false, error: "Cannot collect 2 flux" };
     }
     if (energyPool[energyTypes[0]] < 4) {
       return {
@@ -638,11 +642,6 @@ export function validateEnergyCollection(
     if (uniqueTypes.size !== 3) {
       return { valid: false, error: "Must collect 3 different energy types" };
     }
-    if (energyTypes.includes("flux")) {
-      return { valid: false, error: "Cannot collect flux this way" };
-    }
-  } else if (energyTypes.length === 1 && energyTypes[0] === "flux") {
-    return { valid: true };
   } else {
     return { valid: false, error: "Must collect 2 same or 3 different" };
   }

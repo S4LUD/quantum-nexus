@@ -16,6 +16,7 @@ import {
   type AudioPlayer,
 } from "expo-audio";
 import * as SecureStore from "expo-secure-store";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 type SoundContextValue = {
   isSoundEnabled: boolean;
@@ -70,8 +71,14 @@ export function SoundProvider({ children }: SoundProviderProps) {
           soundsRefSnapshot.current[key] = sound;
         });
         readyRef.current = true;
-      } catch {
-        console.warn("[Sound] failed to load sounds");
+      } catch (error) {
+        reportRuntimeError(
+          {
+            scope: "SoundContext",
+            action: "load_sounds",
+          },
+          error,
+        );
         readyRef.current = false;
       }
     };
@@ -96,8 +103,14 @@ export function SoundProvider({ children }: SoundProviderProps) {
           return;
         }
         setSoundEnabled(stored === "true");
-      } catch {
-        // ignore storage errors
+      } catch (error) {
+        reportRuntimeError(
+          {
+            scope: "SoundContext",
+            action: "load_sound_setting",
+          },
+          error,
+        );
       }
     };
     loadSoundSetting();
@@ -111,11 +124,29 @@ export function SoundProvider({ children }: SoundProviderProps) {
   }, []);
 
   useEffect(() => {
-    setIsAudioActiveAsync(isSoundEnabled).catch(() => {});
+    setIsAudioActiveAsync(isSoundEnabled).catch((error) => {
+      reportRuntimeError(
+        {
+          scope: "SoundContext",
+          action: "set_audio_active",
+          metadata: { isSoundEnabled },
+        },
+        error,
+      );
+    });
   }, [isSoundEnabled]);
 
   useEffect(() => {
-    SecureStore.setItemAsync(storageKey, String(isSoundEnabled)).catch(() => {});
+    SecureStore.setItemAsync(storageKey, String(isSoundEnabled)).catch((error) => {
+      reportRuntimeError(
+        {
+          scope: "SoundContext",
+          action: "save_sound_setting",
+          metadata: { isSoundEnabled },
+        },
+        error,
+      );
+    });
   }, [isSoundEnabled]);
 
   const play = useCallback(

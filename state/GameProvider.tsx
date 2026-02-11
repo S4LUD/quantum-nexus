@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { AppState, AppStateStatus } from "react-native";
 import { GameContext } from "./GameContext";
 import { gameReducer } from "./gameReducer";
 import { BotDifficulty, GameState } from "../types/game";
@@ -19,6 +20,7 @@ import {
 } from "@/types/realtime";
 import { realtimeClient } from "@/services/realtimeClient";
 import { mapRealtimeStateToGameState } from "@/services/realtimeMapper";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 interface GameProviderProps {
   children: ReactNode;
@@ -86,7 +88,16 @@ export function GameProvider({ children }: GameProviderProps) {
           currentSession.active &&
           currentSession.matchId
         ) {
-          void realtimeClient.resyncMatch(currentSession.matchId).catch(() => {});
+          void realtimeClient.resyncMatch(currentSession.matchId).catch((resyncError) => {
+            reportRuntimeError(
+              {
+                scope: "GameProvider",
+                action: "resync_after_rejection",
+                metadata: { matchId: currentSession.matchId },
+              },
+              resyncError,
+            );
+          });
         }
       },
       onConnected: () => {
@@ -101,6 +112,36 @@ export function GameProvider({ children }: GameProviderProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const handleAppStateChange = (nextState: AppStateStatus) => {
+      if (nextState === "active") {
+        void realtimeClient.resumeActiveSession().catch((error) => {
+          const currentSession = sessionRef.current;
+          reportRuntimeError(
+            {
+              scope: "GameProvider",
+              action: "resume_active_multiplayer_session",
+              metadata: {
+                matchId: currentSession.matchId || undefined,
+              },
+            },
+            error,
+          );
+        });
+        return;
+      }
+      realtimeClient.pauseActiveSession();
+      setMultiplayerSession(realtimeClient.getSession());
+    };
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const initializeGame = useCallback(
     (
       playerCount: number,
@@ -108,11 +149,20 @@ export function GameProvider({ children }: GameProviderProps) {
       botDifficulty: BotDifficulty = "easy",
     ) => {
       if (multiplayerSession.active) {
-        void realtimeClient.leaveMatch().catch(() => {});
+        void realtimeClient.leaveMatch().catch((error) => {
+          reportRuntimeError(
+            {
+              scope: "GameProvider",
+              action: "leave_match_before_local_init",
+            },
+            error,
+          );
+        });
         setMultiplayerSession({
           active: false,
           matchId: null,
           playerId: null,
+          sessionToken: null,
           playerName: null,
           hostPlayerId: null,
           isQuickMatch: false,
@@ -178,12 +228,18 @@ export function GameProvider({ children }: GameProviderProps) {
   const leaveMultiplayerMatch = useCallback(async () => {
     try {
       await realtimeClient.leaveMatch();
-    } catch {
-      // ignore network errors; always clear local session
+    } catch (error) {
+      reportRuntimeError(
+        {
+          scope: "GameProvider",
+          action: "leave_multiplayer_match",
+        },
+        error,
+      );
     } finally {
-        setMultiplayerSession(realtimeClient.getSession());
-        dispatch({ type: "RESET" });
-      }
+      setMultiplayerSession(realtimeClient.getSession());
+      dispatch({ type: "RESET" });
+    }
   }, []);
 
   const submitMultiplayerAction = useCallback(
@@ -195,7 +251,15 @@ export function GameProvider({ children }: GameProviderProps) {
           payload: mapRealtimeStateToGameState(result.state),
         });
         return true;
-      } catch {
+      } catch (error) {
+        reportRuntimeError(
+          {
+            scope: "GameProvider",
+            action: "submit_multiplayer_action",
+            metadata: { actionType: action.type },
+          },
+          error,
+        );
         return false;
       }
     },

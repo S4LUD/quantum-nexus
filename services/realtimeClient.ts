@@ -14,6 +14,7 @@ import {
   RealtimeAction,
   ResyncRequestResult,
 } from "@/types/realtime";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 type AckResponse<T> = { ok: true; data: T } | { ok: false; error: EventError };
 
@@ -26,41 +27,48 @@ type ServerToClientEvents = {
 
 type ClientToServerEvents = {
   "match:create": (
-    payload: { name: string; maxPlayers?: number },
+    payload: { name: string; maxPlayers?: number; accessKey?: string },
     ack: (response: AckResponse<MatchCreateResult>) => void,
   ) => void;
   "match:quick": (
-    payload: { name: string; maxPlayers?: number },
+    payload: { name: string; maxPlayers?: number; accessKey?: string },
     ack: (response: AckResponse<MatchQuickResult>) => void,
   ) => void;
   "match:join": (
-    payload: { matchId: string; name: string },
+    payload: { matchId: string; name: string; accessKey?: string },
     ack: (response: AckResponse<MatchJoinResult>) => void,
   ) => void;
   "match:reconnect": (
-    payload: { matchId: string; playerId: string },
+    payload: { matchId: string; playerId: string; sessionToken: string },
     ack: (response: AckResponse<MatchReconnectResult>) => void,
   ) => void;
   "player:heartbeat": (payload: {
     matchId: string;
     playerId: string;
+    sessionToken: string;
   }) => void;
   "match:leave": (
-    payload: { matchId: string },
+    payload: { matchId: string; playerId: string; sessionToken: string },
     ack: (response: AckResponse<MatchLeaveResult>) => void,
   ) => void;
   "match:start": (
-    payload: { matchId: string; playerId: string },
+    payload: { matchId: string; playerId: string; sessionToken: string },
     ack: (response: AckResponse<MatchStartResult>) => void,
   ) => void;
   "match:ready": (
-    payload: { matchId: string; playerId: string; ready: boolean },
+    payload: {
+      matchId: string;
+      playerId: string;
+      ready: boolean;
+      sessionToken: string;
+    },
     ack: (response: AckResponse<MatchReadyResult>) => void,
   ) => void;
   "action:submit": (
     payload: {
       matchId: string;
       playerId: string;
+      sessionToken: string;
       actionId: string;
       action: RealtimeAction;
       knownStateVersion: number;
@@ -68,7 +76,7 @@ type ClientToServerEvents = {
     ack: (response: AckResponse<ActionSubmitResult>) => void,
   ) => void;
   "state:resync_request": (
-    payload: { matchId: string },
+    payload: { matchId: string; playerId: string; sessionToken: string },
     ack: (response: AckResponse<ResyncRequestResult>) => void,
   ) => void;
 };
@@ -82,6 +90,28 @@ type RealtimeClientListeners = {
   onDisconnected?: () => void;
 };
 
+const REALTIME_URL_ENV_NAME = "EXPO_PUBLIC_REALTIME_URL";
+function resolveRealtimeUrl() {
+  const raw = process.env.EXPO_PUBLIC_REALTIME_URL?.trim();
+  if (!raw) {
+    throw new Error(
+      `[realtime] Missing ${REALTIME_URL_ENV_NAME}. Configure it before starting multiplayer.`,
+    );
+  }
+  try {
+    return new URL(raw).toString();
+  } catch {
+    throw new Error(
+      `[realtime] Invalid ${REALTIME_URL_ENV_NAME}: "${raw}". Expected absolute URL (http/https).`,
+    );
+  }
+}
+
+function resolveMultiplayerAccessKey() {
+  const raw = process.env.EXPO_PUBLIC_MULTIPLAYER_ACCESS_KEY?.trim();
+  return raw && raw.length > 0 ? raw : undefined;
+}
+
 class RealtimeClient {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents> | null =
     null;
@@ -93,6 +123,7 @@ class RealtimeClient {
     active: false,
     matchId: null,
     playerId: null,
+    sessionToken: null,
     playerName: null,
     hostPlayerId: null,
     isQuickMatch: false,
@@ -109,25 +140,99 @@ class RealtimeClient {
     return this.session;
   }
 
+  pauseActiveSession() {
+    if (!this.session.active) {
+      return;
+    }
+    this.stopHeartbeat();
+    if (this.socket) {
+      this.socket.removeAllListeners();
+      this.socket.disconnect();
+      this.socket = null;
+    }
+    this.session = { ...this.session, isConnected: false };
+    this.listeners.onDisconnected?.();
+  }
+
+  async resumeActiveSession() {
+    if (
+      !this.session.active ||
+      !this.session.matchId ||
+      !this.session.playerId ||
+      !this.session.sessionToken
+    ) {
+      return;
+    }
+    this.connect();
+    this.startHeartbeat();
+    if (!this.socket?.connected) {
+      return;
+    }
+    try {
+      await this.reconnectMatch(
+        this.session.matchId,
+        this.session.playerId,
+        this.session.sessionToken,
+      );
+    } catch (error) {
+      reportRuntimeError(
+        {
+          scope: "RealtimeClient",
+          action: "resume_active_session",
+          metadata: { matchId: this.session.matchId },
+        },
+        error,
+      );
+      await this.resync(
+        this.session.matchId,
+        this.session.playerId,
+        this.session.sessionToken,
+      );
+    }
+  }
+
   connect() {
     if (this.socket) {
       return;
     }
-    const url =
-      process.env.EXPO_PUBLIC_REALTIME_URL?.trim() ||
-      "http://192.168.1.29:3001";
+    const url = resolveRealtimeUrl();
     this.socket = io(url, {
       transports: ["websocket"],
       autoConnect: true,
     });
     this.socket.on("connect", () => {
       this.session = { ...this.session, isConnected: true };
-      if (this.session.active && this.session.matchId && this.session.playerId) {
-        void this.reconnectMatch(this.session.matchId, this.session.playerId).catch(
-          () => {
-            void this.resync(this.session.matchId as string);
-          },
-        );
+      if (
+        this.session.active &&
+        this.session.matchId &&
+        this.session.playerId &&
+        this.session.sessionToken
+      ) {
+        void this.reconnectMatch(
+          this.session.matchId,
+          this.session.playerId,
+          this.session.sessionToken,
+        ).catch((error) => {
+          reportRuntimeError(
+            {
+              scope: "RealtimeClient",
+              action: "reconnect_match",
+              metadata: { matchId: this.session.matchId },
+            },
+            error,
+          );
+          if (
+            this.session.matchId &&
+            this.session.playerId &&
+            this.session.sessionToken
+          ) {
+            void this.resync(
+              this.session.matchId,
+              this.session.playerId,
+              this.session.sessionToken,
+            );
+          }
+        });
       }
       this.startHeartbeat();
       this.listeners.onConnected?.();
@@ -159,11 +264,13 @@ class RealtimeClient {
     const response = await this.emitAck<MatchCreateResult>("match:create", {
       name,
       maxPlayers,
+      accessKey: resolveMultiplayerAccessKey(),
     });
     this.session = {
       active: true,
       matchId: response.state.matchId,
       playerId: response.playerId,
+      sessionToken: response.sessionToken,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
       isQuickMatch: response.state.isQuickMatch,
@@ -179,11 +286,13 @@ class RealtimeClient {
     const response = await this.emitAck<MatchQuickResult>("match:quick", {
       name,
       maxPlayers,
+      accessKey: resolveMultiplayerAccessKey(),
     });
     this.session = {
       active: true,
       matchId: response.state.matchId,
       playerId: response.playerId,
+      sessionToken: response.sessionToken,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
       isQuickMatch: response.state.isQuickMatch,
@@ -200,11 +309,13 @@ class RealtimeClient {
     const response = await this.emitAck<MatchJoinResult>("match:join", {
       matchId: normalizedMatchId,
       name,
+      accessKey: resolveMultiplayerAccessKey(),
     });
     this.session = {
       active: true,
       matchId: response.state.matchId,
       playerId: response.playerId,
+      sessionToken: response.sessionToken,
       playerName: name,
       hostPlayerId: response.state.hostPlayerId,
       isQuickMatch: response.state.isQuickMatch,
@@ -215,19 +326,21 @@ class RealtimeClient {
     return response;
   }
 
-  async reconnectMatch(matchId: string, playerId: string) {
+  async reconnectMatch(matchId: string, playerId: string, sessionToken: string) {
     const socket = this.ensureSocket();
     const response = await this.emitAck<MatchReconnectResult>(
       "match:reconnect",
       {
         matchId: matchId.trim().toUpperCase(),
         playerId,
+        sessionToken,
       },
     );
     this.session = {
       ...this.session,
       active: true,
       matchId: response.state.matchId,
+      sessionToken: response.sessionToken,
       hostPlayerId: response.state.hostPlayerId,
       isQuickMatch: response.state.isQuickMatch,
       isConnected: socket.connected,
@@ -238,36 +351,50 @@ class RealtimeClient {
   }
 
   async leaveMatch() {
-    if (!this.session.active || !this.session.matchId) {
+    if (
+      !this.session.active ||
+      !this.session.matchId ||
+      !this.session.playerId ||
+      !this.session.sessionToken
+    ) {
       return;
     }
-    await this.emitAck<MatchLeaveResult>("match:leave", {
-      matchId: this.session.matchId,
-    });
-    this.session = {
-      active: false,
-      matchId: null,
-      playerId: null,
-      playerName: null,
-      hostPlayerId: null,
-      isQuickMatch: false,
-      isConnected: this.socket?.connected ?? false,
-    };
-    this.latestStateVersion = 1;
-    this.stopHeartbeat();
+    try {
+      await this.emitAck<MatchLeaveResult>("match:leave", {
+        matchId: this.session.matchId,
+        playerId: this.session.playerId,
+        sessionToken: this.session.sessionToken,
+      });
+    } catch (error) {
+      reportRuntimeError(
+        {
+          scope: "RealtimeClient",
+          action: "leave_match",
+          metadata: {
+            matchId: this.session.matchId,
+            playerId: this.session.playerId,
+          },
+        },
+        error,
+      );
+    } finally {
+      this.clearSession();
+    }
   }
 
   async startMatch() {
     if (
       !this.session.active ||
       !this.session.matchId ||
-      !this.session.playerId
+      !this.session.playerId ||
+      !this.session.sessionToken
     ) {
       throw new Error("No active multiplayer session");
     }
     const result = await this.emitAck<MatchStartResult>("match:start", {
       matchId: this.session.matchId,
       playerId: this.session.playerId,
+      sessionToken: this.session.sessionToken,
     });
     this.latestStateVersion = result.state.stateVersion;
     return result;
@@ -277,7 +404,8 @@ class RealtimeClient {
     if (
       !this.session.active ||
       !this.session.matchId ||
-      !this.session.playerId
+      !this.session.playerId ||
+      !this.session.sessionToken
     ) {
       throw new Error("No active multiplayer session");
     }
@@ -285,6 +413,7 @@ class RealtimeClient {
       matchId: this.session.matchId,
       playerId: this.session.playerId,
       ready,
+      sessionToken: this.session.sessionToken,
     });
     this.latestStateVersion = result.state.stateVersion;
     return result;
@@ -294,7 +423,8 @@ class RealtimeClient {
     if (
       !this.session.active ||
       !this.session.matchId ||
-      !this.session.playerId
+      !this.session.playerId ||
+      !this.session.sessionToken
     ) {
       throw new Error("No active multiplayer session");
     }
@@ -302,6 +432,7 @@ class RealtimeClient {
     const result = await this.emitAck<ActionSubmitResult>("action:submit", {
       matchId: this.session.matchId,
       playerId: this.session.playerId,
+      sessionToken: this.session.sessionToken,
       actionId,
       action,
       knownStateVersion: this.latestStateVersion,
@@ -321,6 +452,7 @@ class RealtimeClient {
       active: false,
       matchId: null,
       playerId: null,
+      sessionToken: null,
       playerName: null,
       hostPlayerId: null,
       isQuickMatch: false,
@@ -335,6 +467,7 @@ class RealtimeClient {
       active: false,
       matchId: null,
       playerId: null,
+      sessionToken: null,
       playerName: null,
       hostPlayerId: null,
       isQuickMatch: false,
@@ -344,17 +477,20 @@ class RealtimeClient {
     this.stopHeartbeat();
   }
 
-  private async resync(matchId: string) {
+  private async resync(matchId: string, playerId: string, sessionToken: string) {
     const response = await this.emitAck<ResyncRequestResult>(
       "state:resync_request",
-      { matchId },
+      { matchId, playerId, sessionToken },
     );
     this.latestStateVersion = response.state.stateVersion;
     this.listeners.onSnapshot?.(response.state);
   }
 
   async resyncMatch(matchId: string) {
-    await this.resync(matchId);
+    if (!this.session.playerId || !this.session.sessionToken) {
+      throw new Error("No active multiplayer session");
+    }
+    await this.resync(matchId, this.session.playerId, this.session.sessionToken);
   }
 
   private ensureSocket() {
@@ -378,7 +514,7 @@ class RealtimeClient {
       if (event === "match:create") {
         socket.emit(
           event,
-          payload as { name: string; maxPlayers?: number },
+          payload as { name: string; maxPlayers?: number; accessKey?: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -389,7 +525,7 @@ class RealtimeClient {
       if (event === "match:quick") {
         socket.emit(
           event,
-          payload as { name: string; maxPlayers?: number },
+          payload as { name: string; maxPlayers?: number; accessKey?: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -400,7 +536,7 @@ class RealtimeClient {
       if (event === "match:join") {
         socket.emit(
           event,
-          payload as { matchId: string; name: string },
+          payload as { matchId: string; name: string; accessKey?: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -411,7 +547,7 @@ class RealtimeClient {
       if (event === "match:reconnect") {
         socket.emit(
           event,
-          payload as { matchId: string; playerId: string },
+          payload as { matchId: string; playerId: string; sessionToken: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -420,10 +556,14 @@ class RealtimeClient {
         return;
       }
       if (event === "match:leave") {
-        socket.emit(event, payload as { matchId: string }, (response) => {
-          clearTimeout(timeout);
-          this.resolveAck(response as AckResponse<T>, resolve, reject);
-        });
+        socket.emit(
+          event,
+          payload as { matchId: string; playerId: string; sessionToken: string },
+          (response) => {
+            clearTimeout(timeout);
+            this.resolveAck(response as AckResponse<T>, resolve, reject);
+          },
+        );
         return;
       }
       if (event === "action:submit") {
@@ -432,6 +572,7 @@ class RealtimeClient {
           payload as {
             matchId: string;
             playerId: string;
+            sessionToken: string;
             actionId: string;
             action: RealtimeAction;
             knownStateVersion: number;
@@ -446,7 +587,7 @@ class RealtimeClient {
       if (event === "match:start") {
         socket.emit(
           event,
-          payload as { matchId: string; playerId: string },
+          payload as { matchId: string; playerId: string; sessionToken: string },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -457,7 +598,12 @@ class RealtimeClient {
       if (event === "match:ready") {
         socket.emit(
           event,
-          payload as { matchId: string; playerId: string; ready: boolean },
+          payload as {
+            matchId: string;
+            playerId: string;
+            ready: boolean;
+            sessionToken: string;
+          },
           (response) => {
             clearTimeout(timeout);
             this.resolveAck(response as AckResponse<T>, resolve, reject);
@@ -465,10 +611,14 @@ class RealtimeClient {
         );
         return;
       }
-      socket.emit(event, payload as { matchId: string }, (response) => {
-        clearTimeout(timeout);
-        this.resolveAck(response as AckResponse<T>, resolve, reject);
-      });
+      socket.emit(
+        event,
+        payload as { matchId: string; playerId: string; sessionToken: string },
+        (response) => {
+          clearTimeout(timeout);
+          this.resolveAck(response as AckResponse<T>, resolve, reject);
+        },
+      );
     });
   }
 
@@ -494,6 +644,7 @@ class RealtimeClient {
         !this.session.active ||
         !this.session.matchId ||
         !this.session.playerId ||
+        !this.session.sessionToken ||
         !this.socket.connected
       ) {
         return;
@@ -501,6 +652,7 @@ class RealtimeClient {
       this.socket.emit("player:heartbeat", {
         matchId: this.session.matchId,
         playerId: this.session.playerId,
+        sessionToken: this.session.sessionToken,
       });
     }, 5000);
   }

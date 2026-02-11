@@ -14,9 +14,18 @@ import { useModal } from "@/hooks/useModal";
 import { useSound } from "@/hooks/useSound";
 import { useLocaleSettings } from "@/hooks/useLocale";
 
+const HOME_ROUTE = "/(screens)/Home/HomeScreen";
+
 export function SettingsScreen() {
-  const { isDarkMode, toggleTheme, isColorBlind, toggleColorBlind, theme } =
-    useTheme();
+  const {
+    isDarkMode,
+    toggleTheme,
+    isColorBlind,
+    toggleColorBlind,
+    isFontScalingEnabled,
+    toggleFontScaling,
+    theme,
+  } = useTheme();
   const { isSoundEnabled, toggleSound } = useSound();
   const { language, setLanguage } = useLocaleSettings();
   const settingsStyles = useMemo(() => createSettingsStyles(theme), [theme]);
@@ -29,7 +38,7 @@ export function SettingsScreen() {
   const [legalType, setLegalType] = useState<LegalModalType>("terms");
 
   const handleBack = useCallback(() => {
-    router.back();
+    router.replace(HOME_ROUTE);
   }, [router]);
 
   const handleToggleSound = useCallback(() => {
@@ -58,6 +67,8 @@ export function SettingsScreen() {
           onToggleDarkMode={toggleTheme}
           isSoundEnabled={isSoundEnabled}
           onToggleSound={handleToggleSound}
+          isFontScalingEnabled={isFontScalingEnabled}
+          onToggleFontScaling={toggleFontScaling}
           isColorBlind={isColorBlind}
           onToggleColorBlind={toggleColorBlind}
           language={language}

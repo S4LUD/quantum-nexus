@@ -5,9 +5,11 @@ import { MultiplayerScreen as MultiplayerView } from "@/components/domain/home/M
 import { useGame } from "@/state/GameContext";
 import { useTranslation } from "react-i18next";
 import * as SecureStore from "expo-secure-store";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 const DEFAULT_MAX_PLAYERS = 4;
 const PLAYER_NAME_STORAGE_KEY = "quantum_nexus_player_name";
+const HOME_ROUTE = "/(screens)/Home/HomeScreen";
 
 export function MultiplayerScreen() {
   const router = useRouter();
@@ -34,7 +36,15 @@ export function MultiplayerScreen() {
         }
         setPlayerName(stored);
       })
-      .catch(() => {});
+      .catch((error) => {
+        reportRuntimeError(
+          {
+            scope: "MultiplayerScreen",
+            action: "load_player_name",
+          },
+          error,
+        );
+      });
     return () => {
       mounted = false;
     };
@@ -59,7 +69,15 @@ export function MultiplayerScreen() {
 
   const handlePlayerNameChange = useCallback((value: string) => {
     setPlayerName(value);
-    SecureStore.setItemAsync(PLAYER_NAME_STORAGE_KEY, value).catch(() => {});
+    SecureStore.setItemAsync(PLAYER_NAME_STORAGE_KEY, value).catch((error) => {
+      reportRuntimeError(
+        {
+          scope: "MultiplayerScreen",
+          action: "save_player_name",
+        },
+        error,
+      );
+    });
   }, []);
 
   const handleMatchIdChange = useCallback((value: string) => {
@@ -135,11 +153,7 @@ export function MultiplayerScreen() {
   }, [joinMultiplayerMatch, matchId, playerName, t]);
 
   const handleBack = useCallback(() => {
-    if (router.canGoBack?.()) {
-      router.back();
-      return;
-    }
-    router.replace("/(screens)/Home/HomeScreen");
+    router.replace(HOME_ROUTE);
   }, [router]);
 
   return (

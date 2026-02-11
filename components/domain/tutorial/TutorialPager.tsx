@@ -46,6 +46,25 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
             </Text>
             <View style={tutorialPagerStyles.callout}>
               <Text style={tutorialPagerStyles.calloutTitle}>
+                {t("tutorial.quickStartTitle")}
+              </Text>
+              <View style={tutorialPagerStyles.list}>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.quickStartLine1")}
+                </Text>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.quickStartLine2")}
+                </Text>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.quickStartLine3")}
+                </Text>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.quickStartLine4")}
+                </Text>
+              </View>
+            </View>
+            <View style={tutorialPagerStyles.callout}>
+              <Text style={tutorialPagerStyles.calloutTitle}>
                 {t("tutorial.winConditions")}
               </Text>
               <View style={tutorialPagerStyles.list}>
@@ -287,6 +306,19 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
               <View
                 style={[
                   tutorialPagerStyles.nodeRow,
+                  tutorialPagerStyles.nodeControl,
+                ]}
+              >
+                <Text style={tutorialPagerStyles.energyTitle}>
+                  {t("tutorial.nodeControl")}
+                </Text>
+                <Text style={tutorialPagerStyles.energySubtitle}>
+                  {t("tutorial.nodeControlDesc")}
+                </Text>
+              </View>
+              <View
+                style={[
+                  tutorialPagerStyles.nodeRow,
                   tutorialPagerStyles.nodeProduction,
                 ]}
               >
@@ -310,17 +342,23 @@ export function TutorialPager({ onDone }: TutorialPagerProps) {
                   {t("tutorial.nodeNetworkDesc")}
                 </Text>
               </View>
-              <View
-                style={[
-                  tutorialPagerStyles.nodeRow,
-                  tutorialPagerStyles.nodeControl,
-                ]}
-              >
-                <Text style={tutorialPagerStyles.energyTitle}>
-                  {t("tutorial.nodeControl")}
+            </View>
+            <View style={tutorialPagerStyles.callout}>
+              <Text style={tutorialPagerStyles.calloutTitle}>
+                {t("tutorial.cardReadingTitle")}
+              </Text>
+              <View style={tutorialPagerStyles.list}>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.cardReadingLine1")}
                 </Text>
-                <Text style={tutorialPagerStyles.energySubtitle}>
-                  {t("tutorial.nodeControlDesc")}
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.cardReadingLine2")}
+                </Text>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.cardReadingLine3")}
+                </Text>
+                <Text style={tutorialPagerStyles.listItem}>
+                  {t("tutorial.cardReadingLine4")}
                 </Text>
               </View>
             </View>

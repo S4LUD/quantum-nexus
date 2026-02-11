@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Pressable, ScrollView, View, Platform } from "react-native";
-import { X, Moon, Sun, Volume2, VolumeX, Palette } from "lucide-react-native";
+import {
+  X,
+  Moon,
+  Sun,
+  Volume2,
+  VolumeX,
+  Palette,
+  Type,
+} from "lucide-react-native";
 import Constants from "expo-constants";
 import { useTranslation } from "react-i18next";
 import { Text } from "@/components/ui/Text/Text";
@@ -17,6 +25,8 @@ interface SettingsModalProps {
   onToggleDarkMode: () => void;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
+  isFontScalingEnabled: boolean;
+  onToggleFontScaling: () => void;
   isColorBlind: boolean;
   onToggleColorBlind: () => void;
   language: SupportedLanguage;
@@ -31,6 +41,8 @@ export function SettingsModal({
   onToggleDarkMode,
   isSoundEnabled,
   onToggleSound,
+  isFontScalingEnabled,
+  onToggleFontScaling,
   isColorBlind,
   onToggleColorBlind,
   language,
@@ -48,6 +60,9 @@ export function SettingsModal({
   const toggleAnim = useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
   const soundToggleAnim = useRef(
     new Animated.Value(isSoundEnabled ? 1 : 0),
+  ).current;
+  const fontScalingToggleAnim = useRef(
+    new Animated.Value(isFontScalingEnabled ? 1 : 0),
   ).current;
   const colorBlindToggleAnim = useRef(
     new Animated.Value(isColorBlind ? 1 : 0),
@@ -68,6 +83,14 @@ export function SettingsModal({
       useNativeDriver: true,
     }).start();
   }, [isSoundEnabled, soundToggleAnim]);
+
+  useEffect(() => {
+    Animated.timing(fontScalingToggleAnim, {
+      toValue: isFontScalingEnabled ? 1 : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [fontScalingToggleAnim, isFontScalingEnabled]);
 
   useEffect(() => {
     Animated.timing(colorBlindToggleAnim, {
@@ -95,6 +118,15 @@ export function SettingsModal({
     });
   }, [soundToggleAnim]);
 
+  const fontScalingTranslateX = useMemo(() => {
+    const travel =
+      layout.toggle.width - layout.toggle.thumb - layout.toggle.padding * 2;
+    return fontScalingToggleAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, travel],
+    });
+  }, [fontScalingToggleAnim]);
+
   const colorBlindTranslateX = useMemo(() => {
     const travel =
       layout.toggle.width - layout.toggle.thumb - layout.toggle.padding * 2;
@@ -110,6 +142,10 @@ export function SettingsModal({
 
   const handleSoundToggle = () => {
     onToggleSound();
+  };
+
+  const handleFontScalingToggle = () => {
+    onToggleFontScaling();
   };
 
   const handleColorBlindToggle = () => {
@@ -240,6 +276,44 @@ export function SettingsModal({
                 settingsModalStyles.toggleThumb,
                 isSoundEnabled ? settingsModalStyles.toggleThumbActive : null,
                 { transform: [{ translateX: soundTranslateX }] },
+              ]}
+            />
+          </Pressable>
+        </View>
+
+        <View style={settingsModalStyles.row}>
+          <View style={settingsModalStyles.rowLeft}>
+            <Icon
+              icon={Type}
+              size={layout.icon.lg}
+              color={colors.blue500}
+              fill="none"
+            />
+            <View>
+              <Text style={settingsModalStyles.rowTitle}>
+                {t("settings.fontScaling")}
+              </Text>
+              <Text style={settingsModalStyles.rowSubtitle}>
+                {isFontScalingEnabled
+                  ? t("settings.enabled")
+                  : t("settings.disabled")}
+              </Text>
+            </View>
+          </View>
+          <Pressable
+            onPress={handleFontScalingToggle}
+            style={[
+              settingsModalStyles.toggle,
+              isFontScalingEnabled ? settingsModalStyles.toggleActive : null,
+            ]}
+          >
+            <Animated.View
+              style={[
+                settingsModalStyles.toggleThumb,
+                isFontScalingEnabled
+                  ? settingsModalStyles.toggleThumbActive
+                  : null,
+                { transform: [{ translateX: fontScalingTranslateX }] },
               ]}
             />
           </Pressable>

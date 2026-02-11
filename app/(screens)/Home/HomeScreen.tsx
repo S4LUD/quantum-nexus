@@ -23,8 +23,15 @@ import { useLocaleSettings } from "@/hooks/useLocale";
 export function HomeScreen() {
   const router = useRouter();
   const { initializeGame } = useGame();
-  const { isDarkMode, toggleTheme, isColorBlind, toggleColorBlind, theme } =
-    useTheme();
+  const {
+    isDarkMode,
+    toggleTheme,
+    isColorBlind,
+    toggleColorBlind,
+    isFontScalingEnabled,
+    toggleFontScaling,
+    theme,
+  } = useTheme();
   const { isSoundEnabled, toggleSound } = useSound();
   const { language, setLanguage } = useLocaleSettings();
   const homeStyles = useMemo(() => createHomeStyles(theme), [theme]);
@@ -117,6 +124,10 @@ export function HomeScreen() {
     toggleSound();
   }, [toggleSound]);
 
+  const handleToggleFontScaling = useCallback(() => {
+    toggleFontScaling();
+  }, [toggleFontScaling]);
+
   const handleBotCountChange = useCallback((count: number) => {
     setBotCount(count);
   }, []);
@@ -164,6 +175,8 @@ export function HomeScreen() {
           onToggleDarkMode={handleToggleTheme}
           isSoundEnabled={isSoundEnabled}
           onToggleSound={handleToggleSound}
+          isFontScalingEnabled={isFontScalingEnabled}
+          onToggleFontScaling={handleToggleFontScaling}
           isColorBlind={isColorBlind}
           onToggleColorBlind={toggleColorBlind}
           language={language}

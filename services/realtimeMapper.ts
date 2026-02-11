@@ -41,13 +41,13 @@ export function mapRealtimeStateToGameState(
         state.board.decksByCategory.research
           .map((nodeId) => mapNode(nodeId))
           .filter(isNode),
+        state.board.decksByCategory.control
+          .map((nodeId) => mapNode(nodeId))
+          .filter(isNode),
         state.board.decksByCategory.production
           .map((nodeId) => mapNode(nodeId))
           .filter(isNode),
         state.board.decksByCategory.network
-          .map((nodeId) => mapNode(nodeId))
-          .filter(isNode),
-        state.board.decksByCategory.control
           .map((nodeId) => mapNode(nodeId))
           .filter(isNode),
       ]

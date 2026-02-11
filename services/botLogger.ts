@@ -1,4 +1,5 @@
 import { BotDifficulty } from "@/types";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 interface BotLogPayload {
   playerId: string;
@@ -36,8 +37,14 @@ export async function logBotDecision(payload: BotLogPayload): Promise<void> {
       }),
       signal: controller.signal,
     });
-  } catch {
-    // Ignore logging failures to keep bot turns deterministic.
+  } catch (error) {
+    reportRuntimeError(
+      {
+        scope: "BotLogger",
+        action: "log_bot_decision",
+      },
+      error,
+    );
   } finally {
     clearTimeout(timeoutId);
   }

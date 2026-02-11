@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Vibration, View } from "react-native";
+import { BackHandler, Vibration, View } from "react-native";
 import { useRouter } from "expo-router";
 import { GameTab, GameTabs } from "@/components/domain/game/GameTabs";
 import { useGame } from "@/state/GameContext";
@@ -8,6 +8,7 @@ import { createGameStyles } from "@/components/domain/game/game.styles";
 import { GameHeader } from "@/components/domain/game/GameHeader";
 import { EndGameScreen } from "@/components/domain/game/EndGameScreen/EndGameScreen";
 import { GameBoard } from "@/components/domain/game/GameBoard";
+import { LeaveGameModal } from "@/components/domain/game/LeaveGameModal";
 import { PlayerArea } from "@/components/domain/game/PlayerArea/PlayerArea";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
@@ -28,6 +29,7 @@ const BOT_NOTICE_DURATION_MS = Math.round(animations.botNotice * 1);
 const TURN_VIBRATION_MS = 60;
 const QUICK_MATCH_RECONNECT_MS = 60000;
 const LOBBY_RECONNECT_MS = 180000;
+const HOME_ROUTE = "/(screens)/Home/HomeScreen";
 const MULTIPLAYER_ACTION_NOTICE_KEYS: Record<
   RealtimeAction["type"],
   string | null
@@ -89,6 +91,7 @@ export function GameScreen() {
     [gameState?.players, multiplayerSession.active],
   );
   const [nowMs, setNowMs] = useState(Date.now());
+  const [isLeaveGameModalOpen, setIsLeaveGameModalOpen] = useState(false);
   const [localDisconnectAtMs, setLocalDisconnectAtMs] = useState<number | null>(
     null,
   );
@@ -204,13 +207,34 @@ export function GameScreen() {
     return { market, protocols, players };
   }, [gameState, multiplayerSession.active, multiplayerSession.playerId]);
 
-  const handleBack = useCallback(() => {
+  const isInProgressGame = Boolean(
+    gameState && !gameState.winner && gameState.phase === "playing",
+  );
+
+  const handleExitToHome = useCallback(() => {
     if (multiplayerSession.active) {
       void leaveMultiplayerMatch();
     }
     resetGame();
-    router.back();
+    router.replace(HOME_ROUTE);
   }, [leaveMultiplayerMatch, multiplayerSession.active, resetGame, router]);
+
+  const handleBack = useCallback(() => {
+    if (!isInProgressGame) {
+      handleExitToHome();
+      return;
+    }
+    setIsLeaveGameModalOpen(true);
+  }, [handleExitToHome, isInProgressGame]);
+
+  const handleCancelLeaveGame = useCallback(() => {
+    setIsLeaveGameModalOpen(false);
+  }, []);
+
+  const handleConfirmLeaveGame = useCallback(() => {
+    setIsLeaveGameModalOpen(false);
+    handleExitToHome();
+  }, [handleExitToHome]);
 
   const handleTabChange = useCallback((tab: GameTab) => {
     setSelectedTab(tab);
@@ -495,6 +519,20 @@ export function GameScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    const onHardwareBackPress = () => {
+      handleBack();
+      return true;
+    };
+    const subscription = BackHandler.addEventListener(
+      "hardwareBackPress",
+      onHardwareBackPress,
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, [handleBack]);
+
   return (
     <Screen
       disableHorizontalPadding
@@ -584,6 +622,15 @@ export function GameScreen() {
                 </View>
               </>
             )}
+            <LeaveGameModal
+              isOpen={isLeaveGameModalOpen}
+              title={t("game.leaveGameTitle")}
+              message={t("game.leaveGameMessage")}
+              confirmLabel={t("game.leaveGameConfirm")}
+              cancelLabel={t("game.leaveGameCancel")}
+              onConfirm={handleConfirmLeaveGame}
+              onCancel={handleCancelLeaveGame}
+            />
           </>
         ) : (
           <View style={gameStyles.centerContent}>

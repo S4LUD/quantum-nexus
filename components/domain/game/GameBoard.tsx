@@ -17,16 +17,12 @@ import {
 import { ENERGY_LIMIT } from "@/logic/rules";
 import { getTotalEnergy } from "@/logic/selectors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
-import { EnergyPool } from "./EnergyPool/EnergyPool";
+import { View } from "react-native";
 import { EnergyDiscardModal } from "./EnergyPool/EnergyDiscardModal";
 import { ExchangeModal } from "./EnergyPool/ExchangeModal";
 import { GameState, EnergyType, Protocol, Node } from "./game.types";
 import { createGameBoardStyles } from "./gameBoard.styles";
-import { NodeCard } from "./NodeCard/NodeCard";
 import { NodeDetailModal } from "./NodeCard/NodeDetailModal";
-import { PlayerArea } from "./PlayerArea/PlayerArea";
-import { ProtocolCard } from "./ProtocolCard/ProtocolCard";
 import { Text } from "@/components/ui/Text/Text";
 import { AlertModal } from "@/components/ui/Modal/AlertModal";
 import { ReclaimModal } from "./Effects/ReclaimModal";
@@ -35,6 +31,11 @@ import { useTheme } from "@/hooks/useTheme";
 import { useSound } from "@/hooks/useSound";
 import { useTranslation } from "react-i18next";
 import { RealtimeAction } from "@/types/realtime";
+import { MARKET_CATEGORIES } from "./gameBoard.constants";
+import { MarketTabContent } from "./MarketTabContent";
+import { PlayersTabContent } from "./PlayersTabContent";
+import { ProtocolsTabContent } from "./ProtocolsTabContent";
+import { BeginnerHelpModal, BeginnerHelpTopic } from "./BeginnerHelpModal";
 
 interface GameBoardProps {
   gameState: GameState;
@@ -92,6 +93,8 @@ export function GameBoard({
   const [exchangeGiveSelection, setExchangeGiveSelection] = useState<
     Exclude<EnergyType, "flux">[]
   >([]);
+  const [beginnerHelpTopic, setBeginnerHelpTopic] =
+    useState<BeginnerHelpTopic | null>(null);
   const [alertState, setAlertState] = useState({
     isOpen: false,
     title: "",
@@ -102,6 +105,7 @@ export function GameBoard({
     exchange: false,
     reclaim: false,
     swap: false,
+    beginnerHelp: false,
   });
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
@@ -168,6 +172,26 @@ export function GameBoard({
     setAlertState((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
+  const handleOpenEnergyPoolHelp = useCallback(() => {
+    setBeginnerHelpTopic("energyPool");
+  }, []);
+
+  const handleOpenMarketNodesHelp = useCallback(() => {
+    setBeginnerHelpTopic("marketNodes");
+  }, []);
+
+  const handleOpenProtocolsHelp = useCallback(() => {
+    setBeginnerHelpTopic("protocols");
+  }, []);
+
+  const handleOpenPlayersHelp = useCallback(() => {
+    setBeginnerHelpTopic("players");
+  }, []);
+
+  const handleCloseBeginnerHelp = useCallback(() => {
+    setBeginnerHelpTopic(null);
+  }, []);
+
   const advanceTurn = useCallback(
     (nextState: GameState) => {
       const winner = checkWinConditions(nextState);
@@ -190,17 +214,16 @@ export function GameBoard({
   function handleEnergyToggle(type: EnergyType) {
     play("secondary_click");
     setSelectedEnergy((prev) => {
+      if (type === "flux") {
+        return prev;
+      }
       const countOfType = prev.filter((item) => item === type).length;
       if (countOfType === 2) {
         return prev.filter((item) => item !== type);
       }
       if (countOfType === 1) {
         const isOnlySelection = prev.length === 1;
-        if (
-          isOnlySelection &&
-          type !== "flux" &&
-          gameState.energyPool[type] >= 4
-        ) {
+        if (isOnlySelection && gameState.energyPool[type] >= 4) {
           return [...prev, type];
         }
         const index = prev.indexOf(type);
@@ -221,15 +244,12 @@ export function GameBoard({
         if (unique.size === 1) {
           return prev;
         }
-        if (type === "flux") {
-          return prev;
-        }
         return [...prev, type];
       }
 
       if (prev.length === 1) {
         const existing = prev[0];
-        if (existing === "flux" || type === "flux") {
+        if (existing === "flux") {
           return prev;
         }
         return [...prev, type];
@@ -766,6 +786,7 @@ export function GameBoard({
   useEffect(() => {
     const reclaimOpen = Boolean(pendingReclaim > 0 && postEffectState);
     const swapOpen = Boolean(pendingSwap > 0 && postEffectState);
+    const beginnerHelpOpen = Boolean(beginnerHelpTopic);
     const prev = modalStateRef.current;
     if (prev.node !== isNodeModalOpen) {
       play("modal_whoosh");
@@ -783,7 +804,12 @@ export function GameBoard({
       play("modal_whoosh");
       prev.swap = swapOpen;
     }
+    if (prev.beginnerHelp !== beginnerHelpOpen) {
+      play("modal_whoosh");
+      prev.beginnerHelp = beginnerHelpOpen;
+    }
   }, [
+    beginnerHelpTopic,
     isExchangeOpen,
     isNodeModalOpen,
     pendingReclaim,
@@ -793,72 +819,19 @@ export function GameBoard({
   ]);
 
   const marketRows = useMemo(() => {
-    const categories: Node["category"][] = [
-      "research",
-      "production",
-      "network",
-      "control",
-    ];
-    return categories.map((category, index) => ({
+    return MARKET_CATEGORIES.map((category, index) => ({
       category,
       nodes: gameState.marketNodes[index] || [],
     }));
   }, [gameState.marketNodes]);
-
-  const marketSectionNodes = marketRows.map((row) => {
-    const nodes = row.nodes.map((node) => {
-      if (!node) {
-        return null;
-      }
-      const handlePress = () => handleNodePress(node);
-      return (
-        <View
-          key={node.id}
-          style={{ paddingBottom: 11.5 }}
-          pointerEvents={isPlayerTurn ? "auto" : "none"}
-        >
-          <NodeCard
-            node={node}
-            onPress={isPlayerTurn ? handlePress : undefined}
-            showTitle={false}
-            isAffordable={
-              isPlayerTurn ? canAffordNode(node, currentPlayer) : false
-            }
-          />
-        </View>
-      );
-    });
-
-    return (
-      <View key={row.category} style={gameBoardStyles.section}>
-        <Text style={gameBoardStyles.sectionLabel}>
-          {t(`categories.${row.category}`)} {t("game.nodes")}
-        </Text>
-        <View style={gameBoardStyles.sectionRow}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={gameBoardStyles.row}
-          >
-            {nodes}
-          </ScrollView>
-        </View>
-      </View>
-    );
-  });
-
-  const protocolCards = gameState.protocols.map((protocol) => {
-    const handlePress = () => handleProtocolClaim(protocol);
-    return (
-      <View key={protocol.id} pointerEvents={isPlayerTurn ? "auto" : "none"}>
-        <ProtocolCard
-          protocol={protocol}
-          player={currentPlayer}
-          onPress={isPlayerTurn ? handlePress : undefined}
-        />
-      </View>
-    );
-  });
+  const getCategoryLabel = useCallback(
+    (category: Node["category"]) => `${t(`categories.${category}`)} ${t("game.nodes")}`,
+    [t],
+  );
+  const isNodeAffordable = useCallback(
+    (node: Node) => canAffordNode(node, currentPlayer),
+    [currentPlayer],
+  );
 
   const orderedPlayers = useMemo(() => {
     const players = [...gameState.players];
@@ -871,61 +844,46 @@ export function GameBoard({
     return [...players.slice(primaryIndex), ...players.slice(0, primaryIndex)];
   }, [gameState.players, primaryPlayerId]);
 
-  const renderPlayerArea = useCallback(
-    (player: GameState["players"][number]) => {
-      const isCurrent = player.id === currentPlayer.id;
-      return (
-        <PlayerArea
-          key={player.id}
-          player={player}
-          isCurrentPlayer={isCurrent}
-          onReservedNodePress={
-            isCurrent && isPlayerTurn ? handleReservedNodePress : undefined
-          }
-          disabled={!isPlayerTurn}
-        />
-      );
-    },
-    [currentPlayer.id, handleReservedNodePress, isPlayerTurn],
-  );
-
-  const playerAreas = orderedPlayers.map(renderPlayerArea);
-
   return (
     <View style={gameBoardStyles.container}>
       {selectedTab === "market" ? (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={gameBoardStyles.scrollContent}
-        >
-          <EnergyPool
-            energyPool={gameState.energyPool}
-            selectedEnergy={selectedEnergy}
-            onToggleEnergy={handleEnergyToggle}
-            onCollect={handleCollectEnergy}
-            onExchange={handleOpenExchange}
-            disabled={!isPlayerTurn}
-          />
-          {marketSectionNodes}
-        </ScrollView>
+        <MarketTabContent
+          energyPool={gameState.energyPool}
+          selectedEnergy={selectedEnergy}
+          onToggleEnergy={handleEnergyToggle}
+          onCollectEnergy={handleCollectEnergy}
+          onOpenExchange={handleOpenExchange}
+          onOpenEnergyPoolHelp={handleOpenEnergyPoolHelp}
+          onOpenMarketNodesHelp={handleOpenMarketNodesHelp}
+          isPlayerTurn={isPlayerTurn}
+          marketRows={marketRows}
+          onNodePress={handleNodePress}
+          isNodeAffordable={isNodeAffordable}
+          gameBoardStyles={gameBoardStyles}
+          getCategoryLabel={getCategoryLabel}
+        />
       ) : null}
 
       {selectedTab === "protocols" ? (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={gameBoardStyles.scrollContent}
-        >
-          {protocolCards}
-        </ScrollView>
+        <ProtocolsTabContent
+          protocols={gameState.protocols}
+          currentPlayer={currentPlayer}
+          onProtocolClaim={handleProtocolClaim}
+          onOpenProtocolsHelp={handleOpenProtocolsHelp}
+          isPlayerTurn={isPlayerTurn}
+          gameBoardStyles={gameBoardStyles}
+        />
       ) : null}
 
       {selectedTab === "players" ? (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={gameBoardStyles.scrollContent}
-        >
-          {playerAreas}
-        </ScrollView>
+        <PlayersTabContent
+          players={orderedPlayers}
+          currentPlayerId={currentPlayer.id}
+          onReservedNodePress={handleReservedNodePress}
+          onOpenPlayersHelp={handleOpenPlayersHelp}
+          isPlayerTurn={isPlayerTurn}
+          gameBoardStyles={gameBoardStyles}
+        />
       ) : null}
 
       {selectedNode ? (
@@ -987,6 +945,11 @@ export function GameBoard({
           onSkip={handleSwapSkip}
         />
       ) : null}
+      <BeginnerHelpModal
+        isOpen={Boolean(beginnerHelpTopic)}
+        topic={beginnerHelpTopic}
+        onClose={handleCloseBeginnerHelp}
+      />
       {isInteractionLocked ? (
         <View style={gameBoardStyles.disabledOverlay}>
           <View style={gameBoardStyles.disabledOverlayContent}>

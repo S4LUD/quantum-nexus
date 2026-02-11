@@ -17,16 +17,19 @@ export function Text({
   style,
   numberOfLines,
   ellipsizeMode,
+  allowFontScaling,
 }: TextProps) {
-  const { theme } = useTheme();
+  const { theme, isFontScalingEnabled } = useTheme();
   const textStyles = useMemo(() => createTextStyles(theme), [theme]);
   const variantStyle = variantMap[variant](textStyles);
+  const resolvedAllowFontScaling = allowFontScaling ?? isFontScalingEnabled;
 
   return (
     <RNText
       style={[variantStyle, style]}
       numberOfLines={numberOfLines}
       ellipsizeMode={ellipsizeMode}
+      allowFontScaling={resolvedAllowFontScaling}
     >
       {children}
     </RNText>

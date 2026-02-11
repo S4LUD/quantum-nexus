@@ -9,6 +9,11 @@ export const createEnergyPoolStyles = (theme: Theme) =>
       width: "100%",
       gap: spacing.sm,
     },
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
     energyRow: {
       flexDirection: "row",
       flexWrap: "wrap",

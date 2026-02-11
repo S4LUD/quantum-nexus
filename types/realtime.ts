@@ -158,31 +158,37 @@ export type EventError = {
 
 export type MatchCreateResult = {
   playerId: string;
+  sessionToken: string;
   state: PublicMatchState;
 };
 
 export type MatchQuickResult = {
   playerId: string;
+  sessionToken: string;
   state: PublicMatchState;
 };
 
 export type MatchJoinResult = {
   playerId: string;
+  sessionToken: string;
   state: PublicMatchState;
 };
 
 export type MatchReconnectPayload = {
   matchId: string;
   playerId: string;
+  sessionToken: string;
 };
 
 export type MatchReconnectResult = {
+  sessionToken: string;
   state: PublicMatchState;
 };
 
 export type PlayerHeartbeatPayload = {
   matchId: string;
   playerId: string;
+  sessionToken: string;
 };
 
 export type MatchLeaveResult = {
@@ -212,6 +218,7 @@ export type MultiplayerSession = {
   active: boolean;
   matchId: string | null;
   playerId: string | null;
+  sessionToken: string | null;
   playerName: string | null;
   hostPlayerId: string | null;
   isQuickMatch: boolean;

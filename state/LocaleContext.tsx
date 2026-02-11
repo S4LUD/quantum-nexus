@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useSt
 import * as SecureStore from "expo-secure-store";
 import * as Localization from "expo-localization";
 import { initI18n, SupportedLanguage, supportedLanguages } from "@/i18n";
+import { reportRuntimeError } from "@/utils/runtimeError";
 
 interface LocaleContextValue {
   language: SupportedLanguage;
@@ -37,7 +38,16 @@ export function LocaleProvider({ children }: LocaleProviderProps) {
     (next: SupportedLanguage) => {
       setLanguageState(next);
       initI18n(next);
-      SecureStore.setItemAsync(storageKey, next).catch(() => {});
+      SecureStore.setItemAsync(storageKey, next).catch((error) => {
+        reportRuntimeError(
+          {
+            scope: "LocaleContext",
+            action: "save_language",
+            metadata: { language: next },
+          },
+          error,
+        );
+      });
     },
     [storageKey],
   );
@@ -55,7 +65,14 @@ export function LocaleProvider({ children }: LocaleProviderProps) {
           return;
         }
         applyLanguage(resolveSystemLanguage());
-      } catch {
+      } catch (error) {
+        reportRuntimeError(
+          {
+            scope: "LocaleContext",
+            action: "load_language",
+          },
+          error,
+        );
         applyLanguage(resolveSystemLanguage());
       }
     };

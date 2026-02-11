@@ -40,11 +40,7 @@ export function LobbyScreen() {
     try {
       setIsSubmitting(true);
       await leaveMultiplayerMatch();
-      if (router.canGoBack?.()) {
-        router.back();
-      } else {
-        router.replace("/(screens)/Multiplayer");
-      }
+      router.replace("/(screens)/Multiplayer");
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : t("lobby.errors.leave"),

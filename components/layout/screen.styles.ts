@@ -1,4 +1,3 @@
-import { layout } from "@/constants/layout";
 import { spacing } from "@/constants/spacing";
 import { StyleSheet } from "react-native";
 import { Theme } from "@/constants/theme";

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { BeginnerHelpTrigger } from "../BeginnerHelpTrigger";
 
 interface EnergyPoolProps {
   energyPool: Record<EnergyType, number>;
@@ -14,6 +15,7 @@ interface EnergyPoolProps {
   onToggleEnergy: (type: EnergyType) => void;
   onCollect: () => void;
   onExchange: () => void;
+  onOpenHelp?: () => void;
   disabled?: boolean;
 }
 
@@ -23,6 +25,7 @@ export function EnergyPool({
   onToggleEnergy,
   onCollect,
   onExchange,
+  onOpenHelp,
   disabled = false,
 }: EnergyPoolProps) {
   const { theme } = useTheme();
@@ -41,7 +44,7 @@ export function EnergyPool({
 
   const energyButtons = energyTypes.map((type) => {
     const isSelected = selectedEnergy.includes(type);
-    const isDisabled = energyPool[type] === 0 || disabled;
+    const isDisabled = energyPool[type] === 0 || disabled || type === "flux";
 
     const handlePress = () => {
       onToggleEnergy(type);
@@ -63,10 +66,16 @@ export function EnergyPool({
   });
 
   return (
-    <View
-      style={energyPoolStyles.container}
-    >
-      <Text variant="caption">{t("energyPool.title")}</Text>
+    <View style={energyPoolStyles.container}>
+      <View style={energyPoolStyles.titleRow}>
+        <Text variant="caption">{t("energyPool.title")}</Text>
+        {onOpenHelp ? (
+          <BeginnerHelpTrigger
+            onPress={onOpenHelp}
+            accessibilityLabel={t("beginnerHelp.energyPool.buttonLabel")}
+          />
+        ) : null}
+      </View>
       <View style={energyPoolStyles.energyRow}>{energyButtons}</View>
       {selectedEnergy.length > 0 && (
         <Button

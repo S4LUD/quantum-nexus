@@ -2,6 +2,7 @@ import { spacing } from "@/constants/spacing";
 import { typography } from "@/constants/typography";
 import { StyleSheet } from "react-native";
 import { Theme } from "@/constants/theme";
+import { MARKET_NODE_BOTTOM_PADDING } from "./gameBoard.constants";
 
 export const createGameBoardStyles = (theme: Theme) =>
   StyleSheet.create({
@@ -57,8 +58,18 @@ export const createGameBoardStyles = (theme: Theme) =>
       fontFamily: typography.fontFamily.medium,
       textTransform: "uppercase",
     },
+    helpHeaderRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
     row: {
       gap: spacing.sm,
       paddingHorizontal: spacing.md,
     },
+    marketNodeWrapper: {
+      paddingBottom: MARKET_NODE_BOTTOM_PADDING,
+    },
   });
+
+export type GameBoardStyles = ReturnType<typeof createGameBoardStyles>;

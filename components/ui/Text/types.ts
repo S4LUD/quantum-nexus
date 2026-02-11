@@ -9,4 +9,5 @@ export interface TextProps {
   style?: StyleProp<TextStyle>;
   numberOfLines?: RNTextProps["numberOfLines"];
   ellipsizeMode?: RNTextProps["ellipsizeMode"];
+  allowFontScaling?: RNTextProps["allowFontScaling"];
 }
