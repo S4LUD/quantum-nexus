@@ -4,6 +4,7 @@
     "darkMode": "Mode Gelap",
     "soundEffects": "Efek Suara",
     "colorBlindMode": "Bantuan Buta Warna",
+    "fontScaling": "Ukuran Font Perangkat",
     "theme": "Tema",
     "enableDarkMode": "Aktifkan Mode Gelap",
     "disableDarkMode": "Nonaktifkan Mode Gelap",
@@ -24,36 +25,36 @@
     "splashAnd": "and",
     "terms": {
       "title": "Terms of Service",
-      "updated": "Last updated February 7, 2026",
-      "intro": "These Terms govern your use of Quantum Nexus. By using the game, you agree to these Terms.",
+      "updated": "Last updated February 11, 2026",
+      "intro": "These Terms of Service constitute a legally binding agreement between you and the publisher of Quantum Nexus. By installing, accessing, or using the game, you acknowledge that you have read, understood, and agree to be bound by these Terms.",
       "sections": {
-        "licenseTitle": "License",
-        "licenseBody": "You are granted a personal, non-exclusive, non-transferable license to use the game for personal, non-commercial entertainment.",
-        "acceptableTitle": "Acceptable Use",
-        "acceptableBody": "Do not hack, reverse engineer, or attempt to interfere with the game. Do not use automation, exploits, or unauthorized tools.",
-        "contentTitle": "User Content",
-        "contentBody": "Quantum Nexus does not accept user-generated content at this time.",
-        "liabilityTitle": "Disclaimer",
-        "liabilityBody": "The game is provided \"as is\" without warranties. To the maximum extent permitted by law, we are not liable for damages arising from use of the game.",
-        "changesTitle": "Changes",
-        "changesBody": "We may update these Terms from time to time. Continued use after updates indicates acceptance."
+        "licenseTitle": "License Grant and Ownership",
+        "licenseBody": "Subject to your ongoing compliance with these Terms, you are granted a limited, revocable, non-exclusive, non-transferable, and non-sublicensable license to install and use Quantum Nexus for personal, non-commercial entertainment. All intellectual property rights, title, and interest in the game, its content, and all related materials are reserved by the publisher and its licensors.",
+        "acceptableTitle": "Acceptable Use and Enforcement",
+        "acceptableBody": "You must not decompile, reverse engineer, tamper with, disrupt, or attempt unauthorized access to any service, network, or game system. You must not use automation, exploits, or methods that manipulate fair play. The publisher may investigate suspected violations and may suspend or terminate access, remove participation from multiplayer sessions, or apply other reasonable enforcement measures.",
+        "contentTitle": "Online Sessions and User Identifiers",
+        "contentBody": "To participate in multiplayer, you provide a display name and receive session credentials. You are responsible for activity conducted through your session while it is active on your device. You must not impersonate others, use unlawful or abusive identifiers, or submit content that violates applicable law. Quantum Nexus currently does not provide public user-generated uploads or chat features.",
+        "liabilityTitle": "Disclaimers, Limitation of Liability, and Indemnity",
+        "liabilityBody": "Quantum Nexus is provided on an \"as is\" and \"as available\" basis without warranties of any kind, to the fullest extent permitted by law. To the fullest extent permitted by law, the publisher and its service providers are not liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or for loss of data, revenue, or goodwill arising from or related to use of the game. You agree to indemnify and hold harmless the publisher from claims arising from your breach of these Terms or misuse of the service.",
+        "changesTitle": "Changes, Governing Law, and Contact",
+        "changesBody": "The publisher may revise these Terms at any time. Updated Terms become effective when posted with a revised date, and continued use constitutes acceptance. These Terms are governed by the laws applicable in the publisher's principal place of business, excluding conflict-of-law rules. If you have legal questions or requests, use the support contact listed in the official app store page."
       }
     },
     "privacy": {
       "title": "Privacy Policy",
-      "updated": "Last updated February 7, 2026",
-      "intro": "Quantum Nexus includes online multiplayer. We process limited data to run realtime sessions.",
+      "updated": "Last updated February 11, 2026",
+      "intro": "This Privacy Policy explains how Quantum Nexus processes information when you use gameplay and multiplayer features.",
       "sections": {
-        "dataTitle": "Data Collection",
-        "dataBody": "We do not sell personal data or use third-party analytics or ads. For multiplayer, we process player name, match ID, and match state to run the session.",
-        "permissionsTitle": "Permissions",
-        "permissionsBody": "The app may request audio-related permissions to support sound playback and system audio behavior.",
-        "storageTitle": "Local Storage",
-        "storageBody": "Game progress is stored locally on your device. Multiplayer session data is kept only for the duration of a session on the server.",
-        "childrenTitle": "Children's Privacy",
-        "childrenBody": "We do not knowingly collect personal data from children because we do not collect any data.",
-        "changesTitle": "Changes",
-        "changesBody": "If this policy changes, we will update the date shown here."
+        "dataTitle": "Categories of Data Processed",
+        "dataBody": "We process only data necessary to operate the game and protect service integrity: player display name, match identifier, multiplayer state, session token metadata, and operational telemetry required for reliability and abuse prevention. We do not sell personal data and we do not use third-party advertising or behavioral analytics.",
+        "permissionsTitle": "Purposes, Legal Basis, and Permissions",
+        "permissionsBody": "Data processing is performed to provide core multiplayer functionality, maintain security, prevent abuse, and troubleshoot service issues. Where applicable law requires a legal basis, processing is performed to provide requested services, to pursue legitimate interests in security and stability, or based on consent where required. The app may request audio-related permissions to support sound playback and system audio behavior.",
+        "storageTitle": "Retention, Storage Location, and Security",
+        "storageBody": "Single-player progress is stored locally on your device until you delete app data or uninstall the app. Multiplayer state is stored on server infrastructure and in managed cache snapshots for continuity, reconnection, and operational recovery, then removed according to session lifecycle and service retention controls. We apply reasonable technical and organizational safeguards, but no transmission or storage method can be guaranteed as absolutely secure.",
+        "childrenTitle": "Children's Data and User Rights",
+        "childrenBody": "Quantum Nexus is not directed to children under the age threshold defined by applicable law. We do not knowingly collect personal data from children for profiling or marketing. If you believe a child submitted personal data, contact us to request review and deletion. Depending on your jurisdiction, you may request access, correction, deletion, or objection related to data processing, subject to verification and legal limitations.",
+        "changesTitle": "Policy Updates and Contact",
+        "changesBody": "We may amend this Privacy Policy from time to time. Material updates are reflected by the revised \"Last updated\" date. Questions, privacy requests, or data-rights requests should be sent through the support contact listed in the official app store page."
       }
     }
   },
@@ -173,7 +174,11 @@
     "networkSize": "Ukuran Jaringan",
     "protocolMastery": "Penguasaan Protokol",
     "efficiencyThreshold": "Ambang Efisiensi",
-    "noActiveGame": "Tidak ada game aktif."
+    "noActiveGame": "Tidak ada game aktif.",
+    "leaveGameTitle": "Keluar dari game ini?",
+    "leaveGameMessage": "Progres pertandingan saat ini akan hilang.",
+    "leaveGameConfirm": "Keluar Game",
+    "leaveGameCancel": "Tetap"
   },
   "player": {
     "you": "Anda",
@@ -297,6 +302,11 @@
     "welcomeTitle": "Selamat datang di Quantum Nexus",
     "welcomeBody1": "Bangun jaringan komputasi kuantum dengan Kumpulkan Energi dan Bangun Simpul.",
     "welcomeBody2": "Menanglah dengan Efficiency, ukuran Jaringan, atau penguasaan Protokol.",
+    "quickStartTitle": "Quick Start (First Turns)",
+    "quickStartLine1": "• Turn 1: Collect 3 different Energy types.",
+    "quickStartLine2": "• Turn 2: Collect again or Exchange to match one Node cost.",
+    "quickStartLine3": "• Turn 3: Build your first Node (or Reserve one if you are still short).",
+    "quickStartLine4": "• Repeat: Build steady output first, then chase Protocols.",
     "winConditions": "Syarat Menang",
     "winConditionEfficiency": "• Capai 20★ Efficiency setelah giliran 20",
     "winConditionNodes": "• Bangun Simpul sesuai kebutuhan (2P: 13 / 3P: 15 / 4P: 17)",
@@ -332,6 +342,11 @@
     "nodeNetworkDesc": "Tambahan kompleks bernilai tinggi",
     "nodeControl": "Control Simpul",
     "nodeControlDesc": "Efek utilitas dan fleksibilitas",
+    "cardReadingTitle": "How to Read a Node",
+    "cardReadingLine1": "• Top: category and Efficiency value.",
+    "cardReadingLine2": "• Cost section: the Energy you must pay to Build.",
+    "cardReadingLine3": "• Output icon: the type of Output this Node adds to your network.",
+    "cardReadingLine4": "• Special effect text: bonus effect that triggers by its rule.",
     "outputTitle": "Pembangkitan Output",
     "outputBody": "Setiap Simpul menghasilkan 1 output sesuai tipe, dihitung untuk syarat Protokol dan mengurangi biaya Energi terkait sebesar 1 saat Bangun Simpul (hanya Energi dasar).",
     "protocolsTitle": "Protokol",
@@ -356,6 +371,44 @@
     "previous": "Sebelumnya",
     "next": "Berikutnya",
     "gotIt": "Mengerti"
+  },
+  "beginnerHelp": {
+    "energyPool": {
+      "title": "Energy Pool Basics",
+      "buttonLabel": "Open Energy Pool beginner help",
+      "line1": "The Energy Pool is the shared source for all players.",
+      "line2": "Collect gives you Energy to Build Nodes.",
+      "line3": "Flux cannot be collected directly from the Pool. Gain Flux by reserving a Node.",
+      "line4": "Use Exchange when your current Energy types do not match the Node cost."
+    },
+    "marketNodes": {
+      "sectionLabel": "Node Help",
+      "buttonLabel": "Open Node beginner help",
+      "title": "Node Basics",
+      "line1": "A Node is a project you Build into your network.",
+      "line2": "Each Node shows an Energy cost, Efficiency value, Output type, and optional special effect.",
+      "line3": "If you cannot Build a Node yet, reserve it to hold it for later and gain Flux.",
+      "line4": "Output helps with Protocol requirements and can reduce matching Energy cost when building.",
+      "line5": "Beginner routine: Collect Energy, Build a low-cost Node, then expand category by category."
+    },
+    "protocols": {
+      "sectionLabel": "Protocol Help",
+      "buttonLabel": "Open Protocol beginner help",
+      "title": "Protocol Basics",
+      "line1": "Protocols are claimed upgrades with ongoing effects and Efficiency value.",
+      "line2": "Requirements use your current Output generation, not Energy in hand.",
+      "line3": "Claiming is active: when requirements are met, tap the Protocol to claim it.",
+      "line4": "Early Protocol claims can unlock strong momentum for later turns."
+    },
+    "players": {
+      "sectionLabel": "Player Panel Help",
+      "buttonLabel": "Open Player panel beginner help",
+      "title": "Player Panel Basics",
+      "line1": "This tab shows each player's Energy, Nodes, Protocols, and Efficiency.",
+      "line2": "Check opponents to predict what they can Build next.",
+      "line3": "Reserved Nodes are private to that player and can be built later.",
+      "line4": "If unsure, focus on your panel first: keep Build options open every turn."
+    }
   },
   "botNotice": {
     "reservedNode": "{{name}} telah melakukan reservasi Simpul.",

@@ -1,6 +1,6 @@
 {
   "name": "quantum-nexus",
-  "version": "1.2.26",
+  "version": "1.2.44",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -8,8 +8,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "server:dev": "npm --prefix server run dev",
-    "server:build": "npm --prefix server run build"
+    "lint:ci": "npx eslint app components constants hooks i18n logic services state types utils quantum-nexus-server/src --max-warnings=0",
+    "typecheck": "npx tsc --noEmit",
+    "app:build:ci": "npx expo export --platform web --output-dir .expo-build",
+    "server:dev": "npm --prefix quantum-nexus-server run dev",
+    "server:build": "npm --prefix quantum-nexus-server run build",
+    "server:test": "npm --prefix quantum-nexus-server run test",
+    "ci:validate": "npm run lint:ci && npm run typecheck && npm run app:build:ci && npm run server:build && npm run server:test"
   },
   "dependencies": {
     "expo": "~54.0.33",
