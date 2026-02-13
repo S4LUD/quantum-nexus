@@ -359,6 +359,10 @@ class RealtimeClient {
     ) {
       return;
     }
+    if (!this.session.isConnected || !this.socket?.connected) {
+      this.clearSession();
+      return;
+    }
     try {
       await this.emitAck<MatchLeaveResult>("match:leave", {
         matchId: this.session.matchId,
