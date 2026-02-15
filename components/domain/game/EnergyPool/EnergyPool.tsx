@@ -1,11 +1,11 @@
-import { View, Pressable } from "react-native";
+import { LayoutChangeEvent, Pressable, View } from "react-native";
 import { createEnergyPoolStyles } from "./energyPool.styles";
 import { EnergyType } from "../game.types";
 import { EnergyBadge } from "./EnergyIcon";
 import { Text } from "@/components/ui/Text/Text";
 import { Button } from "@/components/ui/Button/Button";
 import { useTheme } from "@/hooks/useTheme";
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BeginnerHelpTrigger } from "../BeginnerHelpTrigger";
 
@@ -16,6 +16,7 @@ interface EnergyPoolProps {
   onCollect: () => void;
   onExchange: () => void;
   onOpenHelp?: () => void;
+  onMeasured?: (coords: { centerX: number; centerY: number }) => void;
   disabled?: boolean;
 }
 
@@ -26,6 +27,7 @@ export function EnergyPool({
   onCollect,
   onExchange,
   onOpenHelp,
+  onMeasured,
   disabled = false,
 }: EnergyPoolProps) {
   const { theme } = useTheme();
@@ -34,6 +36,7 @@ export function EnergyPool({
     () => createEnergyPoolStyles(theme),
     [theme],
   );
+  const containerRef = useRef<View | null>(null);
   const energyTypes: EnergyType[] = [
     "solar",
     "hydro",
@@ -65,8 +68,23 @@ export function EnergyPool({
     );
   });
 
+  const handleLayout = useCallback(
+    (_event: LayoutChangeEvent) => {
+      if (!onMeasured || !containerRef.current) {
+        return;
+      }
+      containerRef.current.measureInWindow((x, y, width, height) => {
+        onMeasured({
+          centerX: x + width / 2,
+          centerY: y + height / 2,
+        });
+      });
+    },
+    [onMeasured],
+  );
+
   return (
-    <View style={energyPoolStyles.container}>
+    <View ref={containerRef} style={energyPoolStyles.container} onLayout={handleLayout}>
       <View style={energyPoolStyles.titleRow}>
         <Text variant="caption">{t("energyPool.title")}</Text>
         {onOpenHelp ? (

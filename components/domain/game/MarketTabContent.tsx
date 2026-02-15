@@ -20,6 +20,7 @@ interface MarketTabContentProps {
   onCollectEnergy: () => void;
   onOpenExchange: () => void;
   onOpenEnergyPoolHelp: () => void;
+  onEnergyPoolMeasured?: (coords: { centerX: number; centerY: number }) => void;
   onOpenMarketNodesHelp: () => void;
   isPlayerTurn: boolean;
   marketRows: MarketRow[];
@@ -36,6 +37,7 @@ export function MarketTabContent({
   onCollectEnergy,
   onOpenExchange,
   onOpenEnergyPoolHelp,
+  onEnergyPoolMeasured,
   onOpenMarketNodesHelp,
   isPlayerTurn,
   marketRows,
@@ -98,6 +100,7 @@ export function MarketTabContent({
         onCollect={onCollectEnergy}
         onExchange={onOpenExchange}
         onOpenHelp={onOpenEnergyPoolHelp}
+        onMeasured={onEnergyPoolMeasured}
         disabled={!isPlayerTurn}
       />
       <View style={gameBoardStyles.helpHeaderRow}>

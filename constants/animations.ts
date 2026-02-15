@@ -5,4 +5,12 @@ export const animations = {
   pressDebounce: 300,
   botNotice: 2200,
   botTurnDelay: 850,
+  nodeBuildFlyoverPop: 220,
+  nodeBuildFlyoverTravel: 460,
+  nodeBuildFlyoverFade: 140,
+  tabPulseScale: 1.07,
+  tabPulseDuration: 160,
+  energyCollectFlyoverTravel: 420,
+  energyCollectFlyoverFade: 140,
+  energyCollectFlyoverStagger: 60,
 };

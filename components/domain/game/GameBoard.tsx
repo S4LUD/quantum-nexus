@@ -48,6 +48,8 @@ interface GameBoardProps {
   reconnectingLabel?: string | null;
   pauseLabel?: string | null;
   onSubmitMultiplayerAction?: (action: RealtimeAction) => Promise<boolean>;
+  onCollectEnergyEvent?: (energy: Exclude<EnergyType, "flux">[]) => void;
+  onEnergyPoolMeasured?: (coords: { centerX: number; centerY: number }) => void;
 }
 
 const BASE_ENERGY_TYPES: Exclude<EnergyType, "flux">[] = [
@@ -68,6 +70,8 @@ export function GameBoard({
   reconnectingLabel = null,
   pauseLabel = null,
   onSubmitMultiplayerAction,
+  onCollectEnergyEvent,
+  onEnergyPoolMeasured,
 }: GameBoardProps) {
   const { theme } = useTheme();
   const { play } = useSound();
@@ -278,6 +282,12 @@ export function GameBoard({
         validation.error || t("alerts.invalidActionMessage"),
       );
       return;
+    }
+    const collectedEnergy = selectedEnergy.filter(
+      (type): type is Exclude<EnergyType, "flux"> => type !== "flux",
+    );
+    if (collectedEnergy.length > 0 && onCollectEnergyEvent) {
+      onCollectEnergyEvent(collectedEnergy);
     }
     if (isMultiplayer && onSubmitMultiplayerAction) {
       const action: RealtimeAction = {
@@ -851,10 +861,11 @@ export function GameBoard({
           energyPool={gameState.energyPool}
           selectedEnergy={selectedEnergy}
           onToggleEnergy={handleEnergyToggle}
-          onCollectEnergy={handleCollectEnergy}
-          onOpenExchange={handleOpenExchange}
-          onOpenEnergyPoolHelp={handleOpenEnergyPoolHelp}
-          onOpenMarketNodesHelp={handleOpenMarketNodesHelp}
+        onCollectEnergy={handleCollectEnergy}
+        onOpenExchange={handleOpenExchange}
+        onOpenEnergyPoolHelp={handleOpenEnergyPoolHelp}
+        onEnergyPoolMeasured={onEnergyPoolMeasured}
+        onOpenMarketNodesHelp={handleOpenMarketNodesHelp}
           isPlayerTurn={isPlayerTurn}
           marketRows={marketRows}
           onNodePress={handleNodePress}

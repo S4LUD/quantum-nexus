@@ -3,6 +3,8 @@ import { getTheme, Theme, ThemeMode } from "@/constants/theme";
 import * as SecureStore from "expo-secure-store";
 import { reportRuntimeError } from "@/utils/runtimeError";
 
+export type AnimationIntensity = "full" | "reduced" | "off";
+
 interface ThemeContextValue {
   theme: Theme;
   mode: ThemeMode;
@@ -12,6 +14,8 @@ interface ThemeContextValue {
   toggleColorBlind: () => void;
   isFontScalingEnabled: boolean;
   toggleFontScaling: () => void;
+  animationIntensity: AnimationIntensity;
+  setAnimationIntensity: (intensity: AnimationIntensity) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -24,9 +28,12 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [mode, setMode] = useState<ThemeMode>("dark");
   const [isColorBlind, setIsColorBlind] = useState(false);
   const [isFontScalingEnabled, setIsFontScalingEnabled] = useState(false);
+  const [animationIntensity, setAnimationIntensity] =
+    useState<AnimationIntensity>("full");
   const storageKey = "quantum_nexus_theme_mode";
   const colorBlindKey = "quantum_nexus_color_blind";
   const fontScalingKey = "quantum_nexus_font_scaling";
+  const animationIntensityKey = "quantum_nexus_animation_intensity";
 
   useEffect(() => {
     let isMounted = true;
@@ -147,6 +154,48 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     });
   }, [isFontScalingEnabled]);
 
+  useEffect(() => {
+    let isMounted = true;
+    const loadAnimationIntensity = async () => {
+      try {
+        const stored = await SecureStore.getItemAsync(animationIntensityKey);
+        if (!isMounted || !stored) {
+          return;
+        }
+        if (stored === "full" || stored === "reduced" || stored === "off") {
+          setAnimationIntensity(stored);
+        }
+      } catch (error) {
+        reportRuntimeError(
+          {
+            scope: "ThemeContext",
+            action: "load_animation_intensity",
+          },
+          error,
+        );
+      }
+    };
+    loadAnimationIntensity();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    SecureStore.setItemAsync(animationIntensityKey, animationIntensity).catch(
+      (error) => {
+        reportRuntimeError(
+          {
+            scope: "ThemeContext",
+            action: "save_animation_intensity",
+            metadata: { animationIntensity },
+          },
+          error,
+        );
+      },
+    );
+  }, [animationIntensity]);
+
   const toggleTheme = useCallback(() => {
     setMode((prev) => (prev === "dark" ? "light" : "dark"));
   }, []);
@@ -170,6 +219,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       toggleColorBlind,
       isFontScalingEnabled,
       toggleFontScaling,
+      animationIntensity,
+      setAnimationIntensity,
     };
   }, [
     mode,
@@ -178,6 +229,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     toggleColorBlind,
     isFontScalingEnabled,
     toggleFontScaling,
+    animationIntensity,
+    setAnimationIntensity,
   ]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

@@ -24,6 +24,8 @@ export function SettingsScreen() {
     toggleColorBlind,
     isFontScalingEnabled,
     toggleFontScaling,
+    animationIntensity,
+    setAnimationIntensity,
     theme,
   } = useTheme();
   const { isSoundEnabled, toggleSound } = useSound();
@@ -71,6 +73,8 @@ export function SettingsScreen() {
           onToggleFontScaling={toggleFontScaling}
           isColorBlind={isColorBlind}
           onToggleColorBlind={toggleColorBlind}
+          animationIntensity={animationIntensity}
+          onSelectAnimationIntensity={setAnimationIntensity}
           language={language}
           onSelectLanguage={setLanguage}
           onOpenTerms={handleOpenTerms}

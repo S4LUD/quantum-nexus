@@ -6,6 +6,7 @@ import { colors } from "@/constants/colors";
 
 type GameTabsStyles = {
   container: ViewStyle;
+  playersPulseWrap: ViewStyle;
   tab: ViewStyle;
   tabActive: ViewStyle;
   tabContent: ViewStyle;
@@ -24,6 +25,9 @@ export const createGameTabsStyles = (theme: Theme) =>
       justifyContent: "space-between",
       gap: spacing.md,
       marginBottom: spacing.md,
+    },
+    playersPulseWrap: {
+      flex: 1,
     },
     tab: {
       flex: 1,

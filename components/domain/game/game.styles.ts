@@ -13,6 +13,7 @@ export const createGameStyles = (theme: Theme) =>
       paddingHorizontal: spacing.lg,
     },
     footerPanel: {
+      position: "relative",
       backgroundColor:
         theme.mode === "light"
           ? theme.colors.surfaceStrong
@@ -20,6 +21,18 @@ export const createGameStyles = (theme: Theme) =>
       paddingTop: spacing.sm,
       paddingBottom: spacing.sm,
       overflow: "visible",
+    },
+    playerAreaPulse: {
+      position: "absolute",
+      width: 220,
+      height: 92,
+      borderRadius: 46,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.surfaceMuted,
+      left: "50%",
+      marginLeft: -110,
+      top: spacing.xxs,
     },
     footerOverlay: {
       position: "absolute",

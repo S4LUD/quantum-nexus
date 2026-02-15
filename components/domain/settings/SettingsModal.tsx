@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, ScrollView, View, Platform } from "react-native";
 import {
   X,
@@ -8,6 +8,9 @@ import {
   VolumeX,
   Palette,
   Type,
+  Zap,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react-native";
 import Constants from "expo-constants";
 import { useTranslation } from "react-i18next";
@@ -19,6 +22,7 @@ import { layout } from "@/constants/layout";
 import { createSettingsModalStyles } from "./settingsModal.styles";
 import { useTheme } from "@/hooks/useTheme";
 import { SupportedLanguage, languageLabels } from "@/i18n";
+import { AnimationIntensity } from "@/state/ThemeContext";
 
 interface SettingsModalProps {
   isDarkMode: boolean;
@@ -29,6 +33,8 @@ interface SettingsModalProps {
   onToggleFontScaling: () => void;
   isColorBlind: boolean;
   onToggleColorBlind: () => void;
+  animationIntensity: AnimationIntensity;
+  onSelectAnimationIntensity: (intensity: AnimationIntensity) => void;
   language: SupportedLanguage;
   onSelectLanguage: (language: SupportedLanguage) => void;
   onOpenTerms: () => void;
@@ -45,6 +51,8 @@ export function SettingsModal({
   onToggleFontScaling,
   isColorBlind,
   onToggleColorBlind,
+  animationIntensity,
+  onSelectAnimationIntensity,
   language,
   onSelectLanguage,
   onOpenTerms,
@@ -67,6 +75,8 @@ export function SettingsModal({
   const colorBlindToggleAnim = useRef(
     new Animated.Value(isColorBlind ? 1 : 0),
   ).current;
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [isAnimationOpen, setIsAnimationOpen] = useState(false);
 
   useEffect(() => {
     Animated.timing(toggleAnim, {
@@ -151,28 +161,55 @@ export function SettingsModal({
   const handleColorBlindToggle = () => {
     onToggleColorBlind();
   };
+  const handleSelectAnimationFull = useCallback(() => {
+    onSelectAnimationIntensity("full");
+    setIsAnimationOpen(false);
+  }, [onSelectAnimationIntensity]);
+  const handleSelectAnimationReduced = useCallback(() => {
+    onSelectAnimationIntensity("reduced");
+    setIsAnimationOpen(false);
+  }, [onSelectAnimationIntensity]);
+  const handleSelectAnimationOff = useCallback(() => {
+    onSelectAnimationIntensity("off");
+    setIsAnimationOpen(false);
+  }, [onSelectAnimationIntensity]);
+  const handleToggleAnimationDropdown = useCallback(() => {
+    setIsAnimationOpen((prev) => !prev);
+    setIsLanguageOpen(false);
+  }, []);
 
   const handleSelectEnglish = useCallback(() => {
     onSelectLanguage("en");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectChinese = useCallback(() => {
     onSelectLanguage("zh");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectJapanese = useCallback(() => {
     onSelectLanguage("ja");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectKorean = useCallback(() => {
     onSelectLanguage("ko");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectThai = useCallback(() => {
     onSelectLanguage("th");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectIndonesian = useCallback(() => {
     onSelectLanguage("id");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
   const handleSelectRussian = useCallback(() => {
     onSelectLanguage("ru");
+    setIsLanguageOpen(false);
   }, [onSelectLanguage]);
+  const handleToggleLanguageDropdown = useCallback(() => {
+    setIsLanguageOpen((prev) => !prev);
+    setIsAnimationOpen(false);
+  }, []);
 
   const handleOpenTerms = useCallback(() => {
     onOpenTerms();
@@ -354,101 +391,205 @@ export function SettingsModal({
         </View>
 
         <View style={settingsModalStyles.section}>
+          <View style={settingsModalStyles.rowLeft}>
+            <Icon
+              icon={Zap}
+              size={layout.icon.lg}
+              color={colors.orange400}
+              fill="none"
+            />
+            <View>
+              <Text style={settingsModalStyles.rowTitle}>
+                {t("settings.animationIntensity")}
+              </Text>
+              <Text style={settingsModalStyles.rowSubtitle}>
+                {animationIntensity === "full"
+                  ? t("settings.animationFull")
+                  : animationIntensity === "reduced"
+                    ? t("settings.animationReduced")
+                    : t("settings.animationOff")}
+              </Text>
+            </View>
+          </View>
+          <View style={settingsModalStyles.dropdownSection}>
+            <Pressable
+              onPress={handleToggleAnimationDropdown}
+              style={settingsModalStyles.dropdownTrigger}
+            >
+              <Text style={settingsModalStyles.dropdownValue}>
+                {animationIntensity === "full"
+                  ? t("settings.animationFull")
+                  : animationIntensity === "reduced"
+                    ? t("settings.animationReduced")
+                    : t("settings.animationOff")}
+              </Text>
+              <Icon
+                icon={isAnimationOpen ? ChevronUp : ChevronDown}
+                size={layout.icon.md}
+                color={theme.colors.textMuted}
+                fill="none"
+              />
+            </Pressable>
+            {isAnimationOpen ? (
+              <View style={settingsModalStyles.dropdownPanel}>
+                <Pressable
+                  onPress={handleSelectAnimationFull}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    animationIntensity === "full"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {t("settings.animationFull")}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectAnimationReduced}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    animationIntensity === "reduced"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {t("settings.animationReduced")}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectAnimationOff}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    animationIntensity === "off"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {t("settings.animationOff")}
+                  </Text>
+                </Pressable>
+              </View>
+            ) : null}
+          </View>
+        </View>
+
+        <View style={settingsModalStyles.section}>
           <Text style={settingsModalStyles.sectionTitle}>
             {t("settings.language")}
           </Text>
-          <View style={settingsModalStyles.languageGrid}>
+          <View style={settingsModalStyles.dropdownSection}>
             <Pressable
-              onPress={handleSelectEnglish}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "en"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
+              onPress={handleToggleLanguageDropdown}
+              style={settingsModalStyles.dropdownTrigger}
             >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.en}
+              <Text style={settingsModalStyles.dropdownValue}>
+                {languageLabels[language]}
               </Text>
+              <Icon
+                icon={isLanguageOpen ? ChevronUp : ChevronDown}
+                size={layout.icon.md}
+                color={theme.colors.textMuted}
+                fill="none"
+              />
             </Pressable>
-            <Pressable
-              onPress={handleSelectChinese}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "zh"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.zh}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={handleSelectJapanese}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "ja"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.ja}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={handleSelectKorean}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "ko"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.ko}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={handleSelectThai}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "th"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.th}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={handleSelectIndonesian}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "id"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.id}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={handleSelectRussian}
-              style={[
-                settingsModalStyles.languageChip,
-                language === "ru"
-                  ? settingsModalStyles.languageChipActive
-                  : null,
-              ]}
-            >
-              <Text style={settingsModalStyles.languageLabel}>
-                {languageLabels.ru}
-              </Text>
-            </Pressable>
+            {isLanguageOpen ? (
+              <View style={settingsModalStyles.dropdownPanel}>
+                <Pressable
+                  onPress={handleSelectEnglish}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "en"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.en}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectChinese}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "zh"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.zh}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectJapanese}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "ja"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.ja}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectKorean}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "ko"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.ko}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectThai}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "th"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.th}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectIndonesian}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "id"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.id}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleSelectRussian}
+                  style={[
+                    settingsModalStyles.dropdownOption,
+                    language === "ru"
+                      ? settingsModalStyles.dropdownOptionActive
+                      : null,
+                  ]}
+                >
+                  <Text style={settingsModalStyles.dropdownOptionLabel}>
+                    {languageLabels.ru}
+                  </Text>
+                </Pressable>
+              </View>
+            ) : null}
           </View>
         </View>
 

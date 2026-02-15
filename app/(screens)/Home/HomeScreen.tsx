@@ -30,6 +30,8 @@ export function HomeScreen() {
     toggleColorBlind,
     isFontScalingEnabled,
     toggleFontScaling,
+    animationIntensity,
+    setAnimationIntensity,
     theme,
   } = useTheme();
   const { isSoundEnabled, toggleSound } = useSound();
@@ -179,6 +181,8 @@ export function HomeScreen() {
           onToggleFontScaling={handleToggleFontScaling}
           isColorBlind={isColorBlind}
           onToggleColorBlind={toggleColorBlind}
+          animationIntensity={animationIntensity}
+          onSelectAnimationIntensity={setAnimationIntensity}
           language={language}
           onSelectLanguage={setLanguage}
           onOpenTerms={handleOpenTermsFromSettings}

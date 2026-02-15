@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BackHandler, Vibration, View } from "react-native";
+import {
+  Animated,
+  BackHandler,
+  LayoutChangeEvent,
+  Vibration,
+  View,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { GameTab, GameTabs } from "@/components/domain/game/GameTabs";
 import { useGame } from "@/state/GameContext";
@@ -24,12 +30,23 @@ import { useSound } from "@/hooks/useSound";
 import { useTranslation } from "react-i18next";
 import { getLocalizedPlayerName } from "@/utils/helpers";
 import { RealtimeAction } from "@/types/realtime";
+import {
+  BuildFlyoverEvent,
+  NodeBuildFlyover,
+} from "@/components/domain/game/NodeBuildFlyover/NodeBuildFlyover";
+import { EnergyType, Node } from "@/types/game";
+import {
+  EnergyCollectFlyover,
+  EnergyCollectFlyoverEvent,
+} from "@/components/domain/game/EnergyCollectFlyover/EnergyCollectFlyover";
 
 const BOT_NOTICE_DURATION_MS = Math.round(animations.botNotice * 1);
 const TURN_VIBRATION_MS = 60;
 const QUICK_MATCH_RECONNECT_MS = 60000;
 const LOBBY_RECONNECT_MS = 180000;
 const HOME_ROUTE = "/(screens)/Home/HomeScreen";
+const MAX_BUILD_FLYOVER_QUEUE = 2;
+const MAX_ENERGY_COLLECT_QUEUE = 3;
 const MULTIPLAYER_ACTION_NOTICE_KEYS: Record<
   RealtimeAction["type"],
   string | null
@@ -45,6 +62,8 @@ const MULTIPLAYER_ACTION_NOTICE_KEYS: Record<
   APPLY_SWAP: null,
   SKIP_SWAP: null,
 };
+
+type BaseEnergyType = Exclude<EnergyType, "flux">;
 
 export function GameScreen() {
   const router = useRouter();
@@ -75,10 +94,17 @@ export function GameScreen() {
   const lastPatchRef = useRef<string | null>(null);
   const lastRejectedRef = useRef(0);
   const playerConnectionRef = useRef<Record<string, boolean>>({});
+  const rootViewRef = useRef<View | null>(null);
+  const playerAreaRef = useRef<View | null>(null);
+  const nextEnergyCollectIdRef = useRef(1);
+  const previousNodeMapRef = useRef<Record<string, Set<string>> | null>(null);
+  const nextBuildFlyoverIdRef = useRef(1);
+  const playerAreaPulseScale = useRef(new Animated.Value(1)).current;
+  const playerAreaPulseOpacity = useRef(new Animated.Value(0)).current;
   const serverClockRef = useRef<{ serverMs: number; localMs: number } | null>(
     null,
   );
-  const { theme } = useTheme();
+  const { theme, animationIntensity } = useTheme();
   const { play } = useSound();
   const { t } = useTranslation();
   const gameStyles = useMemo(() => createGameStyles(theme), [theme]);
@@ -92,9 +118,300 @@ export function GameScreen() {
   );
   const [nowMs, setNowMs] = useState(Date.now());
   const [isLeaveGameModalOpen, setIsLeaveGameModalOpen] = useState(false);
+  const [buildFlyoverQueue, setBuildFlyoverQueue] = useState<BuildFlyoverEvent[]>(
+    [],
+  );
+  const [energyCollectQueue, setEnergyCollectQueue] = useState<
+    EnergyCollectFlyoverEvent[]
+  >([]);
+  const [activeBuildFlyover, setActiveBuildFlyover] =
+    useState<BuildFlyoverEvent | null>(null);
+  const [activeEnergyCollect, setActiveEnergyCollect] =
+    useState<EnergyCollectFlyoverEvent | null>(null);
+  const [playersPulseKey, setPlayersPulseKey] = useState(0);
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [rootWindowOrigin, setRootWindowOrigin] = useState({ x: 0, y: 0 });
+  const [playersTabCenterWindow, setPlayersTabCenterWindow] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [playerAreaCenterWindow, setPlayerAreaCenterWindow] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [energyPoolCenterWindow, setEnergyPoolCenterWindow] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [localDisconnectAtMs, setLocalDisconnectAtMs] = useState<number | null>(
     null,
   );
+
+  const enqueueEnergyCollectFlyover = useCallback(
+    (energy: BaseEnergyType[]) => {
+      if (animationIntensity === "off" || selectedTab !== "market") {
+        return;
+      }
+      if (energy.length === 0) {
+        return;
+      }
+      const event: EnergyCollectFlyoverEvent = {
+        id: nextEnergyCollectIdRef.current++,
+        energy,
+      };
+      setEnergyCollectQueue((prev) => {
+        const combined = [...prev, event];
+        if (combined.length <= MAX_ENERGY_COLLECT_QUEUE) {
+          return combined;
+        }
+        return combined.slice(combined.length - MAX_ENERGY_COLLECT_QUEUE);
+      });
+    },
+    [animationIntensity, selectedTab],
+  );
+  useEffect(() => {
+    if (!gameState || gameState.phase !== "playing") {
+      previousNodeMapRef.current = null;
+      setBuildFlyoverQueue([]);
+      setActiveBuildFlyover(null);
+      setEnergyCollectQueue([]);
+      setActiveEnergyCollect(null);
+      return;
+    }
+
+    const previousMap = previousNodeMapRef.current;
+    const nextMap: Record<string, Set<string>> = {};
+    const detectedBuilds: Node[] = [];
+    gameState.players.forEach((player) => {
+      const builtNodeIds = new Set(player.nodes.map((node) => node.id));
+      nextMap[player.id] = builtNodeIds;
+      if (!previousMap) {
+        return;
+      }
+      const previousNodeIds = previousMap[player.id] || new Set<string>();
+      const newlyBuiltNodes = player.nodes.filter(
+        (node) => !previousNodeIds.has(node.id),
+      );
+      detectedBuilds.push(...newlyBuiltNodes);
+    });
+    previousNodeMapRef.current = nextMap;
+    if (detectedBuilds.length === 0) {
+      return;
+    }
+    if (animationIntensity === "off") {
+      return;
+    }
+    const nextEvents = detectedBuilds.map((node) => ({
+      id: nextBuildFlyoverIdRef.current++,
+      node,
+    }));
+    setBuildFlyoverQueue((prev) => {
+      const combined = [...prev, ...nextEvents];
+      if (combined.length <= MAX_BUILD_FLYOVER_QUEUE) {
+        return combined;
+      }
+      return [combined[0], combined[combined.length - 1]];
+    });
+  }, [animationIntensity, gameState]);
+
+  useEffect(() => {
+    if (animationIntensity !== "off") {
+      return;
+    }
+    setBuildFlyoverQueue([]);
+    setActiveBuildFlyover(null);
+    setEnergyCollectQueue([]);
+    setActiveEnergyCollect(null);
+  }, [animationIntensity]);
+
+  useEffect(() => {
+    if (selectedTab === "market") {
+      return;
+    }
+    setEnergyCollectQueue([]);
+    setActiveEnergyCollect(null);
+  }, [selectedTab]);
+
+  useEffect(() => {
+    if (activeBuildFlyover || buildFlyoverQueue.length === 0) {
+      return;
+    }
+    const [next, ...rest] = buildFlyoverQueue;
+    setActiveBuildFlyover(next);
+    setBuildFlyoverQueue(rest);
+  }, [activeBuildFlyover, buildFlyoverQueue]);
+
+  useEffect(() => {
+    if (activeEnergyCollect || energyCollectQueue.length === 0) {
+      return;
+    }
+    const [next, ...rest] = energyCollectQueue;
+    setActiveEnergyCollect(next);
+    setEnergyCollectQueue(rest);
+  }, [activeEnergyCollect, energyCollectQueue]);
+
+  const handleRootLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setViewportSize({ width, height });
+    if (!rootViewRef.current) {
+      return;
+    }
+    rootViewRef.current.measureInWindow((x, y) => {
+      setRootWindowOrigin({ x, y });
+    });
+  }, []);
+
+  const handlePlayerAreaLayout = useCallback((_event: LayoutChangeEvent) => {
+    if (!playerAreaRef.current) {
+      return;
+    }
+    playerAreaRef.current.measureInWindow((x, y, width, height) => {
+      setPlayerAreaCenterWindow({
+        x: x + width / 2,
+        y: y + height / 2,
+      });
+    });
+  }, []);
+
+  const handleEnergyPoolMeasured = useCallback((coords: {
+    centerX: number;
+    centerY: number;
+  }) => {
+    setEnergyPoolCenterWindow({
+      x: coords.centerX,
+      y: coords.centerY,
+    });
+  }, []);
+
+  const handleCollectEnergyEvent = useCallback(
+    (energy: BaseEnergyType[]) => {
+      enqueueEnergyCollectFlyover(energy);
+    },
+    [enqueueEnergyCollectFlyover],
+  );
+
+  const handleTabMeasured = useCallback(
+    (
+      tab: GameTab,
+      layout: { centerX: number; centerY: number; width: number; height: number },
+    ) => {
+      if (tab !== "players") {
+        return;
+      }
+      setPlayersTabCenterWindow({ x: layout.centerX, y: layout.centerY });
+    },
+    [],
+  );
+
+  const handleBuildFlyoverComplete = useCallback((eventId: number) => {
+    setActiveBuildFlyover((current) => {
+      if (!current || current.id !== eventId) {
+        return current;
+      }
+      return null;
+    });
+  }, []);
+
+  const handleEnergyCollectComplete = useCallback((eventId: number) => {
+    setActiveEnergyCollect((current) => {
+      if (!current || current.id !== eventId) {
+        return current;
+      }
+      return null;
+    });
+  }, []);
+
+  const pulsePlayersTab = useCallback(() => {
+    setPlayersPulseKey((prev) => prev + 1);
+  }, []);
+
+  const pulsePlayerArea = useCallback(() => {
+    playerAreaPulseScale.setValue(0.72);
+    playerAreaPulseOpacity.setValue(0.22);
+    Animated.parallel([
+      Animated.timing(playerAreaPulseScale, {
+        toValue: 1.16,
+        duration: 220,
+        useNativeDriver: true,
+      }),
+      Animated.timing(playerAreaPulseOpacity, {
+        toValue: 0,
+        duration: 220,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [playerAreaPulseOpacity, playerAreaPulseScale]);
+
+  const handleFlyoverArrive = useCallback(() => {
+    if (selectedTab === "players") {
+      pulsePlayerArea();
+      return;
+    }
+    pulsePlayersTab();
+  }, [pulsePlayerArea, pulsePlayersTab, selectedTab]);
+
+  const playersTabDestination = useMemo(() => {
+    if (!playersTabCenterWindow) {
+      return null;
+    }
+    return {
+      x: playersTabCenterWindow.x - rootWindowOrigin.x,
+      y: playersTabCenterWindow.y - rootWindowOrigin.y,
+    };
+  }, [playersTabCenterWindow, rootWindowOrigin.x, rootWindowOrigin.y]);
+
+  const playerAreaDestination = useMemo(() => {
+    if (!playerAreaCenterWindow) {
+      return null;
+    }
+    return {
+      x: playerAreaCenterWindow.x - rootWindowOrigin.x,
+      y: playerAreaCenterWindow.y - rootWindowOrigin.y,
+    };
+  }, [playerAreaCenterWindow, rootWindowOrigin.x, rootWindowOrigin.y]);
+  const collectFlyoverOrigin = useMemo(() => {
+    if (!energyPoolCenterWindow) {
+      return {
+        x: viewportSize.width / 2,
+        y: Math.max(viewportSize.height * 0.26, 0),
+      };
+    }
+    return {
+      x: energyPoolCenterWindow.x - rootWindowOrigin.x,
+      y: energyPoolCenterWindow.y - rootWindowOrigin.y,
+    };
+  }, [
+    energyPoolCenterWindow,
+    rootWindowOrigin.x,
+    rootWindowOrigin.y,
+    viewportSize.height,
+    viewportSize.width,
+  ]);
+  const collectFlyoverDestination = useMemo(() => {
+    if (playerAreaDestination) {
+      return playerAreaDestination;
+    }
+    return {
+      x: viewportSize.width / 2,
+      y: Math.max(viewportSize.height - 84, 0),
+    };
+  }, [playerAreaDestination, viewportSize.height, viewportSize.width]);
+
+  const fallbackFlyoverDestination = useMemo(
+    () => ({
+      x: viewportSize.width / 2,
+      y:
+        selectedTab === "players"
+          ? Math.max(viewportSize.height - 84, 0)
+          : Math.max(viewportSize.height * 0.24, 0),
+    }),
+    [selectedTab, viewportSize.height, viewportSize.width],
+  );
+  const flyoverBehavior = selectedTab === "players" ? "toPlayerArea" : "toPlayersTab";
+  const flyoverDestination =
+    (selectedTab === "players" ? playerAreaDestination : playersTabDestination) ||
+    fallbackFlyoverDestination;
+
   useEffect(() => {
     if (!gameState?.updatedAt) {
       return;
@@ -328,6 +645,17 @@ export function GameScreen() {
       return;
     }
     lastPatchRef.current = lastActionPatch.lastActionId;
+    if (
+      lastActionPatch.action.type === "COLLECT_ENERGY" &&
+      lastActionPatch.actorPlayerId !== multiplayerSession.playerId
+    ) {
+      const collected = lastActionPatch.action.energy.filter(
+        (type): type is BaseEnergyType => type !== "flux",
+      );
+      if (collected.length > 0) {
+        enqueueEnergyCollectFlyover(collected);
+      }
+    }
     const noticeKey =
       MULTIPLAYER_ACTION_NOTICE_KEYS[lastActionPatch.action.type];
     if (!noticeKey) {
@@ -343,7 +671,14 @@ export function GameScreen() {
     if (message !== noticeKey) {
       pushBotNotice(message);
     }
-  }, [gameState, lastActionPatch, pushBotNotice, t]);
+  }, [
+    enqueueEnergyCollectFlyover,
+    gameState,
+    lastActionPatch,
+    multiplayerSession.playerId,
+    pushBotNotice,
+    t,
+  ]);
 
   useEffect(() => {
     if (!multiplayerSession.active || !gameState) {
@@ -430,6 +765,13 @@ export function GameScreen() {
     }
     botTurnTimerRef.current = setTimeout(() => {
       const result = runBotTurn(gameState, currentPlayer.botDifficulty);
+      const botCollectedEnergy = detectCollectedEnergyFromStates(
+        gameState,
+        result.nextState,
+      );
+      if (botCollectedEnergy.length > 0) {
+        enqueueEnergyCollectFlyover(botCollectedEnergy);
+      }
       if (result.notice.length > 0) {
         const message = result.notice
           .map((notice) => {
@@ -464,6 +806,7 @@ export function GameScreen() {
     }, animations.botTurnDelay);
   }, [
     endGame,
+    enqueueEnergyCollectFlyover,
     gameState,
     multiplayerSession.active,
     pushBotNotice,
@@ -540,7 +883,7 @@ export function GameScreen() {
       disableBottomPadding
       disableTopSafeArea
     >
-      <View style={gameStyles.container}>
+      <View ref={rootViewRef} style={gameStyles.container} onLayout={handleRootLayout}>
         {gameState ? (
           <>
             <BotNotice messages={botNotices} />
@@ -567,6 +910,8 @@ export function GameScreen() {
                     marketBadgeCount={tabBadges.market}
                     protocolsBadgeCount={tabBadges.protocols}
                     playersBadgeCount={tabBadges.players}
+                    onTabMeasured={handleTabMeasured}
+                    playersPulseKey={playersPulseKey}
                   />
                 </View>
               </View>
@@ -608,11 +953,25 @@ export function GameScreen() {
                       : null
                   }
                   onSubmitMultiplayerAction={handleSubmitMultiplayerAction}
+                  onCollectEnergyEvent={handleCollectEnergyEvent}
+                  onEnergyPoolMeasured={handleEnergyPoolMeasured}
                 />
                 <View style={gameStyles.footerOverlay} pointerEvents="box-none">
                   <View
                     style={[gameStyles.paddedSection, gameStyles.footerPanel]}
+                    ref={playerAreaRef}
+                    onLayout={handlePlayerAreaLayout}
                   >
+                    <Animated.View
+                      pointerEvents="none"
+                      style={[
+                        gameStyles.playerAreaPulse,
+                        {
+                          opacity: playerAreaPulseOpacity,
+                          transform: [{ scale: playerAreaPulseScale }],
+                        },
+                      ]}
+                    />
                     <PlayerArea
                       player={gameState.players[gameState.currentPlayerIndex]}
                       isCurrentPlayer
@@ -622,6 +981,25 @@ export function GameScreen() {
                 </View>
               </>
             )}
+            <NodeBuildFlyover
+              event={activeBuildFlyover}
+              viewportWidth={viewportSize.width}
+              viewportHeight={viewportSize.height}
+              mode={animationIntensity === "full" ? "full" : "reduced"}
+              behavior={flyoverBehavior}
+              destination={flyoverDestination}
+              onComplete={handleBuildFlyoverComplete}
+              onArrive={handleFlyoverArrive}
+            />
+            {selectedTab === "market" ? (
+              <EnergyCollectFlyover
+                event={activeEnergyCollect}
+                origin={collectFlyoverOrigin}
+                destination={collectFlyoverDestination}
+                mode={animationIntensity === "full" ? "full" : "reduced"}
+                onComplete={handleEnergyCollectComplete}
+              />
+            ) : null}
             <LeaveGameModal
               isOpen={isLeaveGameModalOpen}
               title={t("game.leaveGameTitle")}
@@ -648,3 +1026,28 @@ export function GameScreen() {
 }
 
 export default GameScreen;
+
+function detectCollectedEnergyFromStates(
+  previous: {
+    energyPool: Record<EnergyType, number>;
+  },
+  next: {
+    energyPool: Record<EnergyType, number>;
+  },
+): BaseEnergyType[] {
+  const baseTypes: BaseEnergyType[] = ["solar", "hydro", "plasma", "neural"];
+  const poolEnergy: BaseEnergyType[] = [];
+  baseTypes.forEach((type) => {
+    const delta = next.energyPool[type] - previous.energyPool[type];
+    if (delta >= 0) {
+      return;
+    }
+    for (let i = 0; i < Math.abs(delta); i += 1) {
+      poolEnergy.push(type);
+    }
+  });
+  if (poolEnergy.length <= 0 || poolEnergy.length > 3) {
+    return [];
+  }
+  return poolEnergy;
+}

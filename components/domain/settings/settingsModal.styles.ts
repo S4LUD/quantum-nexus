@@ -77,6 +77,48 @@ export const createSettingsModalStyles = (theme: Theme) => {
       flexWrap: "wrap",
       gap: spacing.sm,
     },
+    dropdownSection: {
+      gap: spacing.xs,
+    },
+    dropdownTrigger: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.sm,
+      borderRadius: layout.borderRadius.md,
+      borderWidth: layout.borderWidth.thin,
+      borderColor: theme.colors.borderSubtle,
+      backgroundColor: theme.colors.surfaceAlt,
+    },
+    dropdownValue: {
+      color: theme.colors.text,
+      fontSize: typography.size.sm,
+      lineHeight: typography.lineHeight.sm,
+      fontFamily: typography.fontFamily.medium,
+    },
+    dropdownPanel: {
+      borderRadius: layout.borderRadius.md,
+      borderWidth: layout.borderWidth.thin,
+      borderColor: theme.colors.borderSubtle,
+      backgroundColor: theme.colors.surfaceAlt,
+      overflow: "hidden",
+    },
+    dropdownOption: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.sm,
+      borderTopWidth: layout.borderWidth.thin,
+      borderTopColor: theme.colors.borderSubtle,
+    },
+    dropdownOptionActive: {
+      backgroundColor: theme.colors.surfaceStrong,
+    },
+    dropdownOptionLabel: {
+      color: theme.colors.text,
+      fontSize: typography.size.sm,
+      lineHeight: typography.lineHeight.sm,
+      fontFamily: typography.fontFamily.medium,
+    },
     languageChip: {
       paddingHorizontal: spacing.sm,
       paddingVertical: spacing.xs,
